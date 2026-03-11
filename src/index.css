@@ -6,4 +6,7 @@
   
 }
 
-
+[data-sonner-toaster],
+.react-hot-toast {
+  z-index: 99999 !important;
+}

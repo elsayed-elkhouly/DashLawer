@@ -9,15 +9,13 @@ import { useNavigate } from 'react-router-dom'
 
 
 const SideBar = () => {
-  const { token, Logout } = useContext(Authcontext)
-
-
+  const {  Logout, setting } = useContext(Authcontext)
   const navigate = useNavigate()
-
   function logout(){
     Logout(),
     navigate("/login")
       }
+      
   return (
     <>
  <div className="flex flex-col h-screen bg-[#101c2e] text-gray-300 font-sans overflow-hidden" dir="rtl">
@@ -28,7 +26,7 @@ const SideBar = () => {
       <MdGavel size={24} />
     </div>
     <div>
-      <h1 className="text-white font-bold leading-tight">هيلبر للمحاماه</h1>
+      <h1 className="text-white font-bold leading-tight"> {setting?.Settings?.officeName}</h1>
       <p className="text-xs text-gray-500">للإدارة القانونية</p>
     </div>
   </div>

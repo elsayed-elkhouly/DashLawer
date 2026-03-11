@@ -164,8 +164,8 @@ const Setting = () => {
       toast.success("تم تحديث الإعدادات");
     },
     onError: (error) => {
-      console.error("Submit Error:", error.response?.data || error.message);
-      toast.error("حصل خطأ أثناء تحديث الإعدادات");
+      console.error("Submit Error:", error.response?.data?.message );
+      toast.error( error.response?.data?.message);
     },
   });
 

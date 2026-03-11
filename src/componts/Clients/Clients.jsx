@@ -13,103 +13,78 @@ import {
     Pencil,
 } from "lucide-react";
 import Pagination from '../Pagination/Pagination';
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { Link } from 'react-router-dom';
 const Clients = () => {
     const queryClient = useQueryClient();
+    const [search, setSearch] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const limit = 4;
 
-  const [search, setSearch] = useState("");
-const [currentPage, setCurrentPage] = useState(2);
 
-    const demoData = [
-        {
-            id: 1,
-            name: "السيد",
-            clientId: "108429384",
-            type: "فرد",
-            phone: "01237847846",
-            casesCount: 8,
-            openCases: 3,
-            totalDue: 14200,
-            status: "نشط",
-            lastActivity: "منذ ساعتين",
-            avatar: "JI",
-            avatarClass: "bg-amber-500/20 text-amber-300",
-        },
-        {
-            id: 2,
-            name: "شركة آفاق للاستثمار",
-            clientId: "4030123456",
-            type: "شركة",
-            phone: "01237847846",
-            casesCount: 24,
-            openCases: 9,
-            totalDue: 85600,
-            status: "نشط",
-            lastActivity: "يوم أمس",
-            avatar: "A",
-            avatarClass: "bg-emerald-500/20 text-emerald-300",
-        },
-        {
-            id: 3,
-            name: "محمد كمال",
-            clientId: "110293847",
-            type: "فرد",
-            phone: "01237847846",
-            casesCount: 2,
-            openCases: 0,
-            totalDue: 0,
-            status: "غير نشط",
-            lastActivity: "منذ شهرين",
-            avatar: "مح",
-            avatarClass: "bg-slate-500/20 text-slate-300",
-        },
-        {
-            id: 4,
-            name: "مجموعة اللوجستية المتحدة",
-            clientId: "1010887766",
-            type: "شركة",
-            phone: "01237847846",
-            casesCount: 12,
-            openCases: 5,
-            totalDue: 42500,
-            status: "نشط",
-            lastActivity: "منذ 15 دقيقة",
-            avatar: "U",
-            avatarClass: "bg-zinc-100 text-zinc-700",
-        },
-    ];
+    async function exportClient() {
+        try {
+            const res = await axios.get(
+                "https://lawersystem-production.up.railway.app/Client/export",
+                {
+                    headers: {
+                        authorization: `Bearer ${Cookies.get("token")}`,
+                    },
+                    responseType: "blob",
+                }
+            );
 
+            const url = window.URL.createObjectURL(new Blob([res.data]));
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", "clients.xlsx");
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(url);
+            toast.success("download Done")
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     async function getClients(page = 1, search = "") {
-        const res = await axios.get("https://lawersystem-production.up.railway.app/Client/all/", {
-            params: {
-                limit: 4,
-                page,
-                search,
-            },
-            headers: {
-                authorization: `Bearer ${Cookies.get("token")}`,
-            },
-        });
+        const res = await axios.get(
+            "https://lawersystem-production.up.railway.app/Client/all/",
+            {
+                params: {
+                    limit,
+                    page,
+                    search,
+                },
+                headers: {
+                    authorization: `Bearer ${Cookies.get("token")}`,
+                },
+            }
+        );
 
         return res.data;
     }
-    const { data: Clients, isLoading, isError } = useQuery({
-        queryKey: ["Clients", currentPage, search],
-        queryFn: () => getClients(currentPage, search),
-    });
-    const clientsList =
-    Clients?.data?.clients?.map((client) => ({
-        ...client,
-        id: client._id,
-        openCases: client.documents?.length || 0,
-        totalDue: client.totalPaid || 0,
-        status: client.isDeleted ? "محذوف" : "نشط",
-        lastActivity: new Date(client.updatedAt).toLocaleDateString("ar-EG"),
-        avatar: client.fullName?.slice(0, 2).toUpperCase() || "CL",
-        avatarClass: "bg-sky-500/15 text-sky-300",
-    })) || [];
-    console.log(Clients?.clients);
+    const {
+  data: Clients,
+  isLoading,
+  isFetching,
+  isError,
+} = useQuery({
+  queryKey: ["Clients", currentPage, search],
+  queryFn: () => getClients(currentPage, search),
+  placeholderData: (previousData) => previousData,
+  staleTime: 1000 * 60 * 5, // 5 دقايق
+  gcTime: 1000 * 60 * 10,   // يحتفظ بالكاش 10 دقايق بعد الخروج من الصفحة
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
+});
+
+    const clients = Clients?.clients || [];
+    const totalPages = Clients?.totalPages || 1;
+    const totalClients = Clients?.total || 0;
+
+
 
 
     const formatCurrency = (value) => {
@@ -127,12 +102,12 @@ const [currentPage, setCurrentPage] = useState(2);
         شركة: "bg-violet-500/15 text-violet-300 ring-1 ring-violet-500/20",
     };
 
-  
 
-const totalPages = Clients?.data?.totalPages || 1;
-   
 
-    
+    // const totalPages = Clients?.data?.totalPages || 5;
+
+
+
 
 
     const {
@@ -155,6 +130,7 @@ const totalPages = Clients?.data?.totalPages || 1;
         mode: "onBlur",
     });
     const clientType = watch("type");
+
     const AddClient = async (data) => {
         const res = await axios.post(
             "https://lawersystem-production.up.railway.app/Client/create",
@@ -185,6 +161,7 @@ const totalPages = Clients?.data?.totalPages || 1;
         onSuccess: () => {
             toast.success("done");
             queryClient.invalidateQueries({ queryKey: ["Stats"] });
+            document.getElementById("my_modal_5")?.close();
             reset();
         },
         onError: (error) => {
@@ -203,13 +180,13 @@ const totalPages = Clients?.data?.totalPages || 1;
         "h-[38px] w-full rounded-full border border-white/5 bg-[#11243a] px-5 text-sm text-white outline-none placeholder:text-slate-500 transition focus:border-[#d3a63f] focus:ring-2 focus:ring-[#d3a63f]/20";
 
     const errorClass = "mt-2 text-xs text-red-400";
-    if (isLoading) {
-    return <div className="text-white p-6">جاري تحميل البيانات...</div>;
-}
+    // if (isLoading) {
+    //     return <div className="text-white p-6 flex justify-center items-center"> <span className="loading loading-infinity   w-[50%]"></span></div>;
+    // }
 
-if (isError) {
-    return <div className="text-red-400 p-6">حصل خطأ أثناء تحميل العملاء</div>;
-}
+    if (isError) {
+        return <div className="text-red-400 p-6">حصل خطأ أثناء تحميل العملاء</div>;
+    }
     return (
         <>
             {/* header */}
@@ -458,7 +435,9 @@ if (isError) {
                         </dialog>
 
                         {/* Export Excel Button */}
-                        <button className="flex items-center gap-2 bg-[#1e293b] border border-slate-700 text-slate-300 px-6 py-2.5 rounded-xl font-medium hover:bg-slate-800 transition-all">
+                        <button
+                            onClick={exportClient}
+                            className="cursor-pointer flex items-center gap-2 bg-[#1e293b] border border-slate-700 text-slate-300 px-6 py-2.5 rounded-xl font-medium hover:bg-slate-800 transition-all">
                             <Download size={18} />
                             <div className="flex gap-1 items-center">
                                 <span>تصدير</span>
@@ -562,7 +541,6 @@ if (isError) {
 
                 </div>
             </section>
-
             <section>
                 <div dir="rtl" className="min-h-screen bg-[#071224] p-6 text-white">
                     <div className="mx-auto max-w-7xl rounded-3xl border border-white/10 bg-[linear-gradient(180deg,#0b1830_0%,#0a162b_100%)] shadow-2xl shadow-black/20 overflow-hidden">
@@ -582,10 +560,16 @@ if (isError) {
                                 </div>
                             </div>
                         </div>
-                        <div className="overflow-x-auto">
+                        <div className="relative overflow-x-auto">
+                            {isFetching && !isLoading && (
+                                <div className="absolute inset-0 z-10 flex items-center justify-center bg-[#071224]/35">
+                                    <span className="loading loading-infinity w-14 text-[#d3a63f]"></span>
+                                </div>
+                            )}
+
                             <table className="min-w-full text-sm">
                                 <thead>
-                                    <tr className="border-b border-white/5 bg-white/[0.02] text-slate-400">
+                                    <tr className="border-b border-white/5 bg-white/2 text-slate-400">
                                         <th className="px-5 py-4 text-right font-medium">اسم العميل</th>
                                         <th className="px-4 py-4 text-right font-medium">النوع</th>
                                         <th className="px-4 py-4 text-right font-medium">رقم التواصل</th>
@@ -593,103 +577,111 @@ if (isError) {
                                         <th className="px-4 py-4 text-right font-medium">القضايا المفتوحة</th>
                                         <th className="px-4 py-4 text-right font-medium">إجمالي المستحقات</th>
                                         <th className="px-4 py-4 text-right font-medium">الحالة</th>
-                                        <th className="px-4 py-4 text-right font-medium">آخر نشاط</th>
                                         <th className="px-4 py-4 text-right font-medium">الإجراءات</th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
-    {clientsList.map((client) => (
-        <tr
-            key={client.id}
-            className="border-b border-white/5 transition hover:bg-white/[0.02]"
-        >
-            <td className="px-5 py-4">
-                <div className="flex items-center justify-between gap-4">
-                    <div
-                        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-sm font-bold ${client.avatarClass}`}
-                    >
-                        {client.avatar}
-                    </div>
+                                    {isLoading ? (
+                                        <tr>
+                                            <td colSpan="8" className="py-10 text-center">
+                                                <div className="flex justify-center items-center">
+                                                    <span className="loading loading-infinity w-16 text-[#d3a63f]"></span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ) : clients.length > 0 ? (
+                                        clients.map((client) => (
+                                            <tr
+                                                key={client._id}
+                                                className="border-b border-white/5 transition hover:bg-white/2"
+                                            >
+                                                <td className="px-5 py-4">
+                                                    <div className="flex items-center justify-between gap-4">
+                                                        <div className="min-w-0 flex-1 text-right">
+                                                            <p className="truncate text-sm font-semibold text-white">
+                                                                {client.fullName}
+                                                            </p>
+                                                            <p className="mt-1 text-xs text-slate-500">
+                                                                ID: {client.id}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </td>
 
-                    <div className="min-w-0 flex-1 text-right">
-                        <p className="truncate text-sm font-semibold text-white">
-                            {client.fullName}
-                        </p>
-                        <p className="mt-1 text-xs text-slate-500">
-                            ID: {client.id}
-                        </p>
-                    </div>
-                </div>
-            </td>
+                                                <td className="px-4 py-4">
+                                                    <span
+                                                        className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${typeClasses?.[client.type] || "bg-slate-500/10 text-slate-300"
+                                                            }`}
+                                                    >
+                                                        {client.type}
+                                                    </span>
+                                                </td>
 
-            <td className="px-4 py-4">
-                <span
-                    className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${
-                        typeClasses?.[client.type] || "bg-slate-500/10 text-slate-300"
-                    }`}
-                >
-                    {client.type}
-                </span>
-            </td>
+                                                <td className="px-4 py-4 text-slate-300">{client.phone}</td>
 
-            <td className="px-4 py-4 text-slate-300">{client.phone}</td>
+                                                <td className="px-4 py-4 font-semibold text-slate-200">
+                                                    {String(client.casesCount || 0).padStart(2, "0")}
+                                                </td>
 
-            <td className="px-4 py-4 font-semibold text-slate-200">
-                {String(client.casesCount || 0).padStart(2, "0")}
-            </td>
+                                                <td className="px-4 py-4 font-semibold text-amber-300">
+                                                    {String(client.openCases || 0).padStart(2, "0")}
+                                                </td>
 
-            <td className="px-4 py-4 font-semibold text-amber-300">
-                {String(client.openCases || 0).padStart(2, "0")}
-            </td>
+                                                <td className="px-4 py-4 font-semibold text-slate-200">
+                                                    {formatCurrency(client.totalDue || 0)}
+                                                </td>
 
-            <td className="px-4 py-4 font-semibold text-slate-200">
-                {formatCurrency(client.totalDue || 0)}
-            </td>
+                                                <td className="px-4 py-4">
+                                                    <span
+                                                        className={`inline-flex items-center gap-2 ${statusClasses?.[client.status] || "text-emerald-400"
+                                                            }`}
+                                                    >
+                                                        <span className="h-2 w-2 rounded-full bg-current" />
+                                                        {client.status}
+                                                    </span>
+                                                </td>
 
-            <td className="px-4 py-4">
-                <span
-                    className={`inline-flex items-center gap-2 ${
-                        statusClasses?.[client.status] || "text-emerald-400"
-                    }`}
-                >
-                    <span className="h-2 w-2 rounded-full bg-current" />
-                    {client.status}
-                </span>
-            </td>
-
-            <td className="px-4 py-4 text-slate-400">{client.lastActivity}</td>
-
-            <td className="px-4 py-4">
-                <div className="flex items-center gap-3 text-slate-400">
-                    <button className="transition hover:text-white" aria-label="المزيد">
-                        <MoreVertical className="h-4 w-4" />
-                    </button>
-                    <button className="transition hover:text-white" aria-label="تعديل">
-                        <Pencil className="h-4 w-4" />
-                    </button>
-                    <button className="transition hover:text-white" aria-label="عرض">
-                        <Eye className="h-4 w-4" />
-                    </button>
-                </div>
-            </td>
-        </tr>
-    ))}
-</tbody>
+                                                <td className="py-4">
+                                                    <div dir="ltr" className="ml-5 flex items-center gap-3 text-slate-400">
+                                                        <button className="transition hover:text-white" aria-label="المزيد">
+                                                            <MoreVertical className="h-4 w-4" />
+                                                        </button>
+                                                        <button className="transition hover:text-white" aria-label="تعديل">
+                                                            <Pencil className="h-4 w-4" />
+                                                        </button>
+                                                        <Link to={`/Clients/ClientProfile/${client._id}`}>
+                                                            <button className="cursor-pointer transition hover:text-white" aria-label="عرض">
+                                                                <Eye className="h-4 w-4" />
+                                                            </button>
+                                                        </Link>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan="8" className="py-10 text-center text-slate-400">
+                                                لا يوجد عملاء
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
                             </table>
                         </div>
                         <Pagination
                             currentPage={currentPage}
                             totalPages={totalPages}
+                            totalItems={totalClients}
+                            limit={limit}
+                            currentItemsCount={clients.length}
                             onPageChange={(page) => {
                                 if (page >= 1 && page <= totalPages) setCurrentPage(page);
                             }}
                         />
                     </div>
 
-                    <div className="mx-auto mt-4 max-w-7xl rounded-2xl border border-dashed border-white/10 bg-white/[0.02] p-4 text-right text-sm text-slate-400">
-                        الباجينيشن متظبط بحيث تقدر تربطه بسهولة مع الـ API عن طريق currentPage و totalPages و onPageChange.
-                    </div>
+
                 </div>
             </section>
 

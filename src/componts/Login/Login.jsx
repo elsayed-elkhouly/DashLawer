@@ -39,7 +39,7 @@ const Login = () => {
     setisLoding(true)
     try {
       const data = await axios.post("https://lawersystem-production.up.railway.app/auth/authSignin", values)
-      // console.log(data.data.access_token);
+      console.log(data.data);
       toast.success(data.data.message)
       insertToken(data.data.access_token)
       Cookies.set("token", data.data.access_token , { expires: 1 });

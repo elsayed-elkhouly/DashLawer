@@ -8,17 +8,17 @@ import { FiEdit3, FiRotateCcw } from 'react-icons/fi'
 import { MdGavel, MdOutlineSecurity } from "react-icons/md";
 import { GrGroup } from "react-icons/gr";
 import { FaCamera, FaMoneyBills } from "react-icons/fa6";
-import { IoSettingsSharp } from "react-icons/io5";
+import { IoArrowBack, IoSettingsSharp } from "react-icons/io5";
 import InputField from '../InputField/InputField';
 import { IoIosCamera } from "react-icons/io";
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { Link } from 'react-router-dom';
 
 const AddMember = () => {
   Cookies.get("token")
   const AddUser = async (data) => {
     const formData = new FormData();
-    // ضيف كل الفيلدز
     formData.append("UserName", data.UserName);
     formData.append("email", data.email);
     formData.append("phone", data.phone);
@@ -28,7 +28,7 @@ const AddMember = () => {
     formData.append("lawyerRegistrationNo", data.lawyerRegistrationNo);
     formData.append("password", data.password);
 
-    // ✅ ابعت الفايل نفسه
+    
     if (data.profile && data.profile[0]) {
       formData.append("profile", data.profile[0]);
     }
@@ -56,7 +56,7 @@ const AddMember = () => {
       console.log(pair[0], pair[1]);
     }
 
-    reset(); // 🔥 Reset بعد الحفظ
+    reset(); 
   };
 
   const schema = z.object({
@@ -105,7 +105,7 @@ const AddMember = () => {
 
 
 
-  // console.log(Cookies.get("token"));
+ 
 
 
   const SelectField = ({ label, options, name, error, register }) => (
@@ -143,10 +143,19 @@ const AddMember = () => {
             <button
               type="button"
               onClick={() => reset()}
-              className="px-6 py-2 rounded-lg border border-gray-700 text-gray-400 hover:bg-gray-800 transition-colors"
+              className="px-6 py-2 rounded-lg border border-gray-700 text-gray-400 hover:bg-gray-800 transition-colors cursor-pointer "
             >
               إلغاء
             </button>
+            <Link to={"/TeamMember"}>
+            <button
+              type="button"
+              
+              className="px-6 py-2 rounded-lg border border-gray-700 text-white hover:bg-[#C9A14A] transition-colors duration-300 cursor-pointer flex items-center gap-2 justify-center"
+            >
+             Back  <IoArrowBack  />
+            </button>
+            </Link>
           </div>
         </div>
 

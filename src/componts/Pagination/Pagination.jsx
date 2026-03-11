@@ -1,8 +1,15 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import React, { useMemo, useState } from "react";
 
-const Pagination = ({ currentPage, totalPages, onPageChange }) => {
-   const pages = useMemo(() => {
+const Pagination = ({
+  currentPage,
+  totalPages,
+  totalItems,
+  limit,
+  currentItemsCount,
+  onPageChange,
+}) => {
+  const pages = useMemo(() => {
     const result = [];
     const delta = 1;
     const range = [];
@@ -32,10 +39,14 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
     return result;
   }, [currentPage, totalPages]);
 
+  const startItem = totalItems === 0 ? 0 : (currentPage - 1) * limit + 1;
+  const endItem = (currentPage - 1) * limit + currentItemsCount;
 
   return (
     <div className="flex items-center justify-between gap-4 border-t border-white/5 px-5 py-4 text-sm text-slate-400">
-      <p>عرض 1-10 من أصل 1,284 عميل</p>
+      <p>
+        عرض {startItem}-{endItem} من أصل {totalItems} عميل
+      </p>
 
       <div className="flex items-center gap-2">
         <button
@@ -76,7 +87,6 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
       </div>
     </div>
   );
-
-}
+};
 
 export default Pagination

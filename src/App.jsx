@@ -19,6 +19,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
+import ClientProfile from './componts/ClientProfile/ClientProfile'
 function App() {
   const router = createBrowserRouter([{
     path: "", element: <Layout />, children: [
@@ -31,17 +32,28 @@ function App() {
       { path: "/Clients", element: <ProtectedRoute><Clients /></ProtectedRoute> },
       { path: "/Setting", element: <ProtectedRoute><Setting /></ProtectedRoute> },
       { path: "/AddMember", element: <ProtectedRoute><AddMember /></ProtectedRoute> },
+      { path: "/Clients/ClientProfile/:id", element: <ProtectedRoute><ClientProfile /></ProtectedRoute> },
       { path: "/Login", element: <Login /> },
 
 
     ]
   }])
-   const client = new QueryClient()
+  const client = new QueryClient()
   return (
     <>
       <AuthContextProvider>
         <QueryClientProvider client={client}>
-          <Toaster />
+          <Toaster
+            position="top-center"
+            containerStyle={{
+              zIndex: 99999,
+            }}
+            toastOptions={{
+              style: {
+                zIndex: 99999,
+              },
+            }}
+          />
           <RouterProvider router={router} />
         </QueryClientProvider>
       </AuthContextProvider>
