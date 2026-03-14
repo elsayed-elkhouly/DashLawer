@@ -6,9 +6,10 @@ import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 const Team = () => {
+
   const formatEgyptDate = (dateString) => {
   if (!dateString) return "—";
-
+  
   const date = new Date(dateString);
 
   if (Number.isNaN(date.getTime())) return "تاريخ غير صالح";
@@ -34,12 +35,12 @@ const Team = () => {
       }
     })
   }
-  const { data } = useQuery({
+  const { data ,isLoading} = useQuery({
     queryKey: ["Users"],
     queryFn: getUSers
   })
  
-console.log(data);
+// console.log(data);
 
   return (
 
@@ -133,7 +134,7 @@ console.log(data);
       </section>
       <section>
         <div className="w-[97%] mx-auto mt-5 bg-[#101c2e] rounded-xl border border-gray-800 overflow-hidden mb-10" dir="rtl">
-          <table className="w-full text-right border-collapse">
+          {isLoading? <div className='flex items-center justify-center h-[300px]'><span className="loading loading-infinity w-28 text-[#d3a63f] text-center"></span></div>:<table className="w-full text-right border-collapse">
             <thead>
               <tr className="text-gray-400 text-sm border-b border-gray-800">
                 <th className="p-4 font-medium">العضو</th>
@@ -192,6 +193,7 @@ console.log(data);
               ))}
             </tbody>
           </table>
+}
 
           {/* Pagination Footer */}
           {/* <div className="p-4 flex items-center justify-between border-t border-gray-800 text-sm">

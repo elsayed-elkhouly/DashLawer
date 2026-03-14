@@ -8,12 +8,14 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
+import { RiDeleteBin6Line } from "react-icons/ri";
+
 import {
     Search, SlidersHorizontal,
     Pencil,
 } from "lucide-react";
 import Pagination from '../Pagination/Pagination';
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 const Clients = () => {
     const queryClient = useQueryClient();
@@ -66,19 +68,19 @@ const Clients = () => {
         return res.data;
     }
     const {
-  data: Clients,
-  isLoading,
-  isFetching,
-  isError,
-} = useQuery({
-  queryKey: ["Clients", currentPage, search],
-  queryFn: () => getClients(currentPage, search),
-  placeholderData: (previousData) => previousData,
-  staleTime: 1000 * 60 * 5, // 5 دقايق
-  gcTime: 1000 * 60 * 10,   // يحتفظ بالكاش 10 دقايق بعد الخروج من الصفحة
-  refetchOnMount: false,
-  refetchOnWindowFocus: false,
-});
+        data: Clients,
+        isLoading,
+        isFetching,
+        isError,
+    } = useQuery({
+        queryKey: ["Clients", currentPage, search],
+        queryFn: () => getClients(currentPage, search),
+        placeholderData: (previousData) => previousData,
+        staleTime: 0, // 5 دقايق
+        gcTime: 1000 * 60 * 10,   // يحتفظ بالكاش 10 دقايق بعد الخروج من الصفحة
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+    });
 
     const clients = Clients?.clients || [];
     const totalPages = Clients?.totalPages || 1;
@@ -104,7 +106,7 @@ const Clients = () => {
 
 
 
-    // const totalPages = Clients?.data?.totalPages || 5;
+
 
 
 
@@ -156,25 +158,76 @@ const Clients = () => {
             }
         })
     }
+
     const addClientMutation = useMutation({
-        mutationFn: AddClient,
-        onSuccess: () => {
-            toast.success("done");
-            queryClient.invalidateQueries({ queryKey: ["Stats"] });
-            document.getElementById("my_modal_5")?.close();
-            reset();
-        },
-        onError: (error) => {
-            console.log("Full error:", error);
-            console.log("Error response:", error.response);
-            console.log("Error data:", error.response?.data);
-            console.log("Error status:", error.response?.status);
-            toast.error("something went wrong");
-        },
-    });
+    mutationFn: AddClient,
+    onSuccess: () => {
+        toast.success("done");
+
+        queryClient.invalidateQueries({ queryKey: ["Stats"] });
+        queryClient.invalidateQueries({ queryKey: ["Clients"] });
+        queryClient.refetchQueries({ queryKey: ["Clients"], type: "active" });
+        
+
+        document.getElementById("my_modal_5")?.close();
+        reset();
+    },
+    onError: (error) => {
+        // console.log("Full error:", error);
+        // console.log("Error response:", error.response);
+        // console.log("Error data:", error.response?.data);
+        // console.log("Error status:", error.response?.status);
+        toast.error(error.response?.data?.message);
+    },
+});
     const onSubmit = (data) => {
         addClientMutation.mutate(data);
     }
+
+    async function deleteClient(id) {
+    try {
+        console.log("Deleting id:", id);
+
+        const res = await axios.delete(
+            `https://lawersystem-production.up.railway.app/Client/${id}`,
+            {
+                headers: {
+                    authorization: `Bearer ${Cookies.get("token")}`,
+                },
+            }
+        );
+
+        console.log("Delete response:", res.data);
+        return res.data;
+    } catch (error) {
+        console.log("Delete error:", error);
+        console.log("Delete error response:", error.response);
+        throw error;
+    }
+}
+    
+    const deleteMutation = useMutation({
+    mutationFn: deleteClient,
+
+    onSuccess: () => {
+        toast.success("Client deleted successfully");
+
+       queryClient.invalidateQueries({ queryKey: ["Stats"] });
+        queryClient.invalidateQueries({ queryKey: ["Clients"] });
+
+        queryClient.refetchQueries({ queryKey: ["Stats"], type: "active" });
+        queryClient.refetchQueries({ queryKey: ["Clients"], type: "active" });
+    },
+
+    onError: (error) => {
+        console.log("Delete mutation error:", error);
+        toast.error("Something went wrong while deleting");
+    },
+});
+
+const handleDelete = (id) => {
+    deleteMutation.mutate(id);
+};
 
     const inputClass =
         "h-[38px] w-full rounded-full border border-white/5 bg-[#11243a] px-5 text-sm text-white outline-none placeholder:text-slate-500 transition focus:border-[#d3a63f] focus:ring-2 focus:ring-[#d3a63f]/20";
@@ -542,7 +595,7 @@ const Clients = () => {
                 </div>
             </section>
             <section>
-                <div dir="rtl" className="min-h-screen bg-[#071224] p-6 text-white">
+                <div dir="rtl" className=" bg-[#071224] p-6 text-white">
                     <div className="mx-auto max-w-7xl rounded-3xl border border-white/10 bg-[linear-gradient(180deg,#0b1830_0%,#0a162b_100%)] shadow-2xl shadow-black/20 overflow-hidden">
                         <div className="border-b border-white/5 p-4 md:p-5">
                             <div className="flex items-center gap-3 rounded-[20px] border border-white/10 bg-[#0a1730] p-3 md:p-4">
@@ -643,13 +696,12 @@ const Clients = () => {
                                                 </td>
 
                                                 <td className="py-4">
-                                                    <div dir="ltr" className="ml-5 flex items-center gap-3 text-slate-400">
-                                                        <button className="transition hover:text-white" aria-label="المزيد">
-                                                            <MoreVertical className="h-4 w-4" />
+                                                    <div dir="ltr" className="ml-10 flex items-center gap-3 text-slate-400 cursor-pointer ">
+                                                        <button onClick={() => handleDelete(client.id)}
+                                                            className="transition hover:text-white" aria-label="المزيد">
+                                                            <RiDeleteBin6Line  className="h-4 w-4 hover:text-red-500 duration-300 cursor-pointer" />
                                                         </button>
-                                                        <button className="transition hover:text-white" aria-label="تعديل">
-                                                            <Pencil className="h-4 w-4" />
-                                                        </button>
+
                                                         <Link to={`/Clients/ClientProfile/${client._id}`}>
                                                             <button className="cursor-pointer transition hover:text-white" aria-label="عرض">
                                                                 <Eye className="h-4 w-4" />
