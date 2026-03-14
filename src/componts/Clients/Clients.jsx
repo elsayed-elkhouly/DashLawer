@@ -9,11 +9,7 @@ import Cookies from 'js-cookie';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { RiDeleteBin6Line } from "react-icons/ri";
-
-import {
-    Search, SlidersHorizontal,
-    Pencil,
-} from "lucide-react";
+import {Search, SlidersHorizontal,} from "lucide-react";
 import Pagination from '../Pagination/Pagination';
 import React, { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';

@@ -199,7 +199,7 @@ const ClientProfile = () => {
           <Card
             icon={<MdOutlineAccountBalanceWallet />}
             title="الرصيد المتبقي"
-            value={data?.data?.summary?.remainingFees
+            value={data?.data?.summary?.totalDue
             }
             color="text-red-500"
           />
@@ -234,27 +234,27 @@ const ClientProfile = () => {
                 <div className="space-y-3">
 
                   {documents?.map((doc, index) => (
-  <div
-    key={doc.publicId || index}
-    className="bg-[#1d2a3b] p-3 rounded-lg mt-3 hover:bg-[#24364d] flex justify-between items-center cursor-pointer"
-    onClick={() => downloadFile(doc)}
-  >
-    <div>
-      <p className="text-white">{doc.name}</p>
-    </div>
+                    <div
+                      key={doc.publicId || index}
+                      className="bg-[#1d2a3b] p-3 rounded-lg mt-3 hover:bg-[#24364d] flex justify-between items-center cursor-pointer"
+                      onClick={() => downloadFile(doc)}
+                    >
+                      <div>
+                        <p className="text-white">{doc.name}</p>
+                      </div>
 
-    <button
-      type="button"
-      onClick={(e) => {
-        e.stopPropagation(); // يمنع تشغيل التحميل عند الضغط على الحذف
-        DeleteDoc(doc.publicId);
-      }}
-      className="text-red-400 hover:text-red-600 text-lg cursor-pointer"
-    >
-      <RiDeleteBin6Line />
-    </button>
-  </div>
-))}
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation(); // يمنع تشغيل التحميل عند الضغط على الحذف
+                          DeleteDoc(doc.publicId);
+                        }}
+                        className="text-red-400 hover:text-red-600 text-lg cursor-pointer"
+                      >
+                        <RiDeleteBin6Line />
+                      </button>
+                    </div>
+                  ))}
 
 
                 </div>
