@@ -1,11 +1,23 @@
 import { PaginationButton } from 'flowbite-react';
-import React from 'react'
+import React, { useState, useMemo } from 'react'
 import { BiCalendar, BiCalendarAlt, BiCalendarCheck, BiChevronDown, BiChevronLeftCircle, BiChevronRight, BiCloudDownload, BiDownload, BiPlus, BiSearch } from 'react-icons/bi'
 import { BsEye } from 'react-icons/bs';
 import { FiEdit3, FiRotateCcw } from 'react-icons/fi'
-import { Eye, Edit3, Calendar, Download, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import {
+  HiOutlineEye,
+  HiOutlinePencilSquare,
+  HiOutlineFolder,
+  HiOutlineChevronLeft,
+  HiOutlineChevronRight,
+} from "react-icons/hi2";
+import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
+import Cookies from 'js-cookie';
+
 const CaseMange = () => {
+  const [activeTab, setActiveTab] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
   const filterOptions = [
     { label: 'الحالة' },
     { label: 'نوع القضية' },
@@ -13,29 +25,111 @@ const CaseMange = () => {
     { label: 'المحامي' },
   ];
   const tabs = [
-    { name: 'كل القضايا', count: null, active: true },
-    { name: 'النشطة', count: null },
-    { name: 'المؤجلة', count: null },
-    { name: 'المغلقة', count: null },
-    { name: 'المتأخرة', count: 12 },
+    { id: "all", label: "كل القضايا" },
+    { id: "active", label: "النشطة" },
+    { id: "pending", label: "المؤجلة" },
+    { id: "closed", label: "المغلقة" },
+    { id: "archived", label: "المؤرشفة" },
   ];
 
-  const cases = [
-    { id: '#CAS-2024-0412', client: 'شركة تشييد', subClient: 'سجل تجاري: 1010XXXXXX', type: 'نزاع تجاري', court: 'المحكمة الاقتصادية', date: '12 مارس 2024', time: '09:30 صباحاً', status: 'نشطة', statusColor: 'bg-green-500/10 text-green-500' },
-    { id: '#CAS-2024-0398', client: 'عبدالعزيز جاويش', subClient: 'هوية: 1092XXXXXX', type: 'جنائي - تزييف', court: 'المحكمة الجزائية', date: 'لم يحدد بعد', time: '', status: 'مؤجلة', statusColor: 'bg-blue-500/10 text-blue-500' },
-    { id: '#CAS-2023-1102', client: 'فتحي منصور', subClient: 'مؤسسة مالية', type: 'مطالبات مالية', court: 'محكمة التنفيذ', date: 'منتهية', time: '', status: 'مغلقة', statusColor: 'bg-gray-500/10 text-gray-500' },
+  const casesData = [
+    {
+      id: "#CAS-2024-0412",
+      client: "شركة تشييد",
+      clientId: "1010XXXXXX",
+      type: "نزاع تجاري",
+      court: "المحكمة الاقتصادية",
+      nextSession: "12 مارس 2024",
+      nextSessionTime: "09:30 صباحًا",
+      status: "نشطة",
+      tab: "active",
+    },
+    {
+      id: "#CAS-2024-0398",
+      client: "عبدالعزيز وائس",
+      clientId: "1950XXXXXX",
+      type: "جنائي - تزوير",
+      court: "المحكمة الجزائية",
+      nextSession: "لم يحدد بعد",
+      nextSessionTime: "",
+      status: "مؤجلة",
+      tab: "pending",
+    },
+    {
+      id: "#CAS-2023-1102",
+      client: "فتحي منصور",
+      clientId: "مؤسسة مالية",
+      type: "مطالبات مالية",
+      court: "محكمة التنفيذ",
+      nextSession: "منتهية",
+      nextSessionTime: "",
+      status: "مغلقة",
+      tab: "closed",
+    },
+    {
+      id: "#CAS-2024-0501",
+      client: "سالم القحطاني",
+      clientId: "1023XXXXXX",
+      type: "قضية عمالية",
+      court: "المحكمة العمالية",
+      nextSession: "18 مارس 2024",
+      nextSessionTime: "11:00 صباحًا",
+      status: "نشطة",
+      tab: "active",
+    },
+    {
+      id: "#CAS-2022-0881",
+      client: "محمد العتيبي",
+      clientId: "1078XXXXXX",
+      type: "تنفيذي",
+      court: "محكمة التنفيذ",
+      nextSession: "مؤرشفة",
+      nextSessionTime: "",
+      status: "مؤرشفة",
+      tab: "archived",
+    },
   ];
-  const ActionButton = ({ icon }) => (
-    <button className="p-2 border border-gray-700 rounded-md text-yellow-600 hover:bg-yellow-600 hover:text-white transition-all">
-      {icon}
-    </button>
-  );
+
+
+  const filteredCases = useMemo(() => {
+    if (activeTab === "all") return casesData;
+    return casesData.filter((item) => item.tab === activeTab);
+  }, [activeTab]);
+
+  const getStatusStyle = (status) => {
+    switch (status) {
+      case "نشطة":
+        return "border border-[#6f5a22] bg-[#2a2411] text-[#d7b14a]";
+      case "مؤجلة":
+        return "border border-[#31445c] bg-[#162538] text-[#9db2ca]";
+      case "مغلقة":
+        return "border border-[#28364d] bg-[#111c2c] text-[#7f90a8]";
+      case "مؤرشفة":
+        return "border border-[#4a2c33] bg-[#1d1419] text-[#c67886]";
+      default:
+        return "border border-[#31445c] bg-[#162538] text-[#9db2ca]";
+    }
+  };
+  function getAllCases() {
+    return axios.get("https://lawersystem-production.up.railway.app/LegalCase/", {
+      headers: {
+        authorization: `Bearer ${Cookies.get("token")}`,
+
+      }
+    })
+  }
+  const{data : Cases } =useQuery({
+    queryKey:["Cases"],
+    queryFn:getAllCases
+  })
+  console.log(Cases?.data?.cases);
+  
   return (
     <>
       <div className="w-full bg-[#0f172a] p-8 flex flex-row-reverse items-center justify-between font-sans" dir="rtl">
         {/* Right Side: Buttons */}
         <div className="flex items-center gap-4">
-          
+
 
           {/* Export Button */}
           <button className="flex items-center gap-2 border border-gray-700 text-gray-300 px-4 py-2.5 rounded-lg hover:bg-gray-800 transition-colors">
@@ -45,12 +139,12 @@ const CaseMange = () => {
 
           {/* Add New Case Button */}
           <Link to={"/CaseMangemnt/AddNewCase"}>
-          
-          <button 
-           className="flex items-center cursor-pointer gap-2 bg-[#c5a059] hover:bg-[#b38f4d] text-[#0f172a] px-6 py-2.5 rounded-lg font-bold transition-colors shadow-lg">
-            <BiPlus size={20} />
-            <span>إضافة قضية جديدة</span>
-          </button>
+
+            <button
+              className="flex items-center cursor-pointer gap-2 bg-[#c5a059] hover:bg-[#b38f4d] text-[#0f172a] px-6 py-2.5 rounded-lg font-bold transition-colors shadow-lg">
+              <BiPlus size={20} />
+              <span>إضافة قضية جديدة</span>
+            </button>
           </Link>
         </div>
 
@@ -70,7 +164,7 @@ const CaseMange = () => {
         <div className="flex flex-wrap items-center gap-3 bg-[#111827]/50 p-4 rounded-xl border border-gray-800">
 
           {/* Search Input */}
-          <div className="relative flex-grow max-w-2xl">
+          <div className="relative grow max-w-2xl">
             <span className="absolute inset-y-0 left-3 flex items-center pr-3 pointer-events-none">
               <BiSearch size={18} className="text-gray-500" />
             </span>
@@ -99,8 +193,194 @@ const CaseMange = () => {
         </div>
       </div>
       {/* name of each tab group should be unique */}
-     
 
+      <div className="min-h-screen bg-[#061224] p-6 text-white" dir="rtl">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-4 border-b border-[#1a2d47] pb-4">
+            <div className="flex flex-wrap items-center gap-2">
+              {tabs.map((tab) => {
+                const isActive = activeTab === tab.id;
+
+                return (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => {
+                      setActiveTab(tab.id);
+                      setCurrentPage(1);
+                    }}
+                    className={`relative rounded-md px-3 py-2 text-sm font-medium transition ${isActive
+                      ? "text-[#d7b14a]"
+                      : "text-[#7f93ad] hover:text-white"
+                      }`}
+                  >
+                    {tab.label}
+                    {isActive && (
+                      <span className="absolute bottom-[-17px] right-0 h-[2px] w-full bg-[#d7b14a]" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="flex items-center gap-2 text-sm text-[#7f93ad]">
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#3a1820] text-[10px] text-[#ff6b81]">
+                3
+              </span>
+            </div>
+          </div>
+
+          <div className="overflow-hidden rounded-2xl border border-[#1a2d47] bg-[#09172b] shadow-[0_10px_30px_rgba(0,0,0,0.25)]">
+            <div className="overflow-x-auto">
+              <table className="min-w-full border-collapse">
+                <thead>
+                  <tr className="border-b border-[#1a2d47] text-xs text-[#7f93ad]">
+                    <th className="px-6 py-4 text-right font-medium">رقم القضية</th>
+                    <th className="px-6 py-4 text-right font-medium">العميل</th>
+                    <th className="px-6 py-4 text-right font-medium">نوع القضية</th>
+                    <th className="px-6 py-4 text-right font-medium">المحكمة</th>
+                    <th className="px-6 py-4 text-right font-medium">الجلسة القادمة</th>
+                    <th className="px-6 py-4 text-right font-medium">الحالة</th>
+                    <th className="px-6 py-4 text-right font-medium">الإجراءات</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {filteredCases.length > 0 ? (
+                    filteredCases.map((item, index) => (
+                      <tr
+                        key={`${item.id}-${index}`}
+                        className="border-b border-[#13243b] text-sm text-[#dbe7f5] last:border-b-0"
+                      >
+                        <td className="px-6 py-5 font-semibold text-[#d7b14a]">
+                          {item.id}
+                        </td>
+
+                        <td className="px-6 py-5">
+                          <div className="font-medium text-white">{item.client}</div>
+                          <div className="mt-1 text-xs text-[#6f86a6]">
+                            {item.clientId}
+                          </div>
+                        </td>
+
+                        <td className="px-6 py-5 text-[#c8d6e8]">{item.type}</td>
+                        <td className="px-6 py-5 text-[#c8d6e8]">{item.court}</td>
+
+                        <td className="px-6 py-5">
+                          <div className="text-[#dbe7f5]">{item.nextSession}</div>
+                          {item.nextSessionTime ? (
+                            <div className="mt-1 text-xs text-[#6f86a6]">
+                              {item.nextSessionTime}
+                            </div>
+                          ) : null}
+                        </td>
+
+                        <td className="px-6 py-5">
+                          <span
+                            className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${getStatusStyle(
+                              item.status
+                            )}`}
+                          >
+                            {item.status}
+                          </span>
+                        </td>
+
+                        <td className="px-6 py-5">
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              className="flex h-8 w-8 items-center justify-center rounded-md border border-[#2c425f] bg-[#0b1c35] text-[#d7b14a] transition hover:bg-[#112541]"
+                            >
+                              <HiOutlineEye size={16} />
+                            </button>
+
+                            <button
+                              type="button"
+                              className="flex h-8 w-8 items-center justify-center rounded-md border border-[#2c425f] bg-[#0b1c35] text-[#d7b14a] transition hover:bg-[#112541]"
+                            >
+                              <HiOutlinePencilSquare size={16} />
+                            </button>
+
+                            <button
+                              type="button"
+                              className="flex h-8 w-8 items-center justify-center rounded-md border border-[#2c425f] bg-[#0b1c35] text-[#d7b14a] transition hover:bg-[#112541]"
+                            >
+                              <HiOutlineFolder size={16} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan="7"
+                        className="px-6 py-10 text-center text-sm text-[#7f93ad]"
+                      >
+                        لا توجد قضايا في هذا التبويب
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[#1a2d47] px-6 py-4">
+              <p className="text-xs text-[#6f86a6]">
+                عرض 1 إلى {filteredCases.length} من أصل {casesData.length} قضية
+              </p>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                  className="flex h-8 w-8 items-center justify-center rounded-md border border-[#1f3552] bg-[#0a1830] text-[#7f93ad] transition hover:text-white"
+                >
+                  <HiOutlineChevronRight size={16} />
+                </button>
+
+                <button
+                  type="button"
+                  className="flex h-8 min-w-[32px] items-center justify-center rounded-md bg-[#d7b14a] px-3 text-xs font-bold text-[#0a1322]"
+                >
+                  1
+                </button>
+
+                <button
+                  type="button"
+                  className="flex h-8 min-w-[32px] items-center justify-center rounded-md border border-[#1f3552] bg-[#0a1830] px-3 text-xs text-[#7f93ad] transition hover:text-white"
+                >
+                  2
+                </button>
+
+                <button
+                  type="button"
+                  className="flex h-8 min-w-[32px] items-center justify-center rounded-md border border-[#1f3552] bg-[#0a1830] px-3 text-xs text-[#7f93ad] transition hover:text-white"
+                >
+                  3
+                </button>
+
+                <span className="px-1 text-[#7f93ad]">...</span>
+
+                <button
+                  type="button"
+                  className="flex h-8 min-w-[32px] items-center justify-center rounded-md border border-[#1f3552] bg-[#0a1830] px-3 text-xs text-[#7f93ad] transition hover:text-white"
+                >
+                  44
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setCurrentPage((prev) => prev + 1)}
+                  className="flex h-8 w-8 items-center justify-center rounded-md border border-[#1f3552] bg-[#0a1830] text-[#7f93ad] transition hover:text-white"
+                >
+                  <HiOutlineChevronLeft size={16} />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   )
 }
