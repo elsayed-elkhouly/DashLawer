@@ -20,11 +20,13 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query'
 import ClientProfile from './componts/ClientProfile/ClientProfile'
+import AddNewCase from './componts/AddCase/AddNewCase'
 function App() {
   const router = createBrowserRouter([{
     path: "", element: <Layout />, children: [
       { index: true, element: <ProtectedRoute><Dashbord /></ProtectedRoute> },
       { path: "/CaseMangemnt", element: <ProtectedRoute><CaseMange /></ProtectedRoute> },
+      { path: "/CaseMangemnt/AddNewCase", element: <ProtectedRoute><AddNewCase /></ProtectedRoute> },
       { path: "/TeamMember", element: <ProtectedRoute><Team /></ProtectedRoute> },
       { path: "/Bills", element: <ProtectedRoute><Bills /></ProtectedRoute> },
       { path: "/Calender", element: <ProtectedRoute><Calendar /></ProtectedRoute> },

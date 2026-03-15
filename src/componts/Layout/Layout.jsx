@@ -4,25 +4,27 @@ import SideBar from '../SideBar/SideBar'
 import { Authcontext } from '../../Context/AuthContextProvider'
 
 const Layout = () => {
- const {token} = useContext(Authcontext)
+  const { token } = useContext(Authcontext)
   return (
     <>
-       <div className="flex min-h-screen">
-      
-      {/* المحتوى */}
-      <div className={`${token ? "w-[82%]" : "w-full"} bg-[#0e1a2b]`}>
-        <Outlet />
+      <div className="flex h-screen overflow-hidden">
+
+        <main
+          className={`${token ? "w-[82%]" : "w-full"} bg-[#0e1a2b] h-screen overflow-y-auto`}
+        >
+          <Outlet />
+        </main>
+
+
+        {token && (
+          <aside className="w-[18%] bg-[#101c2e] h-screen sticky top-0 shrink-0">
+            <SideBar />
+          </aside>
+        )}
+
+
       </div>
 
-      {/* الـ Sidebar يظهر بس لو في توكن */}
-      {token && (
-        <div className="w-[18%] bg-[#101c2e] min-h-screen">
-          <SideBar />
-        </div>
-      )}
-
-    </div>
-    
     </>
   )
 }

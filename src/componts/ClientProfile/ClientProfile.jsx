@@ -13,9 +13,12 @@ import { LuClipboardPenLine } from "react-icons/lu";
 import { FaMoneyBills } from "react-icons/fa6";
 import { MdOutlineAccountBalanceWallet } from 'react-icons/md';
 import { RiDeleteBin6Line } from "react-icons/ri";
-
 import toast from 'react-hot-toast';
+
+
+
 const ClientProfile = () => {
+  const [loding, setLoding] = useState(false)
   const { id } = useParams()
   const queryClient = useQueryClient();
   const [file, setFile] = useState(null);
@@ -64,7 +67,7 @@ const ClientProfile = () => {
     );
   }
 
-  // console.log(data?.data?.invoices);
+  
 
 
 
@@ -77,8 +80,9 @@ const ClientProfile = () => {
 
     const formData = new FormData();
     formData.append("file", file);
-
+    setLoding(false)
     try {
+      setLoding(true)
       const res = await axios.post(
         `https://lawersystem-production.up.railway.app/Client/${id}/documents`,
         formData, {
@@ -90,11 +94,18 @@ const ClientProfile = () => {
 
       console.log(res.data);
       toast.success("تم رفع الملف بنجاح");
+      queryClient.invalidateQueries({ queryKey: ["ClientProfile", id] });
       setFile(null);
     } catch (error) {
+      setLoding(false)
       console.error(error);
       toast.error("حصل خطأ أثناء رفع الملف");
-    }
+      ;
+    } finally {
+      setLoding(false);
+
+    };
+
   }
   const documents = data?.data?.client?.documents || [];
 
@@ -124,19 +135,86 @@ const ClientProfile = () => {
         `https://lawersystem-production.up.railway.app/Client/${id}/deleteDocuments`,
         {
           data: {
-            publicId: publicId
+            publicId: publicId,
           },
           headers: {
             authorization: `Bearer ${Cookies.get("token")}`,
-          }
+          },
         }
       );
 
       console.log(res.data);
+      toast.success("تم المسح");
+
+      queryClient.invalidateQueries({ queryKey: ["ClientProfile", id] });
     } catch (error) {
       console.log(error);
+      toast.error("حصل خطأ أثناء المسح");
     }
   }
+
+
+  async function PrintAllInvoic() {
+    try {
+      const res = await axios.get(
+        `https://lawersystem-production.up.railway.app/invoices/client/${id}/print-all`,
+        {
+          responseType: "blob",
+          headers: {
+            authorization: `Bearer ${Cookies.get("token")}`,
+          },
+        }
+      );
+
+      const file = new Blob([res.data], { type: "application/pdf" });
+      const fileURL = window.URL.createObjectURL(file);
+
+      const link = document.createElement("a");
+      link.href = fileURL;
+      link.download = `client-${id}-invoices.pdf`;
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(fileURL);
+
+      toast.success("Download Done ");
+    } catch (error) {
+      console.log(error);
+      toast.error("حصل خطأ أثناء تنزيل الملف");
+    }
+  }
+  async function PrintSingleInvoic(id) {
+    try {
+      const res = await axios.get(
+        `https://lawersystem-production.up.railway.app/invoices/${id}/print`,
+        {
+          responseType: "blob",
+          headers: {
+            authorization: `Bearer ${Cookies.get("token")}`,
+          },
+        }
+      );
+
+      const file = new Blob([res.data], { type: "application/pdf" });
+      const fileURL = window.URL.createObjectURL(file);
+
+      const link = document.createElement("a");
+      link.href = fileURL;
+      link.download = `invoice-${id}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      window.URL.revokeObjectURL(fileURL);
+
+      toast.success("Download Done");
+    } catch (error) {
+      console.log(error);
+      toast.error("حصل خطأ أثناء تنزيل الملف");
+    }
+  }
+
 
   function Card({ icon, title, value, color }) {
     return (
@@ -192,7 +270,7 @@ const ClientProfile = () => {
 
           <Card
             icon={<FaMoneyBills />}
-            title="إجمالي الفواتير"
+            title="  إجمالي الفواتير المدفوعة"
             value={data?.data?.summary?.grandTotalPaid}
           />
 
@@ -218,7 +296,7 @@ const ClientProfile = () => {
                 isSaving={updateMutation.isPending}
               />
               <CaseTable cases={data?.data?.cases} />
-              <InvoicesTable invoices={data?.data?.invoices} />
+              <InvoicesTable invoices={data?.data?.invoices} printAll={PrintAllInvoic} printSingle={PrintSingleInvoic} />
             </div>
             {/* Sidebar */}
             <div className="col-span-3">
@@ -228,11 +306,10 @@ const ClientProfile = () => {
                   <h2 className="text-yellow-400 font-semibold">
                     أرشيف المستندات
                   </h2>
-                  <span className="text-sm">(12)</span>
+
                 </div>
 
                 <div className="space-y-3">
-
                   {documents?.map((doc, index) => (
                     <div
                       key={doc.publicId || index}
@@ -258,6 +335,7 @@ const ClientProfile = () => {
 
 
                 </div>
+
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -268,7 +346,7 @@ const ClientProfile = () => {
                 <button
                   type="button"
                   onClick={() => fileInputRef.current.click()}
-                  className="border border-dashed border-yellow-400 mt-4 w-full py-2 rounded-lg text-yellow-400 hover:bg-amber-200 cursor-pointer"
+                  className="border border-dashed border-yellow-400 mt-4 w-full py-2 rounded-lg text-yellow-400 hover:bg-amber-200 cursor-pointer disabled:opacity-50"
                 >
                   {file ? file.name : "+ رفع ملف جديد"}
                 </button>
@@ -276,10 +354,18 @@ const ClientProfile = () => {
                 {file && (
                   <button
                     type="button"
+                    disabled={loding}
                     onClick={AddDocument}
-                    className="mt-3 w-full py-2 rounded-lg bg-yellow-400 text-black font-semibold cursor-pointer"
+                    className="mt-3 w-full py-2 rounded-lg bg-yellow-400 text-black font-semibold cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
                   >
-                    رفع الملف
+                    {loding ? (
+                      <>
+                        <span className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin"></span>
+                        جاري رفع الملف...
+                      </>
+                    ) : (
+                      "رفع الملف"
+                    )}
                   </button>
                 )}
 

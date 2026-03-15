@@ -9,7 +9,7 @@ import Cookies from 'js-cookie';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { RiDeleteBin6Line } from "react-icons/ri";
-import {Search, SlidersHorizontal,} from "lucide-react";
+import { Search, SlidersHorizontal, } from "lucide-react";
 import Pagination from '../Pagination/Pagination';
 import React, { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
@@ -156,82 +156,82 @@ const Clients = () => {
     }
 
     const addClientMutation = useMutation({
-    mutationFn: AddClient,
-    onSuccess: () => {
-        toast.success("done");
+        mutationFn: AddClient,
+        onSuccess: () => {
+            toast.success("done");
 
-        queryClient.invalidateQueries({ queryKey: ["Stats"] });
-        queryClient.invalidateQueries({ queryKey: ["Clients"] });
-        queryClient.refetchQueries({ queryKey: ["Clients"], type: "active" });
-        
+            queryClient.invalidateQueries({ queryKey: ["Stats"] });
+            queryClient.invalidateQueries({ queryKey: ["Clients"] });
+            queryClient.refetchQueries({ queryKey: ["Clients"], type: "active" });
 
-        document.getElementById("my_modal_5")?.close();
-        reset();
-    },
-    onError: (error) => {
-        // console.log("Full error:", error);
-        // console.log("Error response:", error.response);
-        // console.log("Error data:", error.response?.data);
-        // console.log("Error status:", error.response?.status);
-        toast.error(error.response?.data?.message);
-    },
-});
+
+            document.getElementById("my_modal_5")?.close();
+            reset();
+        },
+        onError: (error) => {
+            // console.log("Full error:", error);
+            // console.log("Error response:", error.response);
+            // console.log("Error data:", error.response?.data);
+            // console.log("Error status:", error.response?.status);
+            toast.error(error.response?.data?.message);
+        },
+    });
     const onSubmit = (data) => {
         addClientMutation.mutate(data);
     }
 
     async function deleteClient(id) {
-    try {
-        console.log("Deleting id:", id);
+        try {
+            console.log("Deleting id:", id);
 
-        const res = await axios.delete(
-            `https://lawersystem-production.up.railway.app/Client/${id}`,
-            {
-                headers: {
-                    authorization: `Bearer ${Cookies.get("token")}`,
-                },
-            }
-        );
+            const res = await axios.delete(
+                `https://lawersystem-production.up.railway.app/Client/${id}`,
+                {
+                    headers: {
+                        authorization: `Bearer ${Cookies.get("token")}`,
+                    },
+                }
+            );
 
-        console.log("Delete response:", res.data);
-        return res.data;
-    } catch (error) {
-        console.log("Delete error:", error);
-        console.log("Delete error response:", error.response);
-        throw error;
+            console.log("Delete response:", res.data);
+            return res.data;
+        } catch (error) {
+            console.log("Delete error:", error);
+            console.log("Delete error response:", error.response);
+            throw error;
+        }
     }
-}
-    
+
     const deleteMutation = useMutation({
-    mutationFn: deleteClient,
+        mutationFn: deleteClient,
 
-    onSuccess: () => {
-        toast.success("Client deleted successfully");
+        onSuccess: () => {
+            toast.success("Client deleted successfully");
 
-       queryClient.invalidateQueries({ queryKey: ["Stats"] });
-        queryClient.invalidateQueries({ queryKey: ["Clients"] });
+            queryClient.invalidateQueries({ queryKey: ["Stats"] });
+            queryClient.invalidateQueries({ queryKey: ["Clients"] });
 
-        queryClient.refetchQueries({ queryKey: ["Stats"], type: "active" });
-        queryClient.refetchQueries({ queryKey: ["Clients"], type: "active" });
-    },
+            queryClient.refetchQueries({ queryKey: ["Stats"], type: "active" });
+            queryClient.refetchQueries({ queryKey: ["Clients"], type: "active" });
+        },
 
-    onError: (error) => {
-        console.log("Delete mutation error:", error);
-        toast.error("Something went wrong while deleting");
-    },
-});
+        onError: (error) => {
+            console.log("Delete mutation error:", error);
+            toast.error("Something went wrong while deleting");
+        },
+    });
 
-const handleDelete = (id) => {
-    deleteMutation.mutate(id);
-};
+    const handleDelete = (id) => {
+        deleteMutation.mutate(id);
+    };
 
     const inputClass =
         "h-[38px] w-full rounded-full border border-white/5 bg-[#11243a] px-5 text-sm text-white outline-none placeholder:text-slate-500 transition focus:border-[#d3a63f] focus:ring-2 focus:ring-[#d3a63f]/20";
 
     const errorClass = "mt-2 text-xs text-red-400";
-    // if (isLoading) {
-    //     return <div className="text-white p-6 flex justify-center items-center"> <span className="loading loading-infinity   w-[50%]"></span></div>;
-    // }
+    if (isLoading) {
+        return <div className="text-white p-6 flex justify-center items-center"> <span className="loading loading-infinity   w-[50%]"></span></div>;
+    }
 
     if (isError) {
         return <div className="text-red-400 p-6">حصل خطأ أثناء تحميل العملاء</div>;
@@ -256,7 +256,7 @@ const handleDelete = (id) => {
                             <div className="modal-box  w-[92%] max-w-155 rounded-none border-0 bg-transparent p-0 shadow-none">
                                 <div
                                     dir="rtl"
-                                    className="overflow-hidden rounded-[6px] border border-white/10 bg-[#081a2f] text-white shadow-[0_20px_60px_rgba(0,0,0,0.45)]"
+                                    className="overflow-hidden rounded-md border border-white/10 bg-[#081a2f] text-white shadow-[0_20px_60px_rgba(0,0,0,0.45)]"
                                 >
                                     <div
 
@@ -356,7 +356,7 @@ const handleDelete = (id) => {
                                                         +01
                                                     </span>
                                                     <input
-                                                        className="h-[38px] w-full rounded-l-full bg-transparent px-4 text-sm text-white outline-none placeholder:text-slate-400"
+                                                        className="h-9.5 w-full rounded-l-full bg-transparent px-4 text-sm text-white outline-none placeholder:text-slate-400"
                                                         placeholder="5xxxxxxxx"
                                                         {...register("phone", {
                                                             required: "رقم الهاتف مطلوب",
@@ -378,7 +378,7 @@ const handleDelete = (id) => {
                                                 </label>
                                                 <input
                                                     className={inputClass}
-                                                    placeholder="الجيزة - كفر الزواد - سيدي شحاتة"
+                                                   
                                                     {...register("address", {
                                                         minLength: {
                                                             value: 5,
@@ -401,7 +401,7 @@ const handleDelete = (id) => {
                                                 <button
                                                     type="button"
                                                     onClick={() => setValue("type", "شركة", { shouldValidate: true })}
-                                                    className={`flex h-[48px] items-center justify-center gap-2 rounded-full border px-4 text-sm font-semibold transition ${clientType === "شركة"
+                                                    className={`flex h-12 items-center justify-center gap-2 rounded-full border px-4 text-sm font-semibold transition ${clientType === "شركة"
                                                         ? "border-[#d3a63f] bg-[#d3a63f]/10 text-[#f1c55e]"
                                                         : "border-white/10 bg-[#11243a] text-white hover:border-white/20"
                                                         }`}
@@ -415,7 +415,7 @@ const handleDelete = (id) => {
                                                     onClick={() =>
                                                         setValue("type", "فرد", { shouldValidate: true })
                                                     }
-                                                    className={`flex h-[48px] items-center justify-center gap-2 rounded-full border px-4 text-sm font-semibold transition ${clientType === "فرد"
+                                                    className={`flex h-12 items-center justify-center gap-2 rounded-full border px-4 text-sm font-semibold transition ${clientType === "فرد"
                                                         ? "border-[#d3a63f] bg-[#d3a63f]/10 text-[#f1c55e]"
                                                         : "border-white/10 bg-[#11243a] text-white hover:border-white/20"
                                                         }`}
@@ -440,7 +440,7 @@ const handleDelete = (id) => {
                                             </label>
                                             <textarea
                                                 rows={3}
-                                                className="w-full rounded-[24px] border border-white/5 bg-[#11243a] px-4 py-3 text-sm text-white outline-none placeholder:text-slate-400 transition focus:border-[#d3a63f] focus:ring-2 focus:ring-[#d3a63f]/20"
+                                                className="w-full rounded-3xl border border-white/5 bg-[#11243a] px-4 py-3 text-sm text-white outline-none placeholder:text-slate-400 transition focus:border-[#d3a63f] focus:ring-2 focus:ring-[#d3a63f]/20"
                                                 placeholder="أي تفاصيل مهمة تخص العميل..."
                                                 {...register("notes", {
                                                     maxLength: {
@@ -695,7 +695,7 @@ const handleDelete = (id) => {
                                                     <div dir="ltr" className="ml-10 flex items-center gap-3 text-slate-400 cursor-pointer ">
                                                         <button onClick={() => handleDelete(client.id)}
                                                             className="transition hover:text-white" aria-label="المزيد">
-                                                            <RiDeleteBin6Line  className="h-4 w-4 hover:text-red-500 duration-300 cursor-pointer" />
+                                                            <RiDeleteBin6Line className="h-4 w-4 hover:text-red-500 duration-300 cursor-pointer" />
                                                         </button>
 
                                                         <Link to={`/Clients/ClientProfile/${client._id}`}>

@@ -4,6 +4,7 @@ import { BiCalendar, BiCalendarAlt, BiCalendarCheck, BiChevronDown, BiChevronLef
 import { BsEye } from 'react-icons/bs';
 import { FiEdit3, FiRotateCcw } from 'react-icons/fi'
 import { Eye, Edit3, Calendar, Download, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 const CaseMange = () => {
   const filterOptions = [
     { label: 'الحالة' },
@@ -34,17 +35,23 @@ const CaseMange = () => {
       <div className="w-full bg-[#0f172a] p-8 flex flex-row-reverse items-center justify-between font-sans" dir="rtl">
         {/* Right Side: Buttons */}
         <div className="flex items-center gap-4">
-          {/* Add New Case Button */}
-          <button className="flex items-center gap-2 bg-[#c5a059] hover:bg-[#b38f4d] text-[#0f172a] px-6 py-2.5 rounded-lg font-bold transition-colors shadow-lg">
-            <BiPlus size={20} />
-            <span>إضافة قضية جديدة</span>
-          </button>
+          
 
           {/* Export Button */}
           <button className="flex items-center gap-2 border border-gray-700 text-gray-300 px-4 py-2.5 rounded-lg hover:bg-gray-800 transition-colors">
             <BiDownload size={18} />
             <span className="text-sm">تصدير PDF / Excel</span>
           </button>
+
+          {/* Add New Case Button */}
+          <Link to={"/CaseMangemnt/AddNewCase"}>
+          
+          <button 
+           className="flex items-center cursor-pointer gap-2 bg-[#c5a059] hover:bg-[#b38f4d] text-[#0f172a] px-6 py-2.5 rounded-lg font-bold transition-colors shadow-lg">
+            <BiPlus size={20} />
+            <span>إضافة قضية جديدة</span>
+          </button>
+          </Link>
         </div>
 
 
@@ -92,341 +99,7 @@ const CaseMange = () => {
         </div>
       </div>
       {/* name of each tab group should be unique */}
-      <div className="tabs tabs-border gap-2 pt-10 py-3 " dir="rtl">
-        <input type="radio" name="my_tabs_2" className="tab gap-5 text-[#C9A14A] ms-10 " aria-label="كل القضايا" defaultChecked />
-        <div className="tab-content p-5 "><div className="w-full bg-[#0B1120] text-gray-300 p-6 rounded-xl font-sans" dir="rtl">
-          <div className="overflow-x-auto">
-            <table className="w-full text-right border-separate border-spacing-y-4">
-              <thead>
-                <tr className="text-gray-500 text-sm border-b border-gray-800">
-                  <th className="pb-4 font-medium">رقم القضية</th>
-                  <th className="pb-4 font-medium">العميل</th>
-                  <th className="pb-4 font-medium">نوع القضية</th>
-                  <th className="pb-4 font-medium">المحكمة</th>
-                  <th className="pb-4 font-medium">الجلسة القادمة</th>
-                  <th className="pb-4 font-medium">الحالة</th>
-                  <th className="pb-4 font-medium text-center">الإجراءات</th>
-                </tr>
-              </thead>
-              <tbody>
-                {cases.map((item, index) => (
-                  <tr key={index} className="group hover:bg-white/5 transition-colors">
-                    <td className="py-4 text-yellow-500 font-mono text-sm">{item.id}</td>
-                    <td className="py-4">
-                      <div className="font-bold text-white">{item.client}</div>
-                      <div className="text-xs text-gray-500">{item.subClient}</div>
-                    </td>
-                    <td className="py-4">{item.type}</td>
-                    <td className="py-4">{item.court}</td>
-                    <td className="py-4">
-                      <div className="flex items-center gap-2">
-                        {item.nextSession}
-                        {item.time && <BiCalendarCheck size={14} className="text-yellow-600" />}
-                      </div>
-                      {item.time && <div className="text-xs text-gray-500">{item.time}</div>}
-                    </td>
-                    <td className="py-4">
-                      <span className={`px-4 py-1 rounded-full text-xs ${item.statusColor}`}>
-                        {item.status}
-                      </span>
-                    </td>
-                    <td className="py-4">
-                      <div className="flex justify-center gap-3">
-                        <ActionButton icon={<Eye size={18} />} />
-                        <ActionButton icon={<Edit3 size={18} />} />
-                        <ActionButton icon={<Calendar size={18} />} />
-                        <ActionButton icon={<Download size={18} />} />
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Pagination */}
-          <div className="flex items-center justify-between mt-8 text-sm text-gray-500">
-            <div className="flex items-center gap-2">
-              <button className="p-1 border border-gray-700 rounded hover:bg-gray-800"><ChevronRight size={16} /></button>
-              <button className="px-3 py-1 bg-yellow-600 text-black font-bold rounded">1</button>
-              <button className="px-3 py-1 hover:bg-gray-800 rounded">2</button>
-              <button className="px-3 py-1 hover:bg-gray-800 rounded">3</button>
-              <span className="px-2">...</span>
-              <button className="px-3 py-1 hover:bg-gray-800 rounded">44</button>
-              <button className="p-1 border border-gray-700 rounded hover:bg-gray-800"><ChevronLeft size={16} /></button>
-            </div>
-            <div>عرض 1 إلى 10 من أصل 432 قضية</div>
-          </div>
-        </div>
-        </div>
-  
-  <input type="radio" name="my_tabs_2" className="tab gap-5 text-[#C9A14A]  " aria-label="النشطة"  />
-        <div className="tab-content p-5 "><div className="w-full bg-[#0B1120] text-gray-300 p-6 rounded-xl font-sans" dir="rtl">
-          <div className="overflow-x-auto">
-            <table className="w-full text-right border-separate border-spacing-y-4">
-              <thead>
-                <tr className="text-gray-500 text-sm border-b border-gray-800">
-                  <th className="pb-4 font-medium">رقم القضية</th>
-                  <th className="pb-4 font-medium">العميل</th>
-                  <th className="pb-4 font-medium">نوع القضية</th>
-                  <th className="pb-4 font-medium">المحكمة</th>
-                  <th className="pb-4 font-medium">الجلسة القادمة</th>
-                  <th className="pb-4 font-medium">الحالة</th>
-                  <th className="pb-4 font-medium text-center">الإجراءات</th>
-                </tr>
-              </thead>
-              <tbody>
-                {cases.map((item, index) => (
-                  <tr key={index} className="group hover:bg-white/5 transition-colors">
-                    <td className="py-4 text-yellow-500 font-mono text-sm">{item.id}</td>
-                    <td className="py-4">
-                      <div className="font-bold text-white">{item.client}</div>
-                      <div className="text-xs text-gray-500">{item.subClient}</div>
-                    </td>
-                    <td className="py-4">{item.type}</td>
-                    <td className="py-4">{item.court}</td>
-                    <td className="py-4">
-                      <div className="flex items-center gap-2">
-                        {item.nextSession}
-                        {item.time && <BiCalendarCheck size={14} className="text-yellow-600" />}
-                      </div>
-                      {item.time && <div className="text-xs text-gray-500">{item.time}</div>}
-                    </td>
-                    <td className="py-4">
-                      <span className={`px-4 py-1 rounded-full text-xs ${item.statusColor}`}>
-                        {item.status}
-                      </span>
-                    </td>
-                    <td className="py-4">
-                      <div className="flex justify-center gap-3">
-                        <ActionButton icon={<Eye size={18} />} />
-                        <ActionButton icon={<Edit3 size={18} />} />
-                        <ActionButton icon={<Calendar size={18} />} />
-                        <ActionButton icon={<Download size={18} />} />
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Pagination */}
-          <div className="flex items-center justify-between mt-8 text-sm text-gray-500">
-            <div className="flex items-center gap-2">
-              <button className="p-1 border border-gray-700 rounded hover:bg-gray-800"><ChevronRight size={16} /></button>
-              <button className="px-3 py-1 bg-yellow-600 text-black font-bold rounded">1</button>
-              <button className="px-3 py-1 hover:bg-gray-800 rounded">2</button>
-              <button className="px-3 py-1 hover:bg-gray-800 rounded">3</button>
-              <span className="px-2">...</span>
-              <button className="px-3 py-1 hover:bg-gray-800 rounded">44</button>
-              <button className="p-1 border border-gray-700 rounded hover:bg-gray-800"><ChevronLeft size={16} /></button>
-            </div>
-            <div>عرض 1 إلى 10 من أصل 432 قضية</div>
-          </div>
-        </div>
-        </div>
-  <input type="radio" name="my_tabs_2" className="tab gap-5 text-[#C9A14A]  " aria-label="المؤجلة"  />
-        <div className="tab-content p-5 "><div className="w-full bg-[#0B1120] text-gray-300 p-6 rounded-xl font-sans" dir="rtl">
-          <div className="overflow-x-auto">
-            <table className="w-full text-right border-separate border-spacing-y-4">
-              <thead>
-                <tr className="text-gray-500 text-sm border-b border-gray-800">
-                  <th className="pb-4 font-medium">رقم القضية</th>
-                  <th className="pb-4 font-medium">العميل</th>
-                  <th className="pb-4 font-medium">نوع القضية</th>
-                  <th className="pb-4 font-medium">المحكمة</th>
-                  <th className="pb-4 font-medium">الجلسة القادمة</th>
-                  <th className="pb-4 font-medium">الحالة</th>
-                  <th className="pb-4 font-medium text-center">الإجراءات</th>
-                </tr>
-              </thead>
-              <tbody>
-                {cases.map((item, index) => (
-                  <tr key={index} className="group hover:bg-white/5 transition-colors">
-                    <td className="py-4 text-yellow-500 font-mono text-sm">{item.id}</td>
-                    <td className="py-4">
-                      <div className="font-bold text-white">{item.client}</div>
-                      <div className="text-xs text-gray-500">{item.subClient}</div>
-                    </td>
-                    <td className="py-4">{item.type}</td>
-                    <td className="py-4">{item.court}</td>
-                    <td className="py-4">
-                      <div className="flex items-center gap-2">
-                        {item.nextSession}
-                        {item.time && <BiCalendarCheck size={14} className="text-yellow-600" />}
-                      </div>
-                      {item.time && <div className="text-xs text-gray-500">{item.time}</div>}
-                    </td>
-                    <td className="py-4">
-                      <span className={`px-4 py-1 rounded-full text-xs ${item.statusColor}`}>
-                        {item.status}
-                      </span>
-                    </td>
-                    <td className="py-4">
-                      <div className="flex justify-center gap-3">
-                        <ActionButton icon={<Eye size={18} />} />
-                        <ActionButton icon={<Edit3 size={18} />} />
-                        <ActionButton icon={<Calendar size={18} />} />
-                        <ActionButton icon={<Download size={18} />} />
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Pagination */}
-          <div className="flex items-center justify-between mt-8 text-sm text-gray-500">
-            <div className="flex items-center gap-2">
-              <button className="p-1 border border-gray-700 rounded hover:bg-gray-800"><ChevronRight size={16} /></button>
-              <button className="px-3 py-1 bg-yellow-600 text-black font-bold rounded">1</button>
-              <button className="px-3 py-1 hover:bg-gray-800 rounded">2</button>
-              <button className="px-3 py-1 hover:bg-gray-800 rounded">3</button>
-              <span className="px-2">...</span>
-              <button className="px-3 py-1 hover:bg-gray-800 rounded">44</button>
-              <button className="p-1 border border-gray-700 rounded hover:bg-gray-800"><ChevronLeft size={16} /></button>
-            </div>
-            <div>عرض 1 إلى 10 من أصل 432 قضية</div>
-          </div>
-        </div>
-        </div>
-  <input type="radio" name="my_tabs_2" className="tab gap-5 text-[#C9A14A]  " aria-label="المغلقة"  />
-        <div className="tab-content p-5 "><div className="w-full bg-[#0B1120] text-gray-300 p-6 rounded-xl font-sans" dir="rtl">
-          <div className="overflow-x-auto">
-            <table className="w-full text-right border-separate border-spacing-y-4">
-              <thead>
-                <tr className="text-gray-500 text-sm border-b border-gray-800">
-                  <th className="pb-4 font-medium">رقم القضية</th>
-                  <th className="pb-4 font-medium">العميل</th>
-                  <th className="pb-4 font-medium">نوع القضية</th>
-                  <th className="pb-4 font-medium">المحكمة</th>
-                  <th className="pb-4 font-medium">الجلسة القادمة</th>
-                  <th className="pb-4 font-medium">الحالة</th>
-                  <th className="pb-4 font-medium text-center">الإجراءات</th>
-                </tr>
-              </thead>
-              <tbody>
-                {cases.map((item, index) => (
-                  <tr key={index} className="group hover:bg-white/5 transition-colors">
-                    <td className="py-4 text-yellow-500 font-mono text-sm">{item.id}</td>
-                    <td className="py-4">
-                      <div className="font-bold text-white">{item.client}</div>
-                      <div className="text-xs text-gray-500">{item.subClient}</div>
-                    </td>
-                    <td className="py-4">{item.type}</td>
-                    <td className="py-4">{item.court}</td>
-                    <td className="py-4">
-                      <div className="flex items-center gap-2">
-                        {item.nextSession}
-                        {item.time && <BiCalendarCheck size={14} className="text-yellow-600" />}
-                      </div>
-                      {item.time && <div className="text-xs text-gray-500">{item.time}</div>}
-                    </td>
-                    <td className="py-4">
-                      <span className={`px-4 py-1 rounded-full text-xs ${item.statusColor}`}>
-                        {item.status}
-                      </span>
-                    </td>
-                    <td className="py-4">
-                      <div className="flex justify-center gap-3">
-                        <ActionButton icon={<Eye size={18} />} />
-                        <ActionButton icon={<Edit3 size={18} />} />
-                        <ActionButton icon={<Calendar size={18} />} />
-                        <ActionButton icon={<Download size={18} />} />
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Pagination */}
-          <div className="flex items-center justify-between mt-8 text-sm text-gray-500">
-            <div className="flex items-center gap-2">
-              <button className="p-1 border border-gray-700 rounded hover:bg-gray-800"><ChevronRight size={16} /></button>
-              <button className="px-3 py-1 bg-yellow-600 text-black font-bold rounded">1</button>
-              <button className="px-3 py-1 hover:bg-gray-800 rounded">2</button>
-              <button className="px-3 py-1 hover:bg-gray-800 rounded">3</button>
-              <span className="px-2">...</span>
-              <button className="px-3 py-1 hover:bg-gray-800 rounded">44</button>
-              <button className="p-1 border border-gray-700 rounded hover:bg-gray-800"><ChevronLeft size={16} /></button>
-            </div>
-            <div>عرض 1 إلى 10 من أصل 432 قضية</div>
-          </div>
-        </div>
-        </div>
-  <input type="radio" name="my_tabs_2" className="tab gap-5 text-[#C9A14A]  " aria-label=" المتأخرة "  />
-        <div className="tab-content p-5 "><div className="w-full bg-[#0B1120] text-gray-300 p-6 rounded-xl font-sans" dir="rtl">
-          <div className="overflow-x-auto">
-            <table className="w-full text-right border-separate border-spacing-y-4">
-              <thead>
-                <tr className="text-gray-500 text-sm border-b border-gray-800">
-                  <th className="pb-4 font-medium">رقم القضية</th>
-                  <th className="pb-4 font-medium">العميل</th>
-                  <th className="pb-4 font-medium">نوع القضية</th>
-                  <th className="pb-4 font-medium">المحكمة</th>
-                  <th className="pb-4 font-medium">الجلسة القادمة</th>
-                  <th className="pb-4 font-medium">الحالة</th>
-                  <th className="pb-4 font-medium text-center">الإجراءات</th>
-                </tr>
-              </thead>
-              <tbody>
-                {cases.map((item, index) => (
-                  <tr key={index} className="group hover:bg-white/5 transition-colors">
-                    <td className="py-4 text-yellow-500 font-mono text-sm">{item.id}</td>
-                    <td className="py-4">
-                      <div className="font-bold text-white">{item.client}</div>
-                      <div className="text-xs text-gray-500">{item.subClient}</div>
-                    </td>
-                    <td className="py-4">{item.type}</td>
-                    <td className="py-4">{item.court}</td>
-                    <td className="py-4">
-                      <div className="flex items-center gap-2">
-                        {item.nextSession}
-                        {item.time && <BiCalendarCheck size={14} className="text-yellow-600" />}
-                      </div>
-                      {item.time && <div className="text-xs text-gray-500">{item.time}</div>}
-                    </td>
-                    <td className="py-4">
-                      <span className={`px-4 py-1 rounded-full text-xs ${item.statusColor}`}>
-                        {item.status}
-                      </span>
-                    </td>
-                    <td className="py-4">
-                      <div className="flex justify-center gap-3">
-                        <ActionButton icon={<Eye size={18} />} />
-                        <ActionButton icon={<Edit3 size={18} />} />
-                        <ActionButton icon={<Calendar size={18} />} />
-                        <ActionButton icon={<Download size={18} />} />
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Pagination */}
-          <div className="flex items-center justify-between mt-8 text-sm text-gray-500">
-            <div className="flex items-center gap-2">
-              <button className="p-1 border border-gray-700 rounded hover:bg-gray-800"><ChevronRight size={16} /></button>
-              <button className="px-3 py-1 bg-yellow-600 text-black font-bold rounded">1</button>
-              <button className="px-3 py-1 hover:bg-gray-800 rounded">2</button>
-              <button className="px-3 py-1 hover:bg-gray-800 rounded">3</button>
-              <span className="px-2">...</span>
-              <button className="px-3 py-1 hover:bg-gray-800 rounded">44</button>
-              <button className="p-1 border border-gray-700 rounded hover:bg-gray-800"><ChevronLeft size={16} /></button>
-            </div>
-            <div>عرض 1 إلى 10 من أصل 432 قضية</div>
-          </div>
-        </div>
-        </div>
-
-      
-      </div>
+     
 
     </>
   )
