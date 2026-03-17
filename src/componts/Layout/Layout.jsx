@@ -8,22 +8,20 @@ const Layout = () => {
   return (
     <>
       <div className="flex h-screen overflow-hidden">
+  <main
+    className={`${
+      token ? "w-[82%]" : "flex-1"
+    } bg-[#0e1a2b] h-screen overflow-y-auto`}
+  >
+    <Outlet />
+  </main>
 
-        <main
-          className={`${token ? "w-[82%]" : "w-full"} bg-[#0e1a2b] h-screen overflow-y-auto`}
-        >
-          <Outlet />
-        </main>
-
-
-        {token && (
-          <aside className="w-[18%] bg-[#101c2e] h-screen sticky top-0 shrink-0">
-            <SideBar />
-          </aside>
-        )}
-
-
-      </div>
+  {token && (
+    <aside className="w-[18%] bg-[#101c2e] h-screen sticky top-0 shrink-0">
+      <SideBar />
+    </aside>
+  )}
+</div>
 
     </>
   )

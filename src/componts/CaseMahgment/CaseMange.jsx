@@ -26,75 +26,13 @@ const CaseMange = () => {
   ];
   const tabs = [
     { id: "all", label: "كل القضايا" },
-    { id: "active", label: "النشطة" },
-    { id: "pending", label: "المؤجلة" },
-    { id: "closed", label: "المغلقة" },
-    { id: "archived", label: "المؤرشفة" },
-  ];
 
-  const casesData = [
-    {
-      id: "#CAS-2024-0412",
-      client: "شركة تشييد",
-      clientId: "1010XXXXXX",
-      type: "نزاع تجاري",
-      court: "المحكمة الاقتصادية",
-      nextSession: "12 مارس 2024",
-      nextSessionTime: "09:30 صباحًا",
-      status: "نشطة",
-      tab: "active",
-    },
-    {
-      id: "#CAS-2024-0398",
-      client: "عبدالعزيز وائس",
-      clientId: "1950XXXXXX",
-      type: "جنائي - تزوير",
-      court: "المحكمة الجزائية",
-      nextSession: "لم يحدد بعد",
-      nextSessionTime: "",
-      status: "مؤجلة",
-      tab: "pending",
-    },
-    {
-      id: "#CAS-2023-1102",
-      client: "فتحي منصور",
-      clientId: "مؤسسة مالية",
-      type: "مطالبات مالية",
-      court: "محكمة التنفيذ",
-      nextSession: "منتهية",
-      nextSessionTime: "",
-      status: "مغلقة",
-      tab: "closed",
-    },
-    {
-      id: "#CAS-2024-0501",
-      client: "سالم القحطاني",
-      clientId: "1023XXXXXX",
-      type: "قضية عمالية",
-      court: "المحكمة العمالية",
-      nextSession: "18 مارس 2024",
-      nextSessionTime: "11:00 صباحًا",
-      status: "نشطة",
-      tab: "active",
-    },
-    {
-      id: "#CAS-2022-0881",
-      client: "محمد العتيبي",
-      clientId: "1078XXXXXX",
-      type: "تنفيذي",
-      court: "محكمة التنفيذ",
-      nextSession: "مؤرشفة",
-      nextSessionTime: "",
-      status: "مؤرشفة",
-      tab: "archived",
-    },
   ];
 
 
-  const filteredCases = useMemo(() => {
-    if (activeTab === "all") return casesData;
-    return casesData.filter((item) => item.tab === activeTab);
-  }, [activeTab]);
+
+
+
 
   const getStatusStyle = (status) => {
     switch (status) {
@@ -118,12 +56,16 @@ const CaseMange = () => {
       }
     })
   }
-  const{data : Cases } =useQuery({
-    queryKey:["Cases"],
-    queryFn:getAllCases
+  const { data: Cases } = useQuery({
+    queryKey: ["Cases"],
+    queryFn: getAllCases
   })
   console.log(Cases?.data?.cases);
-  
+  const cases = Cases?.data?.cases || [];
+  const filteredCases = useMemo(() => {
+  if (activeTab === "all") return cases;
+  return cases.filter((item) => item.tab === activeTab);
+}, [activeTab, cases]);
   return (
     <>
       <div className="w-full bg-[#0f172a] p-8 flex flex-row-reverse items-center justify-between font-sans" dir="rtl">
@@ -207,7 +149,7 @@ const CaseMange = () => {
                     type="button"
                     onClick={() => {
                       setActiveTab(tab.id);
-                      setCurrentPage(1);
+                      // setCurrentPage(1);
                     }}
                     className={`relative rounded-md px-3 py-2 text-sm font-medium transition ${isActive
                       ? "text-[#d7b14a]"
@@ -253,17 +195,17 @@ const CaseMange = () => {
                         className="border-b border-[#13243b] text-sm text-[#dbe7f5] last:border-b-0"
                       >
                         <td className="px-6 py-5 font-semibold text-[#d7b14a]">
-                          {item.id}
+                          {item.caseNumber}
                         </td>
 
                         <td className="px-6 py-5">
-                          <div className="font-medium text-white">{item.client}</div>
+                          <div className="font-medium text-white">{item.client.fullName}</div>
                           <div className="mt-1 text-xs text-[#6f86a6]">
                             {item.clientId}
                           </div>
                         </td>
 
-                        <td className="px-6 py-5 text-[#c8d6e8]">{item.type}</td>
+                        <td className="px-6 py-5 text-[#c8d6e8]">{item.caseType.name}</td>
                         <td className="px-6 py-5 text-[#c8d6e8]">{item.court}</td>
 
                         <td className="px-6 py-5">
@@ -287,12 +229,15 @@ const CaseMange = () => {
 
                         <td className="px-6 py-5">
                           <div className="flex items-center gap-2">
+                           <Link to={`/CaseMangemnt/CaseDetails/${item.id}`}>
                             <button
                               type="button"
-                              className="flex h-8 w-8 items-center justify-center rounded-md border border-[#2c425f] bg-[#0b1c35] text-[#d7b14a] transition hover:bg-[#112541]"
+                              className="flex cursor-pointer h-8 w-8 items-center justify-center rounded-md border border-[#2c425f] bg-[#0b1c35] text-[#d7b14a] transition hover:bg-[#112541]"
                             >
                               <HiOutlineEye size={16} />
                             </button>
+                           
+                           </Link>
 
                             <button
                               type="button"
@@ -327,7 +272,7 @@ const CaseMange = () => {
 
             <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[#1a2d47] px-6 py-4">
               <p className="text-xs text-[#6f86a6]">
-                عرض 1 إلى {filteredCases.length} من أصل {casesData.length} قضية
+                عرض 1 إلى {filteredCases.length} من أصل {cases.length} قضية
               </p>
 
               <div className="flex items-center gap-2">

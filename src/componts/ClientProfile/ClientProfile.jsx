@@ -4,7 +4,6 @@ import React, { useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import Cookies from 'js-cookie';
 import { FiFolder, FiFileText, FiDollarSign } from "react-icons/fi";
-// import Documentbar from '../document/Documentbar';
 import PersonalInfp from '../personalInfo/PersonalInfp';
 import CaseTable from '../caseTable/CaseTable';
 import InvoicesTable from '../InvoicesTable/InvoicesTable';

@@ -8,118 +8,58 @@ import { IoCalendarOutline, IoSettingsOutline } from 'react-icons/io5'
 import { MdDashboard } from 'react-icons/md'
 import { PiBag, PiFolderSimpleUser } from 'react-icons/pi'
 import { TbFileInvoice } from 'react-icons/tb'
-import { Link, Links } from 'react-router-dom'
+import { Link, Links, NavLink } from 'react-router-dom'
 
 const Sections = () => {
+  const menuItems = [
+  { to: "/", icon: MdDashboard, label: "لوحة التحكم" },
+  { to: "/CaseMangemnt", icon: PiBag, label: "إدارة القضايا" },
+  { to: "/TeamMember", icon: AiOutlineTeam, label: "أعضاء الفريق" },
+  { to: "/Bills", icon: TbFileInvoice, label: "الفواتير" },
+  { to: "/Calender", icon: IoCalendarOutline, label: "التقويم" },
+  { to: "/DigitalArchive", icon: PiFolderSimpleUser, label: "الأرشيف الرقمي" },
+  { to: "/Clients", icon: FaPeopleGroup, label: "ادارة العملاء" },
+  { to: "/Setting", icon: IoSettingsOutline, label: "الاعدادات" },
+]
     return (
-        <>
-            <Link to={"/"}>
-            <button className={` text-2xl w-full flex items-center gap-4 px-4 py-3 my-2 cursor-pointer rounded-lg transition-all  group
-                focus:border-r-2 border-amber-300
-                focus:from-0% focus:to-[#bfa04cab]
-                focus:bg-linear-to-l
-                  hover:bg-linear-to-l hover:from-0% hover:to-[#bfa04cab] 
-                hover:text-white
-              `}
-            >
-                <MdDashboard className=' group-hover:text-[#C9A14A] group-focus:text-[#C9A14A] ' />
-                <span className="text-sm font-medium group-hover:text-[#C9A14A] group-focus:text-[#C9A14A]">لوحة التحكم</span>
-            </button>        
-            </Link>
+         <>
+      {menuItems.map((item) => {
+        const Icon = item.icon
 
-            <Link to={"/CaseMangemnt"}>
-            <button className={`text-2xl w-full flex items-center gap-4 px-4 py-3 my-2 cursor-pointer rounded-lg transition-all  group
-                focus:border-r-2 border-amber-300
-                focus:from-0% focus:to-[#bfa04cab]
-                focus:bg-linear-to-l
-                  hover:bg-linear-to-l hover:from-0% hover:to-[#bfa04cab] 
-                hover:text-white
-              `}
-            >
-                <PiBag className=' group-hover:text-[#C9A14A] group-focus:text-[#C9A14A]' />
-                <span className="text-sm font-medium group-hover:text-[#C9A14A] group-focus:text-[#C9A14A]">إدارة القضايا</span>
-            </button>        
-            </Link>
-            <Link to={"/TeamMember"}>
-            <button className={`text-2xl w-full flex items-center gap-4 px-4 py-3 my-2 cursor-pointer rounded-lg transition-all  group
-                focus:border-r-2 border-amber-300
-                focus:from-0% focus:to-[#bfa04cab]
-                focus:bg-linear-to-l
-                  hover:bg-linear-to-l hover:from-0% hover:to-[#bfa04cab] 
-                hover:text-white
-              `}
-            >
-                <AiOutlineTeam  className=' group-hover:text-[#C9A14A] group-focus:text-[#C9A14A]' />
-                <span className="text-sm font-medium group-hover:text-[#C9A14A] group-focus:text-[#C9A14A]">أعضاء الفريق</span>
-            </button>        
-            </Link>
-            <Link to={"/Bills"}>
-            <button className={`text-2xl w-full flex items-center gap-4 px-4 py-3 my-2 cursor-pointer rounded-lg transition-all  group
-                focus:border-r-2 border-amber-300
-                focus:from-0% focus:to-[#bfa04cab]
-                focus:bg-linear-to-l
-                  hover:bg-linear-to-l hover:from-0% hover:to-[#bfa04cab] 
-                hover:text-white
-              `}
-            >
-                <TbFileInvoice  className=' group-hover:text-[#C9A14A] group-focus:text-[#C9A14A]' />
-                <span className="text-sm font-medium group-hover:text-[#C9A14A] group-focus:text-[#C9A14A]"> الفواتير</span>
-            </button>        
-            </Link>
-            <Link to={"/Calender"}>
-            <button className={`text-2xl w-full flex items-center gap-4 px-4 py-3 my-2 cursor-pointer rounded-lg transition-all  group
-                focus:border-r-2 border-amber-300
-                focus:from-0% focus:to-[#bfa04cab]
-                focus:bg-linear-to-l
-                  hover:bg-linear-to-l hover:from-0% hover:to-[#bfa04cab] 
-                hover:text-white
-              `}
-            >
-                <IoCalendarOutline  className=' group-hover:text-[#C9A14A] group-focus:text-[#C9A14A]' />
-                <span className="text-sm font-medium group-hover:text-[#C9A14A] group-focus:text-[#C9A14A]"> التقويم</span>
-            </button>        
-            </Link>
-            <Link to={"/DigitalArchive"}>
-            <button className={`text-2xl w-full flex items-center gap-4 px-4 py-3 my-2 cursor-pointer rounded-lg transition-all  group
-                focus:border-r-2 border-amber-300
-                focus:from-0% focus:to-[#bfa04cab]
-                focus:bg-linear-to-l
-                  hover:bg-linear-to-l hover:from-0% hover:to-[#bfa04cab] 
-                hover:text-white
-              `}
-            >
-                <PiFolderSimpleUser className=' group-hover:text-[#C9A14A] group-focus:text-[#C9A14A]' />
-                <span className="text-sm font-medium group-hover:text-[#C9A14A] group-focus:text-[#C9A14A]"> الأرشيف الرقمي</span>
-            </button>        
-            </Link>
-            <Link to={"/Clients"}>
-            <button className={`text-2xl w-full flex items-center gap-4 px-4 py-3 my-2 cursor-pointer rounded-lg transition-all  group
-                focus:border-r-2 border-amber-300
-                focus:from-0% focus:to-[#bfa04cab]
-                focus:bg-linear-to-l
-                  hover:bg-linear-to-l hover:from-0% hover:to-[#bfa04cab] 
-                hover:text-white
-              `}
-            >
-                <FaPeopleGroup className=' group-hover:text-[#C9A14A] group-focus:text-[#C9A14A]' />
-                <span className="text-sm font-medium group-hover:text-[#C9A14A] group-focus:text-[#C9A14A]"> ادارة العملاء</span>
-            </button>        
-            </Link>
-            <Link to={"/Setting"}>
-            <button className={`text-2xl w-full flex items-center gap-4 px-4 py-3 my-2 cursor-pointer rounded-lg transition-all  group
-                focus:border-r-2 border-amber-300
-                focus:from-0% focus:to-[#bfa04cab]
-                focus:bg-linear-to-l
-                  hover:bg-linear-to-l hover:from-0% hover:to-[#bfa04cab] 
-                hover:text-white
-              `}
-            >
-                <IoSettingsOutline className=' group-hover:text-[#C9A14A] group-focus:text-[#C9A14A]' />
-                <span className="text-sm font-medium group-hover:text-[#C9A14A] group-focus:text-[#C9A14A]"> الاعدادات</span>
-            </button>        
-            </Link>
-     
-        </>
+        return (
+          <NavLink key={item.to} to={item.to} end={item.to === "/"}>
+            {({ isActive }) => (
+              <div
+                className={`text-2xl w-full flex items-center gap-4 px-4 py-3 my-2 cursor-pointer rounded-lg transition-all group
+                  ${
+                    isActive
+                      ? "border-r-2 border-amber-300 bg-linear-to-l from-0% to-[#bfa04cab] text-white"
+                      : "hover:bg-linear-to-l hover:from-0% hover:to-[#bfa04cab] hover:text-white"
+                  }
+                `}
+              >
+                <Icon
+                  className={`${
+                    isActive
+                      ? "text-[#C9A14A]"
+                      : "group-hover:text-[#C9A14A]"
+                  }`}
+                />
+                <span
+                  className={`text-sm font-medium ${
+                    isActive
+                      ? "text-[#C9A14A]"
+                      : "group-hover:text-[#C9A14A]"
+                  }`}
+                >
+                  {item.label}
+                </span>
+              </div>
+            )}
+          </NavLink>
+        )
+      })}
+    </>
     )
 }
 
