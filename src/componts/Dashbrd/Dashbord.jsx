@@ -1,3 +1,4 @@
+import axios from 'axios'
 import React from 'react'
 import { BiBell, BiCalendar, BiChevronLeft, BiChevronLeftCircle, BiChevronRight, BiDownload, BiFilter, BiMapPin, BiSearch, BiUserPlus } from 'react-icons/bi'
 import { BsEye, BsPlusSquare, BsPlusSquareDotted } from 'react-icons/bs'
@@ -12,6 +13,9 @@ import { IoAlertCircle, IoPaperPlane } from 'react-icons/io5'
 import { LuFileCheck } from 'react-icons/lu'
 import { MdGavel, MdOutlineElectricBolt } from 'react-icons/md'
 import { RiMicAiLine, RiMvAiLine } from 'react-icons/ri'
+import Cookies from 'js-cookie';
+import { useQuery } from '@tanstack/react-query'
+import { useNavigate } from 'react-router-dom'
 
 const Dashbord = () => {
   const hearingsData = [
@@ -36,34 +40,37 @@ const Dashbord = () => {
       tagStyle: "text-blue-400 border-blue-400/30 bg-blue-400/5"
     }
   ];
-  const tasks = [
-    { id: 1, label: "أولوية حرجة", count: "2 مهام", color: "text-amber-500" },
-    { id: 2, label: "أولوية عالية", count: "4 مهام", color: "text-amber-500" },
-    { id: 3, label: "أولوية متوسطة", count: "1 مهمة", color: "text-amber-500" },
-    { id: 4, label: "أولوية منخفضة", count: "2 مهام", color: "text-amber-500" },
-  ];
+  const navigate = useNavigate();
+  function getData() {
+    return axios.get("https://lawersystem-production.up.railway.app/Dashboard/", {
+      headers: {
+        authorization: `Bearer ${Cookies.get("token")}`,
 
+      }
+    })
+  }
+ const {data} =  useQuery({
+    queryKey:["Data"],
+    queryFn:getData
+  })
+  console.log(data?.data);
+  
   // Static Data for Quick Actions
 
   const priorities = [
-    { label: 'أولوية حرجة', count: 2, color: 'text-amber-500' },
-    { label: 'أولوية عالية', count: 4, color: 'text-amber-500' },
-    { label: 'أولوية متوسطة', count: 1, color: 'text-amber-500' },
-    { label: 'أولوية منخفضة', count: 2, color: 'text-amber-500' },
+    { label: 'أولوية عاجلة', count: data?.data?.tasksByPriority?.عاجلة, color: 'text-amber-500' },
+    { label: 'أولوية عالية', count: data?.data?.tasksByPriority?.عالية, color: 'text-amber-500' },
+    { label: 'أولوية متوسطة', count: data?.data?.tasksByPriority?.متوسطة, color: 'text-amber-500' },
+    { label: 'أولوية منخفضة', count: data?.data?.tasksByPriority?.منخفضة, color: 'text-amber-500' },
   ];
 
   const actions = [
-    { label: 'إضافة عميل', icon: <BiUserPlus size={24} />, key: 1 },
-    { label: 'قضية جديدة', icon: <BsPlusSquare size={24} />, key: 2 },
+    { label: 'إضافة عميل', icon: <BiUserPlus size={24} />, key: 1,path: '' },
+    { label: 'قضية جديدة', icon: <BsPlusSquare size={24} />, key: 2 ,path:"/CaseMangemnt/AddNewCase"},
     { label: 'الرسائل', icon: <RiMvAiLine size={24} />, key: 3 },
     { label: 'جدولة جلسة', icon: <CgLock size={24} />, key: 4 },
   ];
-  const priorities2 = [
-    { label: 'أولوية حرجة', count: 2 },
-    { label: 'أولوية عالية', count: 4 },
-    { label: 'أولوية متوسطة', count: 1 },
-    { label: 'أولوية منخفضة', count: 2 },
-  ];
+ 
 
   // Data for "Latest Added Cases" Table
   const cases = [
@@ -71,6 +78,15 @@ const Dashbord = () => {
     { id: '#CAS-8741', client: 'أحمد مصطفى', type: 'أحوال شخصية - إرث', status: 'بانتظار مستندات', date: '2025/10/10' },
     { id: '#CAS-8692', client: 'مستشفى النور التخصصي', type: 'قانون إداري - تراخيص', status: 'متوقفة', date: '2025/10/08' },
   ];
+   const formatDateISO = (dateString) => {
+        if (!dateString) return "-";
+
+        const date = new Date(dateString);
+
+        if (isNaN(date.getTime())) return "-";
+
+        return date.toISOString().split("T")[0];
+    };
   return (
     <>
       <nav className="flex items-center justify-between w-full h-18 px-8 bg-[#0b1120] text-white border-b border-gray-800">
@@ -135,7 +151,7 @@ const Dashbord = () => {
             {/* النص والعدد */}
             <div className="mt-auto text-right pt-10 ">
               <p className="text-gray-400 text-sm"> المهام المعلقة</p>
-              <p className="text-white text-2xl font-bold">42</p>
+              <p className="text-white text-2xl font-bold">{data?.data?.stats?.pendingTasks}</p>
             </div>
           </div>
           <div className="bg-[#101c2e] rounded-xl p-6 w-92.5 flex flex-col justify-between shadow-lg relative border border-[#C9A14A1A]">
@@ -153,7 +169,7 @@ const Dashbord = () => {
             {/* النص والعدد */}
             <div className="mt-auto text-right pt-10 ">
               <p className="text-gray-400 text-sm"> إجمالي الإيرادات</p>
-              <p className="text-white text-2xl font-bold">$1.2M</p>
+              <p className="text-white text-2xl font-bold">${data?.data?.stats?.totalRevenue}</p>
             </div>
           </div>
           <div className="bg-[#101c2e] rounded-xl p-6 w-92.5 flex flex-col justify-between shadow-lg relative border border-[#C9A14A1A]">
@@ -171,7 +187,7 @@ const Dashbord = () => {
             {/* النص والعدد */}
             <div className="mt-auto text-right pt-10 ">
               <p className="text-gray-400 text-sm">العملاء النشطون</p>
-              <p className="text-white text-2xl font-bold">89</p>
+              <p className="text-white text-2xl font-bold">{data?.data?.stats?.activeClients}</p>
             </div>
           </div>
           <div className="bg-[#101c2e] rounded-xl p-6 w-92.5 flex flex-col justify-between shadow-lg relative border border-[#C9A14A1A]">
@@ -189,7 +205,7 @@ const Dashbord = () => {
             {/* النص والعدد */}
             <div className="mt-auto text-right pt-10 ">
               <p className="text-gray-400 text-sm">القضايا النشطة</p>
-              <p className="text-white text-2xl font-bold">124</p>
+              <p className="text-white text-2xl font-bold">{data?.data?.stats?.activeCases}</p>
             </div>
           </div>
 
@@ -251,12 +267,13 @@ const Dashbord = () => {
           {/* Section: Quick Actions */}
           <div>
             <div className="flex items-center gap-2 mb-6 text-xl font-bold">
-              <span className="text-[#C9A14A]"><MdOutlineElectricBolt/></span>
+              <span className="text-[#C9A14A]"><MdOutlineElectricBolt /></span>
               <h2>الإجراءات السريعة</h2>
             </div>
             <div className="grid grid-cols-2 gap-4 p-6 bg-[#111c30]/50 rounded-2xl border border-gray-800">
               {actions.map((action) => (
                 <button
+                 onClick={() => navigate(action.path)}
                   key={action.key}
                   className="flex flex-col items-center justify-center gap-3 bg-[#111c30] p-8 rounded-xl border border-gray-800 hover:border-amber-500/50 transition-all group"
                 >
@@ -291,70 +308,68 @@ const Dashbord = () => {
         </div>
       </div>
       <div dir="rtl" className="min-h-screen bg-[#101c2e] p-6 text-white font-sans">
-      
-    
-      {/* BOTTOM SECTION: Latest Added Cases Table */}
-      <section className="bg-[##101c2e] rounded-2xl border border-gray-800/50 overflow-hidden">
-        <div className="p-6 flex justify-between items-center border-b border-gray-800/50">
-          <div className="flex items-center gap-2">
-            <FiFileText className="text-[#C9A14A]" size={20} />
-            <h2 className="text-lg font-bold">آخر القضايا المضافة</h2>
-          </div>
-          <div className="flex gap-3">
-            <button className="flex items-center gap-2 bg-[#162235] px-4 py-2 rounded-lg text-sm border border-gray-700 hover:bg-gray-700 transition">
-              <BiFilter size={16} /> تصفية
-            </button>
-            <button className="flex items-center gap-2 bg-[#162235] px-4 py-2 rounded-lg text-sm border border-gray-700 hover:bg-gray-700 transition">
-              <BiDownload size={16} /> تصدير
-            </button>
-          </div>
-        </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-right">
-            <thead className="text-[#C9A14A] text-sm bg-[#0d1525]">
-              <tr>
-                <th className="p-4 font-medium">رقم القضية</th>
-                <th className="p-4 font-medium">اسم الموكل</th>
-                <th className="p-4 font-medium">نوع القضية</th>
-                <th className="p-4 font-medium">الحالة</th>
-                <th className="p-4 font-medium">التاريخ</th>
-                <th className="p-4 font-medium">الإجراءات</th>
-              </tr>
-            </thead>
-            <tbody className="text-gray-300 divide-y divide-gray-800/50">
-              {cases.map((item, idx) => (
-                <tr key={idx} className="hover:bg-white/5 transition">
-                  <td className="p-4 font-mono">{item.id}</td>
-                  <td className="p-4">{item.client}</td>
-                  <td className="p-4">{item.type}</td>
-                  <td className="p-4">
-                    <span className={`px-3 py-1 rounded-full text-xs `}>
-                      {item.status}
-                    </span>
-                  </td>
-                  <td className="p-4">{item.date}</td>
-                  <td className="p-4">
-                    <button className="text-[#C9A14A] hover:text-amber-400">
-                      <BsEye size={18} />
-                    </button>
-                  </td>
+
+        {/* BOTTOM SECTION: Latest Added Cases Table */}
+        <section className="bg-[##101c2e] rounded-2xl border border-gray-800/50 overflow-hidden">
+          <div className="p-6 flex justify-between items-center border-b border-gray-800/50">
+            <div className="flex items-center gap-2">
+              <FiFileText className="text-[#C9A14A]" size={20} />
+              <h2 className="text-lg font-bold">آخر القضايا المضافة</h2>
+            </div>
+            <div className="flex gap-3">
+              
+              <button className="flex items-center gap-2 bg-[#162235] px-4 py-2 rounded-lg text-sm border border-gray-700 hover:bg-gray-700 transition">
+                <BiDownload size={16} /> تصدير
+              </button>
+            </div>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-right">
+              <thead className="text-[#C9A14A] text-sm bg-[#0d1525]">
+                <tr>
+                  <th className="p-4 font-medium">رقم القضية</th>
+                  <th className="p-4 font-medium">اسم الموكل</th>
+                  <th className="p-4 font-medium">نوع القضية</th>
+                  <th className="p-4 font-medium">الحالة</th>
+                  <th className="p-4 font-medium">التاريخ</th>
+                  <th className="p-4 font-medium">الإجراءات</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Table Footer / Pagination */}
-        <div className="p-4 flex justify-between items-center text-xs text-gray-500 border-t border-gray-800/50">
-          <div className="flex gap-2">
-             <button className="p-1 bg-[#162235] border border-gray-700 rounded"><BiChevronRight size={16}/></button>
-             <button className="p-1 bg-[#162235] border border-gray-700 rounded"><BiChevronLeftCircle size={16}/></button>
+              </thead>
+              <tbody className="text-gray-300 divide-y divide-gray-800/50">
+                {data?.data?.recentCases.map((item, idx) => (
+                  <tr key={idx} className="hover:bg-white/5 transition">
+                    <td className="p-4 font-mono">{item.caseNumber}</td>
+                    <td className="p-4">{item.client?.fullName}</td>
+                    <td className="p-4">{item.caseType?.name}</td>
+                    <td className="p-4">
+                      <span className={`px-3 py-1 rounded-full text-xs `}>
+                        {item.status}
+                      </span>
+                    </td>
+                    <td className="p-4"> {formatDateISO(item.openedAt)}</td>
+                    <td className="p-4">
+                      <button className="text-[#C9A14A] hover:text-amber-400">
+                        <BsEye size={18} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-          <span>عرض 3 من أصل 124 قضية</span>
-        </div>
-      </section>
-    </div>
+
+          {/* Table Footer / Pagination */}
+          <div className="p-4 flex justify-between items-center text-xs text-gray-500 border-t border-gray-800/50">
+            <div className="flex gap-2">
+              <button className="p-1 bg-[#162235] border border-gray-700 rounded"><BiChevronRight size={16} /></button>
+              <button className="p-1 bg-[#162235] border border-gray-700 rounded"><BiChevronLeftCircle size={16} /></button>
+            </div>
+            <span>عرض 3 من أصل 124 قضية</span>
+          </div>
+        </section>
+      </div>
 
     </>
   )

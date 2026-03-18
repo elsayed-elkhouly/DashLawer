@@ -22,6 +22,8 @@ import {
 import ClientProfile from './componts/ClientProfile/ClientProfile'
 import AddNewCase from './componts/AddCase/AddNewCase'
 import CaseDetails from './componts/CaseDetails/CaseDetails'
+import Eror from './componts/Eror/Eror'
+import AddNewFees from './componts/AddNewFees/AddNewFees'
 function App() {
   const router = createBrowserRouter([{
     path: "", element: <Layout />, children: [
@@ -31,6 +33,7 @@ function App() {
       { path: "/CaseMangemnt/CaseDetails/:id", element: <ProtectedRoute><CaseDetails /></ProtectedRoute> },
       { path: "/TeamMember", element: <ProtectedRoute><Team /></ProtectedRoute> },
       { path: "/Bills", element: <ProtectedRoute><Bills /></ProtectedRoute> },
+      { path: "/Bills/AddNewFees", element: <ProtectedRoute><AddNewFees /></ProtectedRoute> },
       { path: "/Calender", element: <ProtectedRoute><Calendar /></ProtectedRoute> },
       { path: "/DigitalArchive", element: <ProtectedRoute><DigitalArchive /></ProtectedRoute> },
       { path: "/Clients", element: <ProtectedRoute><Clients /></ProtectedRoute> },
@@ -38,6 +41,7 @@ function App() {
       { path: "/AddMember", element: <ProtectedRoute><AddMember /></ProtectedRoute> },
       { path: "/Clients/ClientProfile/:id", element: <ProtectedRoute><ClientProfile /></ProtectedRoute> },
       { path: "/Login", element: <Login /> },
+      { path: "*", element: <Eror /> },
 
 
     ]

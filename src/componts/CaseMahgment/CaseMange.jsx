@@ -12,12 +12,15 @@ import {
   HiOutlineChevronRight,
 } from "react-icons/hi2";
 import axios from 'axios';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
+import { RiDeleteBin6Line } from 'react-icons/ri';
+import toast from 'react-hot-toast';
 
 const CaseMange = () => {
   const [activeTab, setActiveTab] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
+
   const filterOptions = [
     { label: 'الحالة' },
     { label: 'نوع القضية' },
@@ -56,16 +59,54 @@ const CaseMange = () => {
       }
     })
   }
-  const { data: Cases } = useQuery({
+  const { data: Cases, isLoading } = useQuery({
     queryKey: ["Cases"],
     queryFn: getAllCases
   })
+
+  async function deleteCase(id) {
+    try {
+      const res = await axios.delete(
+        `https://lawersystem-production.up.railway.app/LegalCase/${id}`,
+        {
+          headers: {
+            authorization: `Bearer ${Cookies.get("token")}`,
+          },
+        }
+      );
+
+      console.log("Delete response:", res.data);
+      return res.data;
+    } catch (error) {
+      console.log("Delete error:", error);
+      console.log("Delete error response:", error.response);
+      throw error;
+    }
+  }
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteCase,
+
+    onSuccess: () => {
+      toast.success("Case deleted successfully");
+      queryClient.invalidateQueries({ queryKey: ["Cases"] });
+      queryClient.refetchQueries({ queryKey: ["Cases"], type: "active" });
+    },
+
+    onError: (error) => {
+      console.log("Delete mutation error:", error);
+      toast.error("Something went wrong while deleting");
+    },
+  });
+  const handleDelete = (id) => {
+    deleteMutation.mutate(id);
+  };
   console.log(Cases?.data?.cases);
   const cases = Cases?.data?.cases || [];
   const filteredCases = useMemo(() => {
-  if (activeTab === "all") return cases;
-  return cases.filter((item) => item.tab === activeTab);
-}, [activeTab, cases]);
+    if (activeTab === "all") return cases;
+    return cases.filter((item) => item.tab === activeTab);
+  }, [activeTab, cases]);
   return (
     <>
       <div className="w-full bg-[#0f172a] p-8 flex flex-row-reverse items-center justify-between font-sans" dir="rtl">
@@ -188,7 +229,15 @@ const CaseMange = () => {
                 </thead>
 
                 <tbody>
-                  {filteredCases.length > 0 ? (
+                  {isLoading ? (
+                    <tr>
+                      <td colSpan="7" className="py-10 text-center">
+                        <div className="flex items-center justify-center">
+                          <span className="loading loading-infinity w-16 text-[#d3a63f]"></span>
+                        </div>
+                      </td>
+                    </tr>
+                  ) : filteredCases.length > 0 ? (
                     filteredCases.map((item, index) => (
                       <tr
                         key={`${item.id}-${index}`}
@@ -199,13 +248,14 @@ const CaseMange = () => {
                         </td>
 
                         <td className="px-6 py-5">
-                          <div className="font-medium text-white">{item.client.fullName}</div>
-                          <div className="mt-1 text-xs text-[#6f86a6]">
-                            {item.clientId}
-                          </div>
+                          <div className="font-medium text-white">{item.client?.fullName}</div>
+                          <div className="mt-1 text-xs text-[#6f86a6]">{item.clientId}</div>
                         </td>
 
-                        <td className="px-6 py-5 text-[#c8d6e8]">{item.caseType.name}</td>
+                        <td className="px-6 py-5 text-[#c8d6e8]">
+                          {item.caseType?.name}
+                        </td>
+
                         <td className="px-6 py-5 text-[#c8d6e8]">{item.court}</td>
 
                         <td className="px-6 py-5">
@@ -229,28 +279,21 @@ const CaseMange = () => {
 
                         <td className="px-6 py-5">
                           <div className="flex items-center gap-2">
-                           <Link to={`/CaseMangemnt/CaseDetails/${item.id}`}>
-                            <button
-                              type="button"
-                              className="flex cursor-pointer h-8 w-8 items-center justify-center rounded-md border border-[#2c425f] bg-[#0b1c35] text-[#d7b14a] transition hover:bg-[#112541]"
-                            >
-                              <HiOutlineEye size={16} />
-                            </button>
-                           
-                           </Link>
+                            <Link to={`/CaseMangemnt/CaseDetails/${item.id}`}>
+                              <button
+                                type="button"
+                                className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-md border border-[#2c425f] bg-[#0b1c35] text-[#d7b14a] transition hover:bg-[#112541]"
+                              >
+                                <HiOutlineEye size={16} />
+                              </button>
+                            </Link>
 
                             <button
                               type="button"
-                              className="flex h-8 w-8 items-center justify-center rounded-md border border-[#2c425f] bg-[#0b1c35] text-[#d7b14a] transition hover:bg-[#112541]"
+                              onClick={() => handleDelete(item.id)}
+                              className="cursor-pointer text-lg text-red-400 hover:text-red-600"
                             >
-                              <HiOutlinePencilSquare size={16} />
-                            </button>
-
-                            <button
-                              type="button"
-                              className="flex h-8 w-8 items-center justify-center rounded-md border border-[#2c425f] bg-[#0b1c35] text-[#d7b14a] transition hover:bg-[#112541]"
-                            >
-                              <HiOutlineFolder size={16} />
+                              <RiDeleteBin6Line />
                             </button>
                           </div>
                         </td>

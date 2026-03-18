@@ -181,10 +181,8 @@ const Clients = () => {
     }
 
     async function deleteClient(id) {
-        try {
-            console.log("Deleting id:", id);
-
-            const res = await axios.delete(
+        try {          
+           const res = await axios.delete(
                 `https://lawersystem-production.up.railway.app/Client/${id}`,
                 {
                     headers: {
@@ -230,7 +228,7 @@ const Clients = () => {
 
     const errorClass = "mt-2 text-xs text-red-400";
     if (isLoading) {
-        return <div className="text-white p-6 flex justify-center items-center"> <span className="loading loading-infinity   w-[50%]"></span></div>;
+        return <div className="text-[#d3a63f] p-6 flex justify-center items-center"> <span className="loading loading-infinity   w-[50%]"></span></div>;
     }
 
     if (isError) {

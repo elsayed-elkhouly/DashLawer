@@ -56,7 +56,6 @@ const AddNewCase = () => {
     },
   });;
   const onSubmit = async (data) => {
-    console.log("Case Data:", data);
     setloding(true)
     try {
       const res = await axios.post("https://lawersystem-production.up.railway.app/LegalCase/", data, {
@@ -64,7 +63,7 @@ const AddNewCase = () => {
           authorization: `Bearer ${Cookies.get("token")}`
         }
       })
-      console.log(res);
+
       toast.success(res?.data?.message)
       setSearch("");
       setShowClients(false);
@@ -73,6 +72,7 @@ const AddNewCase = () => {
     } catch (error) {
       console.log("Full Error:", error);
       console.log("Response Data:", error?.response?.data);
+      toast.error(error?.response?.data)
       console.log("Response Status:", error?.response?.status);
       console.log("Response Headers:", error?.response?.headers);
 
@@ -522,7 +522,7 @@ const AddNewCase = () => {
             </section>
 
             {/* fees */}
-            <section className="mt-6 rounded-3xl border border-[#10233e] bg-[#061327]/95 p-5 shadow-[0_10px_40px_rgba(0,0,0,0.22)] md:p-6">
+            {/* <section className="mt-6 rounded-3xl border border-[#10233e] bg-[#061327]/95 p-5 shadow-[0_10px_40px_rgba(0,0,0,0.22)] md:p-6">
               <div className="mb-5 flex items-start justify-between gap-4">
                 <div className="text-right">
                   <h2 className="text-lg font-semibold text-[#f3f7fb]">
@@ -612,7 +612,7 @@ const AddNewCase = () => {
               <button type="submit" className="hidden">
                 submit
               </button>
-            </section>
+            </section> */}
           </form>
         </div>
       </div>
