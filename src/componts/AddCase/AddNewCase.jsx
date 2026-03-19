@@ -522,7 +522,7 @@ const AddNewCase = () => {
             </section>
 
             {/* fees */}
-            {/* <section className="mt-6 rounded-3xl border border-[#10233e] bg-[#061327]/95 p-5 shadow-[0_10px_40px_rgba(0,0,0,0.22)] md:p-6">
+            <section className="mt-6 rounded-3xl border border-[#10233e] bg-[#061327]/95 p-5 shadow-[0_10px_40px_rgba(0,0,0,0.22)] md:p-6">
               <div className="mb-5 flex items-start justify-between gap-4">
                 <div className="text-right">
                   <h2 className="text-lg font-semibold text-[#f3f7fb]">
@@ -557,24 +557,7 @@ const AddNewCase = () => {
                   </div>
                 </div>
 
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-[#d8e3f0]">
-                    المبلغ المدفوع
-                  </label>
-                  <div className="relative">
-                    <span className="pointer-events-none absolute inset-y-0 left-4 flex items-center text-xs text-[#6f86a6]">
-                      EGP
-                    </span>
-                    <input
-                      {...register("fees.paidAmount", {
-                        valueAsNumber: true,
-                      })}
-                      type="number"
-                      dir="rtl"
-                      className="h-11 w-full rounded-xl border border-[#132949] bg-[#07162d] pr-4 pl-14 text-sm text-white outline-none transition focus:border-[#d4a63d]/70 focus:ring-2 focus:ring-[#d4a63d]/20"
-                    />
-                  </div>
-                </div>
+               
 
                 <div>
                   <label className="mb-2 block text-sm font-medium text-[#d8e3f0]">
@@ -612,7 +595,7 @@ const AddNewCase = () => {
               <button type="submit" className="hidden">
                 submit
               </button>
-            </section> */}
+            </section>
           </form>
         </div>
       </div>

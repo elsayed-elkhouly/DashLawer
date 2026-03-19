@@ -11,6 +11,8 @@ import {
   HiOutlineTrash,
   HiOutlinePrinter,
 } from "react-icons/hi2"
+import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 const AddNewFees = () => {
   const [search, setSearch] = useState("");
@@ -71,17 +73,18 @@ const AddNewFees = () => {
   });
 
   const items = watch("items");
-const discountPercent = Number(watch("discount")) || 0;
-const taxPercent = Number(watch("tax")) || 0;
-const paid = Number(watch("paidAmount")) || 0;
+  const discountPercent = Number(watch("discount")) || 0;
+  const taxPercent = Number(watch("tax")) || 0;
+  const paid = Number(watch("paidAmount")) || 0;
+  const paymentMethod = Number(watch("paymentMethod")) || "كاش";
 
-const subtotal =
-  items?.reduce((sum, item) => sum + (Number(item.amount) || 0), 0) || 0;
+  const subtotal =
+    items?.reduce((sum, item) => sum + (Number(item.amount) || 0), 0) || 0;
 
-const discountValue = (subtotal * discountPercent) / 100;
-const taxValue = (subtotal * taxPercent) / 100;
-const total = subtotal - discountValue + taxValue;
-const remaining = total - paid;
+  const discountValue = (subtotal * discountPercent) / 100;
+  const taxValue = (subtotal * taxPercent) / 100;
+  const total = subtotal - discountValue + taxValue;
+  const remaining = total - paid;
 
   const onSubmit = async (data) => {
     try {
@@ -111,12 +114,13 @@ const remaining = total - paid;
       );
 
       console.log("invoice created:", res.data);
-      alert("تم إنشاء الفاتورة بنجاح");
+      toast.success("تم إنشاء الفاتورة بنجاح");
       reset();
       setSearch("");
+      
     } catch (error) {
       console.error("create invoice error:", error);
-      alert("حصل خطأ أثناء إنشاء الفاتورة");
+      toast.error("حصل خطأ أثناء إنشاء الفاتورة");
     }
   };
 
@@ -141,21 +145,23 @@ const remaining = total - paid;
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="rounded-xl bg-[#E7B53F] px-5 py-3 text-sm font-bold text-[#081a30] transition hover:opacity-90 disabled:opacity-60"
+                      className="cursor-pointer rounded-xl bg-[#E7B53F] px-5 py-3 text-sm font-bold text-[#081a30] transition hover:opacity-90 disabled:opacity-60"
                     >
                       {isSubmitting ? "جاري الحفظ..." : "حفظ الفاتورة"}
                     </button>
 
+                   <Link to={"/Bills"}>
                     <button
                       type="button"
                       onClick={() => {
                         reset();
                         setSearch("");
                       }}
-                      className="rounded-xl border border-white/10 bg-[#0D223C] px-5 py-3 text-sm text-white"
+                      className=" cursor-pointer rounded-xl border border-white/10 bg-[#0D223C] px-5 py-3 text-sm text-white"
                     >
                       إلغاء
                     </button>
+                   </Link>
                   </div>
                 </div>
 
@@ -230,7 +236,7 @@ const remaining = total - paid;
                         </div>
                       )}
                     </div>
-                   
+
 
                     {/* due date */}
                     <div>
@@ -240,7 +246,7 @@ const remaining = total - paid;
                       <input
                         type="date"
                         {...register("dueDate", {
-                          
+
                         })}
                         className="h-12 w-full rounded-2xl border border-white/10 bg-[#091D34] px-4 text-sm text-white outline-none focus:border-[#E7B53F]/40"
                       />
@@ -251,7 +257,7 @@ const remaining = total - paid;
                       )}
                     </div>
 
-                    
+
                   </div>
                 </div>
 
@@ -262,8 +268,8 @@ const remaining = total - paid;
                     <h2>بنود الفاتورة</h2>
                   </div>
 
-                 
-                
+
+
 
                   {/* items table */}
                   <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#091B31]">
@@ -346,7 +352,8 @@ const remaining = total - paid;
                         <option value="">اختر طريقة الدفع</option>
                         <option value="كاش">كاش</option>
                         <option value="تحويل">تحويل بنكي</option>
-                        <option value="بطاقة">بطاقة</option>
+                        <option value="شيك">شيك</option>
+                        <option value= "محفظه الكنرونية">محفظه الكنرونية</option>
                       </select>
                     </div>
 
@@ -401,15 +408,15 @@ const remaining = total - paid;
                     </div>
 
                     <div className="flex items-center justify-between text-sm">
-  <span className="text-[#A7B9D3]">الخصم ({discountPercent}%)</span>
-  <span className="text-red-400">-{discountValue.toFixed(2)}</span>
-</div>
+                      <span className="text-[#A7B9D3]">الخصم ({discountPercent}%)</span>
+                      <span className="text-red-400">-{discountValue.toFixed(2)}</span>
+                    </div>
 
 
                     <div className="flex items-center justify-between text-sm">
-  <span className="text-[#A7B9D3]">الضريبة ({taxPercent}%)</span>
-  <span className="text-[#DCE7F5]">{taxValue.toFixed(2)}</span>
-</div>
+                      <span className="text-[#A7B9D3]">الضريبة ({taxPercent}%)</span>
+                      <span className="text-[#DCE7F5]">{taxValue.toFixed(2)}</span>
+                    </div>
                   </div>
 
                   <div className="my-4 border-t border-[#D6A634]" />
@@ -446,7 +453,7 @@ const remaining = total - paid;
                     type="button"
                     className="w-full rounded-2xl border border-white/10 bg-[#09182B] px-4 py-3 text-sm text-white"
                   >
-                    تحميل بنك
+                    {paymentMethod} 
                   </button>
                 </div>
 
