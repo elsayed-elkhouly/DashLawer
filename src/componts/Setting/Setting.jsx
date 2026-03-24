@@ -2,10 +2,11 @@ import React, { useEffect, useRef, useState } from 'react'
 import { FaCloudArrowUp } from 'react-icons/fa6';
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useForm } from "react-hook-form";
-import axios from 'axios';
+
 import Cookies from 'js-cookie';
 import toast from 'react-hot-toast';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import api from '../../api/axios';
 
 
 
@@ -76,13 +77,13 @@ const Setting = () => {
   } = useForm();
 
   function getSetting() {
-    return axios
-      .get("https://lawersystem-production.up.railway.app/SettingsService/")
+    return api
+      .get("/SettingsService/")
       .then((res) => res.data);
   }
 
   function getCases() {
-    return axios.get("https://lawersystem-production.up.railway.app/CaseType/all", {
+    return api.get("/CaseType/all", {
       headers: {
         authorization: `Bearer ${Cookies.get("token")}`,
       },
@@ -90,7 +91,7 @@ const Setting = () => {
   }
 
   function getSlots() {
-    return axios.get("https://lawersystem-production.up.railway.app/slots/?page=1&limit=7", {
+    return api.get("/slots/?page=1&limit=7", {
       headers: {
         authorization: `Bearer ${Cookies.get("token")}`,
       },
@@ -141,8 +142,8 @@ const Setting = () => {
 
   const addSettingMutation = useMutation({
     mutationFn: async (formData) => {
-      return await axios.put(
-        "https://lawersystem-production.up.railway.app/SettingsService/",
+      return await api.put(
+        "/SettingsService/",
         formData,
         {
           headers: {
@@ -171,8 +172,8 @@ const Setting = () => {
 
   const addCaseMutation = useMutation({
     mutationFn: async (data) => {
-      return await axios.post(
-        "https://lawersystem-production.up.railway.app/CaseType/createCaseType",
+      return await api.post(
+        "/CaseType/createCaseType",
         data,
         {
           headers: {
@@ -197,10 +198,10 @@ const Setting = () => {
   const toggleCaseMutation = useMutation({
     mutationFn: async ({ id, isActive }) => {
       const url = isActive
-        ? `https://lawersystem-production.up.railway.app/CaseType/${id}/disable`
-        : `https://lawersystem-production.up.railway.app/CaseType/${id}/enable`;
+        ? `/CaseType/${id}/disable`
+        : `/CaseType/${id}/enable`;
 
-      return await axios.patch(url, null, {
+      return await api.patch(url, null, {
         headers: {
           authorization: `Bearer ${Cookies.get("token")}`,
         },
@@ -232,8 +233,8 @@ const Setting = () => {
         ],
       };
 
-      return await axios.put(
-        "https://lawersystem-production.up.railway.app/SettingsService/work-hours",
+      return await api.put(
+        "/SettingsService/work-hours",
         data,
         {
           headers: {
@@ -259,8 +260,8 @@ const Setting = () => {
 
   const deleteDayMutation = useMutation({
     mutationFn: async (days) => {
-      return await axios.delete(
-        "https://lawersystem-production.up.railway.app/SettingsService/work-hours",
+      return await api.delete(
+        "/SettingsService/work-hours",
         {
           headers: {
             authorization: `Bearer ${Cookies.get("token")}`,
@@ -295,8 +296,8 @@ const Setting = () => {
         endAt: end.toISOString(),
       };
 
-      return await axios.post(
-        "https://lawersystem-production.up.railway.app/slots/createSlot",
+      return await api.post(
+        "/slots/createSlot",
         payload,
         {
           headers: {
@@ -323,8 +324,8 @@ const Setting = () => {
 
   const deleteSlotMutation = useMutation({
     mutationFn: async (id) => {
-      return await axios.delete(
-        `https://lawersystem-production.up.railway.app/slots/${id}`,
+      return await api.delete(
+        `/slots/${id}`,
         {
           headers: {
             authorization: `Bearer ${Cookies.get("token")}`,
@@ -346,8 +347,8 @@ const Setting = () => {
       const formData = new FormData();
       formData.append("logo", logoFile);
 
-      return await axios.patch(
-        "https://lawersystem-production.up.railway.app/SettingsService/logo",
+      return await api.patch(
+        "/SettingsService/logo",
         formData,
         {
           headers: {

@@ -5,37 +5,56 @@ import Sections from '../sections/Sections'
 import { MdGavel } from 'react-icons/md'
 import { Authcontext } from '../../Context/AuthContextProvider'
 import { useNavigate } from 'react-router-dom'
+import { IoClose } from 'react-icons/io5'
 
 
 
-const SideBar = () => {
+const SideBar = ({ onClose, isMobile = false }) => {
   const { Logout, setting } = useContext(Authcontext)
   const navigate = useNavigate()
 
   function logout() {
     Logout()
     navigate("/login")
+    if (onClose) onClose()
   }
 
   return (
-    <div className="flex flex-col h-full bg-[#101c2e] text-gray-300 font-sans" dir="rtl">
-      
-      <div className="p-4 flex items-center gap-3 border-b border-gray-800">
-        <div className="bg-[#fbbf24] p-2 rounded-3xl text-black">
-          <MdGavel size={24} />
+    <div
+      className="flex flex-col h-full bg-[#101c2e] text-gray-300 font-sans"
+      dir="rtl"
+    >
+      {/* Header */}
+      <div className="p-4 flex items-center justify-between gap-3 border-b border-gray-800">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="bg-[#fbbf24] p-2 rounded-3xl text-black shrink-0">
+            <MdGavel size={24} />
+          </div>
+
+          <div className="min-w-0">
+            <h1 className="text-white font-bold leading-tight text-sm md:text-base truncate">
+              {setting?.Settings?.officeName || "اسم المكتب"}
+            </h1>
+            <p className="text-xs text-gray-500">للإدارة القانونية</p>
+          </div>
         </div>
-        <div>
-          <h1 className="text-white font-bold leading-tight">
-            {setting?.Settings?.officeName}
-          </h1>
-          <p className="text-xs text-gray-500">للإدارة القانونية</p>
-        </div>
+
+        {isMobile && (
+          <button
+            onClick={onClose}
+            className="p-2 rounded-lg text-gray-300 hover:bg-[#1b2a3d] hover:text-white transition shrink-0"
+          >
+            <IoClose size={22} />
+          </button>
+        )}
       </div>
 
-      <nav className="flex-1 px-4 mt-4 space-y-2 overflow-y-auto">
-        <Sections />
+      {/* Nav */}
+      <nav className="flex-1 px-4 py-4 space-y-2 overflow-y-auto">
+        <Sections onItemClick={onClose} />
       </nav>
 
+      {/* Footer / Logout */}
       <div className="p-4 border-t border-gray-800">
         <button
           onClick={logout}

@@ -13,14 +13,16 @@ import {
 } from "react-icons/hi2"
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
-
+import api from "../../api/axios";
+ 
 const AddNewFees = () => {
+  
   const [search, setSearch] = useState("");
   const [showClients, setShowClients] = useState(false);
 
   async function getClients(search) {
-    const res = await axios.get(
-      "https://lawersystem-production.up.railway.app/Client/all",
+    const res = await api.get(
+      "/Client/all",
       {
         params: {
           search,
@@ -103,8 +105,8 @@ const AddNewFees = () => {
         caseNumber: data.caseNumber,
       };
 
-      const res = await axios.post(
-        "https://lawersystem-production.up.railway.app/invoices/standalone",
+      const res = await api.post(
+        "/invoices/standalone",
         payload,
         {
           headers: {

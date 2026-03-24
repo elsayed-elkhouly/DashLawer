@@ -2,13 +2,13 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import Cookies from 'js-cookie';
-import axios from 'axios';
 import { HiOutlineBanknotes, HiOutlineCalendarDays, HiOutlineDocument, HiOutlineDocumentText, HiOutlineFolderOpen, HiOutlineNoSymbol, HiOutlinePencil, HiOutlinePlusCircle, HiOutlinePrinter } from 'react-icons/hi2';
 import { FaRegFilePdf, FaRegFileWord } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import CaseInfo from '../CaseInfo/CaseInfo';
 import FessInfo from '../FeesInfo/FessInfo';
+import api from '../../api/axios';
 
 const CaseDetails = () => {
 
@@ -28,8 +28,8 @@ const CaseDetails = () => {
         try {
             setLoading(true);
 
-            const res = await axios.post(
-                `https://lawersystem-production.up.railway.app/LegalCase/${id}/attachments`,
+            const res = await api.post(
+                `/LegalCase/${id}/attachments`,
                 formData,
                 {
                     headers: {
@@ -49,7 +49,7 @@ const CaseDetails = () => {
         }
     }
     function getCaseDetails() {
-        return axios.get(`https://lawersystem-production.up.railway.app/LegalCase/${id}`, {
+        return api.get(`/LegalCase/${id}`, {
             headers: {
                 authorization: `Bearer ${Cookies.get("token")}`,
             }
@@ -64,8 +64,8 @@ const CaseDetails = () => {
         try {
             setLoading(true);
 
-            const res = await axios.delete(
-                `https://lawersystem-production.up.railway.app/LegalCase/${id}/attachments/`,
+            const res = await api.delete(
+                `/LegalCase/${id}/attachments/`,
                 {
                     headers: {
                         authorization: `Bearer ${Cookies.get("token")}`,
@@ -87,8 +87,8 @@ const CaseDetails = () => {
         }
     }
     function updateCaseData(updatedCase) {
-        return axios.put(
-            `https://lawersystem-production.up.railway.app/LegalCase/${id}`,
+        return api.put(
+            `/LegalCase/${id}`,
             updatedCase,
             {
                 headers: {
@@ -125,7 +125,7 @@ const CaseDetails = () => {
         },
     });
     function getUSers() {
-        return axios.get("https://lawersystem-production.up.railway.app/users", {
+        return api.get("/users", {
             headers: {
                 authorization: `Bearer ${Cookies.get("token")}`,
 
@@ -137,8 +137,8 @@ const CaseDetails = () => {
         queryFn: getUSers
     })
     function updateFeesData(updatedFees) {
-        return axios.patch(
-            `https://lawersystem-production.up.railway.app/LegalCase/${id}/fees`,
+        return api.patch(
+            `/LegalCase/${id}/fees`,
             updatedFees,
             {
                 headers: {

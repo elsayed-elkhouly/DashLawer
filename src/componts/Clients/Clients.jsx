@@ -4,7 +4,6 @@ import { MdGavel, MdOutlineAccountBalanceWallet } from 'react-icons/md'
 import { MoreVertical, Eye, Edit2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useForm } from "react-hook-form";
 import { Building2, UserRound } from "lucide-react";
-import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
@@ -13,17 +12,18 @@ import { Search, SlidersHorizontal, } from "lucide-react";
 import Pagination from '../Pagination/Pagination';
 import React, { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
+import api from '../../api/axios';
 const Clients = () => {
     const queryClient = useQueryClient();
     const [search, setSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const limit = 4;
 
-
+ 
     async function exportClient() {
         try {
-            const res = await axios.get(
-                "https://lawersystem-production.up.railway.app/Client/export",
+            const res = await api.get(
+                "/Client/export",
                 {
                     headers: {
                         authorization: `Bearer ${Cookies.get("token")}`,
@@ -47,8 +47,8 @@ const Clients = () => {
     }
 
     async function getClients(page = 1, search = "") {
-        const res = await axios.get(
-            "https://lawersystem-production.up.railway.app/Client/all/",
+        const res = await api.get(
+            "/Client/all/",
             {
                 params: {
                     limit,
@@ -130,8 +130,8 @@ const Clients = () => {
     const clientType = watch("type");
 
     const AddClient = async (data) => {
-        const res = await axios.post(
-            "https://lawersystem-production.up.railway.app/Client/create",
+        const res = await api.post(
+            "/Client/create",
             data,
             {
                 headers: {
@@ -148,7 +148,7 @@ const Clients = () => {
     });
 
     function getStats() {
-        return axios.get("https://lawersystem-production.up.railway.app/Client/", {
+        return api.get("/Client/", {
             headers: {
                 authorization: `Bearer ${Cookies.get("token")}`,
             }
@@ -182,8 +182,8 @@ const Clients = () => {
 
     async function deleteClient(id) {
         try {          
-           const res = await axios.delete(
-                `https://lawersystem-production.up.railway.app/Client/${id}`,
+           const res = await api.delete(
+                `/Client/${id}`,
                 {
                     headers: {
                         authorization: `Bearer ${Cookies.get("token")}`,

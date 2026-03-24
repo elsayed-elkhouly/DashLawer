@@ -4,13 +4,14 @@ import { FileText, Search, User } from 'lucide-react'
 import React from 'react'
 import { MdOutlinePictureAsPdf } from "react-icons/md";
 import Cookies from 'js-cookie';
+import api from '../../api/axios';
 
 const DigitalArchive = () => {
 
 
 
   function getData() {
-    return axios.get("https://lawersystem-production.up.railway.app/Archive/?page=1", {
+    return api.get("/Archive/?page=1", {
       headers: {
         authorization: `Bearer ${Cookies.get("token")}`,
       }

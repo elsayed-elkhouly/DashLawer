@@ -4,6 +4,7 @@ import { ArrowLeftRight, ChevronDown, ChevronLeft, ChevronRight, Download, Edit2
 import React from 'react'
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import api from '../../api/axios';
 
 const Team = () => {
 
@@ -25,10 +26,11 @@ const Team = () => {
 };
   
  
+ 
 
 
   function getUSers() {
-    return axios.get("https://lawersystem-production.up.railway.app/users", {
+    return api.get("/users", {
       headers: {
         authorization: `Bearer ${Cookies.get("token")}`,
 

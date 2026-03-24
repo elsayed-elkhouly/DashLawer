@@ -19,6 +19,7 @@ import { Link } from 'react-router-dom';
 import Cookies from "js-cookie";
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
+import api from '../../api/axios';
 
 const Bills = () => {
   const [search, setSearch] = useState("");
@@ -27,7 +28,7 @@ const Bills = () => {
   const queryClient = useQueryClient();
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 10;
-
+ 
   const tabs = [
     { key: "late", label: "المتأخرة" },
     { key: "unpaid", label: "غير المدفوعة" },
@@ -91,7 +92,7 @@ const Bills = () => {
   };
 
   function getAllInvoics(page = 1) {
-    return axios.get("https://lawersystem-production.up.railway.app/invoices/all", {
+    return api.get("/invoices/all", {
       headers: {
         authorization: `Bearer ${Cookies.get("token")}`,
       },
@@ -110,8 +111,8 @@ const Bills = () => {
 
   const deleteMutation = useMutation({
     mutationFn: (id) => {
-      return axios.delete(
-        `https://lawersystem-production.up.railway.app/invoices/${id}`,
+      return api.delete(
+        `/invoices/${id}`,
         {
           headers: {
             authorization: `Bearer ${Cookies.get("token")}`,
@@ -177,8 +178,8 @@ const Bills = () => {
 
 async function PrintSingleInvoic(id) {
     try {
-      const res = await axios.get(
-        `https://lawersystem-production.up.railway.app/invoices/${id}/print`,
+      const res = await api.get(
+        `/invoices/${id}/print`,
         {
           responseType: "blob",
           headers: {

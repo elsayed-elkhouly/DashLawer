@@ -16,6 +16,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import toast from 'react-hot-toast';
+import api from '../../api/axios';
 
 const CaseMange = () => {
   const [activeTab, setActiveTab] = useState("all");
@@ -52,7 +53,7 @@ const CaseMange = () => {
     }
   };
   function getAllCases() {
-    return axios.get("https://lawersystem-production.up.railway.app/LegalCase/", {
+    return api.get("/LegalCase/", {
       headers: {
         authorization: `Bearer ${Cookies.get("token")}`,
 
@@ -66,8 +67,8 @@ const CaseMange = () => {
 
   async function deleteCase(id) {
     try {
-      const res = await axios.delete(
-        `https://lawersystem-production.up.railway.app/LegalCase/${id}`,
+      const res = await api.delete(
+        `/LegalCase/${id}`,
         {
           headers: {
             authorization: `Bearer ${Cookies.get("token")}`,

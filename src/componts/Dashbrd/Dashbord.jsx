@@ -16,6 +16,7 @@ import { RiMicAiLine, RiMvAiLine } from 'react-icons/ri'
 import Cookies from 'js-cookie';
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
+import api from '../../api/axios'
 
 const Dashbord = () => {
   const hearingsData = [
@@ -27,7 +28,7 @@ const Dashbord = () => {
       court: "محكمة الاستئناف - القاعة 4",
       time: "10:00 صباحاً",
       tag: "جلسة أولى",
-      tagStyle: "text-amber-500 border-amber-500/30 bg-amber-500/5"
+      tagStyle: "text-amber-500 border-amber-500/30 bg-amber-500/5",
     },
     {
       id: 2,
@@ -37,296 +38,271 @@ const Dashbord = () => {
       court: "المحكمة العمالية - القاعة 12",
       time: "11:30 صباحاً",
       tag: "مرافعة ختامية",
-      tagStyle: "text-blue-400 border-blue-400/30 bg-blue-400/5"
-    }
-  ];
-  const navigate = useNavigate();
+      tagStyle: "text-blue-400 border-blue-400/30 bg-blue-400/5",
+    },
+  ]
+
+  const navigate = useNavigate()
+
   function getData() {
-    return axios.get("https://lawersystem-production.up.railway.app/Dashboard/", {
+    return api.get("/Dashboard/", {
       headers: {
         authorization: `Bearer ${Cookies.get("token")}`,
-
-      }
+      },
     })
   }
- const {data} =  useQuery({
-    queryKey:["Data"],
-    queryFn:getData
+
+  const { data } = useQuery({
+    queryKey: ["Data"],
+    queryFn: getData,
   })
-  console.log(data?.data);
-  
-  // Static Data for Quick Actions
 
   const priorities = [
-    { label: 'أولوية عاجلة', count: data?.data?.tasksByPriority?.عاجلة, color: 'text-amber-500' },
-    { label: 'أولوية عالية', count: data?.data?.tasksByPriority?.عالية, color: 'text-amber-500' },
-    { label: 'أولوية متوسطة', count: data?.data?.tasksByPriority?.متوسطة, color: 'text-amber-500' },
-    { label: 'أولوية منخفضة', count: data?.data?.tasksByPriority?.منخفضة, color: 'text-amber-500' },
-  ];
+    { label: "أولوية عاجلة", count: data?.data?.tasksByPriority?.عاجلة ?? 0 },
+    { label: "أولوية عالية", count: data?.data?.tasksByPriority?.عالية ?? 0 },
+    { label: "أولوية متوسطة", count: data?.data?.tasksByPriority?.متوسطة ?? 0 },
+    { label: "أولوية منخفضة", count: data?.data?.tasksByPriority?.منخفضة ?? 0 },
+  ]
 
   const actions = [
-    { label: 'إضافة عميل', icon: <BiUserPlus size={24} />, key: 1,path: '' },
-    { label: 'قضية جديدة', icon: <BsPlusSquare size={24} />, key: 2 ,path:"/CaseMangemnt/AddNewCase"},
-    { label: 'الرسائل', icon: <RiMvAiLine size={24} />, key: 3 },
-    { label: 'جدولة جلسة', icon: <CgLock size={24} />, key: 4 },
-  ];
- 
+    { label: "إضافة عميل", icon: <BiUserPlus size={24} />, key: 1, path: "" },
+    { label: "قضية جديدة", icon: <BsPlusSquare size={24} />, key: 2, path: "/CaseMangemnt/AddNewCase" },
+    { label: "الرسائل", icon: <RiMvAiLine size={24} />, key: 3, path: "" },
+    { label: "جدولة جلسة", icon: <CgLock size={24} />, key: 4, path: "" },
+  ]
 
-  // Data for "Latest Added Cases" Table
-  const cases = [
-    { id: '#CAS-8832', client: 'شركة الأمل للاستثمار', type: 'تجاري - نزاع عقود', status: 'نشطة', date: '2025/10/12' },
-    { id: '#CAS-8741', client: 'أحمد مصطفى', type: 'أحوال شخصية - إرث', status: 'بانتظار مستندات', date: '2025/10/10' },
-    { id: '#CAS-8692', client: 'مستشفى النور التخصصي', type: 'قانون إداري - تراخيص', status: 'متوقفة', date: '2025/10/08' },
-  ];
-   const formatDateISO = (dateString) => {
-        if (!dateString) return "-";
+  const formatDateISO = (dateString) => {
+    if (!dateString) return "-"
+    const date = new Date(dateString)
+    if (isNaN(date.getTime())) return "-"
+    return date.toISOString().split("T")[0]
+  }
 
-        const date = new Date(dateString);
+  const statsCards = [
+    {
+      title: "المهام المعلقة",
+      value: data?.data?.stats?.pendingTasks ?? 0,
+      icon: <LuFileCheck className="text-[#C9A14A] w-5 h-5 sm:w-6 sm:h-6" />,
+    },
+    {
+      title: "إجمالي الإيرادات",
+      value: `$${data?.data?.stats?.totalRevenue ?? 0}`,
+      icon: <FaMoneyBills className="text-[#C9A14A] w-5 h-5 sm:w-6 sm:h-6" />,
+    },
+    {
+      title: "العملاء النشطون",
+      value: data?.data?.stats?.activeClients ?? 0,
+      icon: <IoMdPersonAdd className="text-[#C9A14A] w-5 h-5 sm:w-6 sm:h-6" />,
+    },
+    {
+      title: "القضايا النشطة",
+      value: data?.data?.stats?.activeCases ?? 0,
+      icon: <MdGavel className="text-[#C9A14A] w-5 h-5 sm:w-6 sm:h-6" />,
+    },
+  ]
 
-        if (isNaN(date.getTime())) return "-";
-
-        return date.toISOString().split("T")[0];
-    };
   return (
-    <>
-      <nav className="flex items-center justify-between w-full h-18 px-8 bg-[#0b1120] text-white border-b border-gray-800">
+    <div className="min-h-screen bg-[#0b1120] text-white" dir="rtl">
+      {/* Header */}
+      <nav className="w-full px-4 sm:px-6 lg:px-8 py-4 bg-[#0b1120] text-white border-b border-gray-800">
+        <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+          {/* Page Title */}
+          <div className="text-right order-1 xl:order-3">
+            <h1 className="text-lg sm:text-xl font-bold">لوحة التحكم التنفيذية</h1>
+            <p className="text-xs text-gray-400 mt-1">مرحباً بك مجدداً، المحامي أحمد</p>
+          </div>
 
-        {/* 1. Profile & Settings (Left Side) */}
-        <div className="flex items-center gap-6">
-          <div className="flex items-center gap-3">
-            <img
-              src="https://via.placeholder.com/40"
-              alt="User"
-              className="w-10 h-10 rounded-full border border-yellow-500"
-            />
-            <div className="text-right">
-              <p className="text-sm font-bold">أحمد مصطفى</p>
-              <p className="text-xs text-gray-400">شريك إداري</p>
+          {/* Search */}
+          <div className="w-full xl:flex-1 xl:max-w-xl xl:mx-6 order-3 xl:order-2">
+            <div className="relative group">
+              <input
+                type="text"
+                placeholder="...بحث عن قضية، موكل، أو مستند"
+                className="w-full bg-[#151c2c] border border-gray-700 rounded-lg py-2.5 pr-10 pl-4 text-right text-sm focus:outline-none focus:border-gray-500 transition"
+              />
+              <BiSearch className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
             </div>
           </div>
 
-          <div className="flex items-center gap-4 text-gray-400">
-            <CiSettings className="w-5 h-5 cursor-pointer hover:text-white transition" />
-            <div className="relative">
-              <BiBell className="w-5 h-5 cursor-pointer hover:text-white transition" />
-              <span className="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full border border-[#0b1120]"></span>
+          {/* Profile & Settings */}
+          <div className="flex items-center justify-between sm:justify-start gap-4 sm:gap-6 order-2 xl:order-1">
+            <div className="flex items-center gap-3">
+              <img
+                src="https://via.placeholder.com/40"
+                alt="User"
+                className="w-10 h-10 rounded-full border border-yellow-500 object-cover"
+              />
+              <div className="text-right">
+                <p className="text-sm font-bold">أحمد مصطفى</p>
+                <p className="text-xs text-gray-400">شريك إداري</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4 text-gray-400">
+              <CiSettings className="w-5 h-5 cursor-pointer hover:text-white transition" />
+              <div className="relative">
+                <BiBell className="w-5 h-5 cursor-pointer hover:text-white transition" />
+                <span className="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full border border-[#0b1120]"></span>
+              </div>
             </div>
           </div>
         </div>
-
-        {/* 2. Search Bar (Middle) */}
-        <div className="flex-1 max-w-xl mx-10">
-          <div className="relative group">
-            <input
-              type="text"
-              placeholder="...بحث عن قضية، موكل، أو مستند"
-              className="w-full bg-[#151c2c] border border-gray-700 rounded-lg py-2 pr-10 pl-4 text-right text-sm focus:outline-none focus:border-gray-500 transition"
-            />
-            <BiSearch className="absolute right-3 top-2.5 w-4 h-4 text-gray-500" />
-          </div>
-        </div>
-
-        {/* 3. Page Title (Right Side) */}
-        <div className="text-right">
-          <h1 className="text-xl font-bold">لوحة التحكم التنفيذية</h1>
-          <p className="text-xs text-gray-400">مرحباً بك مجدداً، المحامي أحمد</p>
-        </div>
-
       </nav>
 
-      <section>
-        <div className='flex items-center justify-center gap-5 px-5 mt-5'>
-          <div className=" bg-[#101c2e] rounded-xl p-6 w-92.5 flex flex-col justify-between shadow-lg relative border border-[#C9A14A1A]">
-            {/* النسبة */}
-            <div className="flex items-center text-[#C9A14A] font-semibold text-sm mb-4">
-              <FiTrendingUp className="mr-1" />
-              +12%
-            </div>
-
-            {/* الأيقونة الرئيسية */}
-            <div className="absolute top-6 right-6 bg-[#2A2A3D] p-3 rounded-full mt-5">
-              <LuFileCheck className="text-[#C9A14A] w-6 h-6" />
-            </div>
-
-            {/* النص والعدد */}
-            <div className="mt-auto text-right pt-10 ">
-              <p className="text-gray-400 text-sm"> المهام المعلقة</p>
-              <p className="text-white text-2xl font-bold">{data?.data?.stats?.pendingTasks}</p>
-            </div>
-          </div>
-          <div className="bg-[#101c2e] rounded-xl p-6 w-92.5 flex flex-col justify-between shadow-lg relative border border-[#C9A14A1A]">
-            {/* النسبة */}
-            <div className="flex items-center text-[#C9A14A] font-semibold text-sm mb-4">
-              <FiTrendingUp className="mr-1" />
-              +12%
-            </div>
-
-            {/* الأيقونة الرئيسية */}
-            <div className="absolute top-6 right-6 bg-[#2A2A3D] p-3 rounded-full mt-5">
-              <FaMoneyBills className="text-[#C9A14A] w-6 h-6" />
-            </div>
-
-            {/* النص والعدد */}
-            <div className="mt-auto text-right pt-10 ">
-              <p className="text-gray-400 text-sm"> إجمالي الإيرادات</p>
-              <p className="text-white text-2xl font-bold">${data?.data?.stats?.totalRevenue}</p>
-            </div>
-          </div>
-          <div className="bg-[#101c2e] rounded-xl p-6 w-92.5 flex flex-col justify-between shadow-lg relative border border-[#C9A14A1A]">
-            {/* النسبة */}
-            <div className="flex items-center text-[#C9A14A] font-semibold text-sm mb-4">
-              <FiTrendingUp className="mr-1" />
-              +12%
-            </div>
-
-            {/* الأيقونة الرئيسية */}
-            <div className="absolute top-6 right-6 bg-[#2A2A3D] p-3 rounded-full mt-5">
-              <IoMdPersonAdd className="text-[#C9A14A] w-6 h-6" />
-            </div>
-
-            {/* النص والعدد */}
-            <div className="mt-auto text-right pt-10 ">
-              <p className="text-gray-400 text-sm">العملاء النشطون</p>
-              <p className="text-white text-2xl font-bold">{data?.data?.stats?.activeClients}</p>
-            </div>
-          </div>
-          <div className="bg-[#101c2e] rounded-xl p-6 w-92.5 flex flex-col justify-between shadow-lg relative border border-[#C9A14A1A]">
-            {/* النسبة */}
-            <div className="flex items-center text-[#C9A14A] font-semibold text-sm mb-4">
-              <FiTrendingUp className="mr-1" />
-              +12%
-            </div>
-
-            {/* الأيقونة الرئيسية */}
-            <div className="absolute top-6 right-6 bg-[#2A2A3D] p-3 rounded-full mt-5">
-              <MdGavel className="text-[#C9A14A] w-6 h-6" />
-            </div>
-
-            {/* النص والعدد */}
-            <div className="mt-auto text-right pt-10 ">
-              <p className="text-gray-400 text-sm">القضايا النشطة</p>
-              <p className="text-white text-2xl font-bold">{data?.data?.stats?.activeCases}</p>
-            </div>
-          </div>
-
-        </div>
-      </section>
-      <div className="w-full p-6 bg-[#101c2e] text-white font-sans" dir="rtl">
-        {/* Section Header */}
-        <div className="flex justify-between items-center mb-6">
-          <div className="flex items-center gap-2">
-            <BiCalendar className="w-5 h-5 text-[#C9A14A]" />
-            <h2 className="text-xl font-bold">جلسات الاستماع القادمة</h2>
-          </div>
-          <button className="text-[#C9A14A] text-sm hover:underline hover:text-amber-400 transition">
-            عرض الكل
-          </button>
-        </div>
-
-        {/* List of Static Items */}
-        <div className="space-y-4">
-          {hearingsData.map((hearing) => (
+      {/* Stats Cards */}
+      <section className="px-4 sm:px-6 lg:px-8 mt-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-4 gap-4 lg:gap-5">
+          {statsCards.map((card, index) => (
             <div
-              key={hearing.id}
-              className="flex items-center justify-between p-4 bg-[#101c2e] border border-gray-800 rounded-2xl hover:border-gray-700 transition-colors cursor-pointer group"
+              key={index}
+              className="bg-[#101c2e] rounded-xl p-5 sm:p-6 min-h-[150px] flex flex-col justify-between shadow-lg relative border border-[#C9A14A1A]"
             >
-              {/* Right: Date Marker */}
-              <div className="flex items-center gap-4">
-                <div className="bg-[#0b1220] border border-amber-500/20 rounded-xl px-4 py-2 text-center min-w-17.5">
-                  <span className="block text-xl font-bold text-[#C9A14A]">{hearing.day}</span>
-                  <span className="block text-xs text-gray-400">{hearing.month}</span>
-                </div>
+             
 
-                {/* Center: Case Info */}
-                <div className="text-right">
-                  <h3 className="font-semibold text-sm mb-1">{hearing.title}</h3>
-                  <div className="flex items-center gap-1 text-xs text-gray-500">
-                    <BiMapPin className="w-3 h-3" />
-                    <span>{hearing.court}</span>
-                  </div>
-                </div>
+              <div className="absolute top-5 right-5 bg-[#2A2A3D] p-3 rounded-full mb-3">
+                {card.icon}
               </div>
 
-              {/* Left: Time and Tag */}
-              <div className="flex items-center gap-6">
-                <div className="text-left">
-                  <p className="text-sm font-bold mb-1">{hearing.time}</p>
-                  <span className={`text-[10px] px-3 py-0.5 rounded-full border ${hearing.tagStyle}`}>
-                    {hearing.tag}
-                  </span>
-                </div>
-                <BiChevronLeft className="w-5 h-5 text-gray-600 group-hover:text-white transition-colors" />
+              <div className="mt-auto text-right pt-8 sm:pt-10">
+                <p className="text-gray-400 text-sm">{card.title}</p>
+                <p className="text-white text-xl sm:text-2xl font-bold mt-1 break-words">
+                  {card.value}
+                </p>
               </div>
             </div>
           ))}
         </div>
-      </div>
-      <div dir="rtl" className=" bg-[#101c2e] p-8 text-white font-sans">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-30 max-w-6xl mx-auto">
+      </section>
 
-          {/* Section: Quick Actions */}
-          <div>
-            <div className="flex items-center gap-2 mb-6 text-xl font-bold">
-              <span className="text-[#C9A14A]"><MdOutlineElectricBolt /></span>
-              <h2>الإجراءات السريعة</h2>
+      {/* Hearings */}
+      <section className="px-4 sm:px-6 lg:px-8 mt-6">
+        <div className="w-full p-4 sm:p-6 bg-[#101c2e] text-white font-sans rounded-2xl border border-gray-800">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
+            <div className="flex items-center gap-2">
+              <BiCalendar className="w-5 h-5 text-[#C9A14A]" />
+              <h2 className="text-lg sm:text-xl font-bold">جلسات الاستماع القادمة</h2>
             </div>
-            <div className="grid grid-cols-2 gap-4 p-6 bg-[#111c30]/50 rounded-2xl border border-gray-800">
-              {actions.map((action) => (
-                <button
-                 onClick={() => navigate(action.path)}
-                  key={action.key}
-                  className="flex flex-col items-center justify-center gap-3 bg-[#111c30] p-8 rounded-xl border border-gray-800 hover:border-amber-500/50 transition-all group"
-                >
-                  <div className="text-[#C9A14A] group-hover:scale-110 transition-transform">
-                    {action.icon}
+
+            <button className="text-[#C9A14A] text-sm hover:underline hover:text-amber-400 transition self-start sm:self-auto">
+              عرض الكل
+            </button>
+          </div>
+
+          <div className="space-y-4">
+            {hearingsData.map((hearing) => (
+              <div
+                key={hearing.id}
+                className="p-4 bg-[#101c2e] border border-gray-800 rounded-2xl hover:border-gray-700 transition-colors cursor-pointer group"
+              >
+                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                  <div className="flex items-start sm:items-center gap-4">
+                    <div className="bg-[#0b1220] border border-amber-500/20 rounded-xl px-4 py-2 text-center min-w-[70px] shrink-0">
+                      <span className="block text-xl font-bold text-[#C9A14A]">{hearing.day}</span>
+                      <span className="block text-xs text-gray-400">{hearing.month}</span>
+                    </div>
+
+                    <div className="text-right min-w-0">
+                      <h3 className="font-semibold text-sm sm:text-base mb-1 break-words">
+                        {hearing.title}
+                      </h3>
+                      <div className="flex items-center gap-1 text-xs sm:text-sm text-gray-500">
+                        <BiMapPin className="w-3 h-3 shrink-0" />
+                        <span className="break-words">{hearing.court}</span>
+                      </div>
+                    </div>
                   </div>
-                  <span className="text-sm text-gray-300">{action.label}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-          {/* Section: Tasks by Priority */}
-          <div>
-            <div className="flex items-center gap-2 mb-6 text-xl font-bold">
-              <span className="text-[#C9A14A] text-2xl">!</span>
-              <h2>المهام حسب الأولوية</h2>
-            </div>
-            <div className="space-y-3">
-              {priorities.map((p, i) => (
-                <div key={i} className="flex justify-between items-center bg-[#111c30] p-4 rounded-lg border border-gray-800/50">
-                  <span className="text-gray-300">{p.label}</span>
-                  <span className={` text-[#C9A14A] font-medium`}>
-                    {p.count} {p.count === 1 ? 'مهمة' : 'مهام'}
-                  </span>
+
+                  <div className="flex items-center justify-between lg:justify-end gap-4 lg:gap-6">
+                    <div className="text-right lg:text-left">
+                      <p className="text-sm font-bold mb-1">{hearing.time}</p>
+                      <span className={`inline-block text-[10px] sm:text-xs px-3 py-1 rounded-full border ${hearing.tagStyle}`}>
+                        {hearing.tag}
+                      </span>
+                    </div>
+                    <BiChevronLeft className="w-5 h-5 text-gray-600 group-hover:text-white transition-colors shrink-0" />
+                  </div>
                 </div>
-              ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Actions + Priorities */}
+      <section className="px-4 sm:px-6 lg:px-8 mt-6">
+        <div className="bg-[#101c2e] p-4 sm:p-6 lg:p-8 text-white font-sans rounded-2xl border border-gray-800">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-8">
+            {/* Quick Actions */}
+            <div>
+              <div className="flex items-center gap-2 mb-6 text-lg sm:text-xl font-bold">
+                <span className="text-[#C9A14A]">
+                  <MdOutlineElectricBolt />
+                </span>
+                <h2>الإجراءات السريعة</h2>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-2 gap-4 p-4 sm:p-6 bg-[#111c30]/50 rounded-2xl border border-gray-800">
+                {actions.map((action) => (
+                  <button
+                    onClick={() => action.path && navigate(action.path)}
+                    key={action.key}
+                    className="flex flex-col items-center justify-center gap-3 bg-[#111c30] p-5 sm:p-6 lg:p-8 rounded-xl border border-gray-800 hover:border-amber-500/50 transition-all group min-h-[120px]"
+                  >
+                    <div className="text-[#C9A14A] group-hover:scale-110 transition-transform">
+                      {action.icon}
+                    </div>
+                    <span className="text-xs sm:text-sm text-gray-300 text-center">
+                      {action.label}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Priorities */}
+            <div>
+              <div className="flex items-center gap-2 mb-6 text-lg sm:text-xl font-bold">
+                <span className="text-[#C9A14A] text-2xl">!</span>
+                <h2>المهام حسب الأولوية</h2>
+              </div>
+
+              <div className="space-y-3">
+                {priorities.map((p, i) => (
+                  <div
+                    key={i}
+                    className="flex items-center justify-between gap-4 bg-[#111c30] p-4 rounded-lg border border-gray-800/50"
+                  >
+                    <span className="text-gray-300 text-sm sm:text-base">{p.label}</span>
+                    <span className="text-[#C9A14A] font-medium text-sm sm:text-base whitespace-nowrap">
+                      {p.count} {p.count === 1 ? "مهمة" : "مهام"}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-
-
-
         </div>
-      </div>
-      <div dir="rtl" className="min-h-screen bg-[#101c2e] p-6 text-white font-sans">
+      </section>
 
-
-        {/* BOTTOM SECTION: Latest Added Cases Table */}
-        <section className="bg-[##101c2e] rounded-2xl border border-gray-800/50 overflow-hidden">
-          <div className="p-6 flex justify-between items-center border-b border-gray-800/50">
+      {/* Latest Cases */}
+      <section className="px-4 sm:px-6 lg:px-8 mt-6 pb-6">
+        <div className="bg-[#101c2e] rounded-2xl border border-gray-800/50 overflow-hidden">
+          <div className="p-4 sm:p-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 border-b border-gray-800/50">
             <div className="flex items-center gap-2">
               <FiFileText className="text-[#C9A14A]" size={20} />
-              <h2 className="text-lg font-bold">آخر القضايا المضافة</h2>
+              <h2 className="text-base sm:text-lg font-bold">آخر القضايا المضافة</h2>
             </div>
+
             <div className="flex gap-3">
-              
               <button className="flex items-center gap-2 bg-[#162235] px-4 py-2 rounded-lg text-sm border border-gray-700 hover:bg-gray-700 transition">
-                <BiDownload size={16} /> تصدير
+                <BiDownload size={16} />
+                تصدير
               </button>
             </div>
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-right">
+            <table className="w-full min-w-[760px] text-right">
               <thead className="text-[#C9A14A] text-sm bg-[#0d1525]">
                 <tr>
                   <th className="p-4 font-medium">رقم القضية</th>
@@ -337,18 +313,19 @@ const Dashbord = () => {
                   <th className="p-4 font-medium">الإجراءات</th>
                 </tr>
               </thead>
+
               <tbody className="text-gray-300 divide-y divide-gray-800/50">
-                {data?.data?.recentCases.map((item, idx) => (
+                {data?.data?.recentCases?.map((item, idx) => (
                   <tr key={idx} className="hover:bg-white/5 transition">
-                    <td className="p-4 font-mono">{item.caseNumber}</td>
-                    <td className="p-4">{item.client?.fullName}</td>
-                    <td className="p-4">{item.caseType?.name}</td>
-                    <td className="p-4">
-                      <span className={`px-3 py-1 rounded-full text-xs `}>
-                        {item.status}
+                    <td className="p-4 font-mono whitespace-nowrap">{item.caseNumber || "-"}</td>
+                    <td className="p-4 whitespace-nowrap">{item.client?.fullName || "-"}</td>
+                    <td className="p-4 whitespace-nowrap">{item.caseType?.name || "-"}</td>
+                    <td className="p-4 whitespace-nowrap">
+                      <span className="px-3 py-1 rounded-full text-xs bg-white/5 border border-gray-700">
+                        {item.status || "-"}
                       </span>
                     </td>
-                    <td className="p-4"> {formatDateISO(item.openedAt)}</td>
+                    <td className="p-4 whitespace-nowrap">{formatDateISO(item.openedAt)}</td>
                     <td className="p-4">
                       <button className="text-[#C9A14A] hover:text-amber-400">
                         <BsEye size={18} />
@@ -360,18 +337,20 @@ const Dashbord = () => {
             </table>
           </div>
 
-          {/* Table Footer / Pagination */}
-          <div className="p-4 flex justify-between items-center text-xs text-gray-500 border-t border-gray-800/50">
+          <div className="p-4 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-gray-500 border-t border-gray-800/50">
             <div className="flex gap-2">
-              <button className="p-1 bg-[#162235] border border-gray-700 rounded"><BiChevronRight size={16} /></button>
-              <button className="p-1 bg-[#162235] border border-gray-700 rounded"><BiChevronLeftCircle size={16} /></button>
+              <button className="p-1 bg-[#162235] border border-gray-700 rounded">
+                <BiChevronRight size={16} />
+              </button>
+              <button className="p-1 bg-[#162235] border border-gray-700 rounded">
+                <BiChevronLeftCircle size={16} />
+              </button>
             </div>
             <span>عرض 3 من أصل 124 قضية</span>
           </div>
-        </section>
-      </div>
-
-    </>
+        </div>
+      </section>
+    </div>
   )
 }
 

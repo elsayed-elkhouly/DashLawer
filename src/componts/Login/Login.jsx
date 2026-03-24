@@ -12,6 +12,7 @@ import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { Authcontext } from '../../Context/AuthContextProvider';
 import Cookies from "js-cookie";
+import api from '../../api/axios';
 
 
 const Login = () => {
@@ -33,12 +34,12 @@ const Login = () => {
     },
     resolver: zodResolver(schame)
 
-  })
-
+  }) 
+ 
   async function Signin(values) {
     setisLoding(true)
     try {
-      const data = await axios.post("https://lawersystem-production.up.railway.app/auth/authSignin", values)
+      const data =await api.post("/auth/authSignin", values)
       console.log(data.data);
       toast.success(data.data.message)
       insertToken(data.data.access_token)

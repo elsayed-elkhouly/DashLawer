@@ -21,6 +21,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useQuery } from "@tanstack/react-query"
 import toast from 'react-hot-toast';
+import api from '../../api/axios';
 
 const AddNewCase = () => {
 
@@ -58,7 +59,7 @@ const AddNewCase = () => {
   const onSubmit = async (data) => {
     setloding(true)
     try {
-      const res = await axios.post("https://lawersystem-production.up.railway.app/LegalCase/", data, {
+      const res = await api.post("/LegalCase/", data, {
         headers: {
           authorization: `Bearer ${Cookies.get("token")}`
         }
@@ -87,7 +88,7 @@ const AddNewCase = () => {
 
 
   function getCases() {
-    return axios.get("https://lawersystem-production.up.railway.app/CaseType/", {
+    return api.get("/CaseType/", {
       headers: {
         authorization: `Bearer ${Cookies.get("token")}`
       }
@@ -99,7 +100,7 @@ const AddNewCase = () => {
   })
 
   function getUSers() {
-    return axios.get("https://lawersystem-production.up.railway.app/users", {
+    return api.get("/users", {
       headers: {
         authorization: `Bearer ${Cookies.get("token")}`,
 
@@ -112,8 +113,8 @@ const AddNewCase = () => {
   })
   // console.log(Lawer?.data?.users);
   async function getClients(search) {
-    const res = await axios.get(
-      "https://lawersystem-production.up.railway.app/Client/all",
+    const res = await api.get(
+      "/Client/all",
       {
         params: {
           search,

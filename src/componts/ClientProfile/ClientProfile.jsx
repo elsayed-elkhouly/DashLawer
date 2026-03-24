@@ -13,6 +13,7 @@ import { FaMoneyBills } from "react-icons/fa6";
 import { MdOutlineAccountBalanceWallet } from 'react-icons/md';
 import { RiDeleteBin6Line } from "react-icons/ri";
 import toast from 'react-hot-toast';
+import api from '../../api/axios';
 
 
 
@@ -23,7 +24,7 @@ const ClientProfile = () => {
   const [file, setFile] = useState(null);
   const fileInputRef = useRef(null);
   function getClientProfile() {
-    return axios.get(`https://lawersystem-production.up.railway.app/Client/${id}`, {
+    return api.get(`/Client/${id}`, {
       headers: {
         authorization: `Bearer ${Cookies.get("token")}`,
       }
@@ -54,8 +55,8 @@ const ClientProfile = () => {
     },
   });
   function updateData(updatedClient) {
-    return axios.put(
-      `https://lawersystem-production.up.railway.app/Client/${id}`,
+    return api.put(
+      `/Client/${id}`,
       updatedClient,
       {
         headers: {
@@ -82,8 +83,8 @@ const ClientProfile = () => {
     setLoding(false)
     try {
       setLoding(true)
-      const res = await axios.post(
-        `https://lawersystem-production.up.railway.app/Client/${id}/documents`,
+      const res = await api.post(
+        `/Client/${id}/documents`,
         formData, {
         headers: {
           authorization: `Bearer ${Cookies.get("token")}`,
@@ -130,8 +131,8 @@ const ClientProfile = () => {
 
   async function DeleteDoc(publicId) {
     try {
-      const res = await axios.delete(
-        `https://lawersystem-production.up.railway.app/Client/${id}/deleteDocuments`,
+      const res = await api.delete(
+        `/Client/${id}/deleteDocuments`,
         {
           data: {
             publicId: publicId,
@@ -155,8 +156,8 @@ const ClientProfile = () => {
 
   async function PrintAllInvoic() {
     try {
-      const res = await axios.get(
-        `https://lawersystem-production.up.railway.app/invoices/client/${id}/print-all`,
+      const res = await api.get(
+        `/invoices/client/${id}/print-all`,
         {
           responseType: "blob",
           headers: {
@@ -185,8 +186,8 @@ const ClientProfile = () => {
   }
   async function PrintSingleInvoic(id) {
     try {
-      const res = await axios.get(
-        `https://lawersystem-production.up.railway.app/invoices/${id}/print`,
+      const res = await api.get(
+        `/invoices/${id}/print`,
         {
           responseType: "blob",
           headers: {

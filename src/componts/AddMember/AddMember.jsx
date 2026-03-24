@@ -14,8 +14,10 @@ import { IoIosCamera } from "react-icons/io";
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { Link } from 'react-router-dom';
+import api from '../../api/axios';
 
 const AddMember = () => {
+  
   Cookies.get("token")
   const AddUser = async (data) => {
     const formData = new FormData();
@@ -33,7 +35,7 @@ const AddMember = () => {
       formData.append("profile", data.profile[0]);
     }
     try {
-      const response = await axios.post("https://lawersystem-production.up.railway.app/users/addUsers", formData, {
+      const response = await api.post("/users/addUsers", formData, {
         headers: {
           authorization: `Bearer ${Cookies.get("token")}`,
         },
