@@ -110,72 +110,70 @@ const CaseMange = () => {
   }, [activeTab, cases]);
   return (
     <>
-      <div className="w-full bg-[#0f172a] p-8 flex flex-row-reverse items-center justify-between font-sans" dir="rtl">
-        {/* Right Side: Buttons */}
-        <div className="flex items-center gap-4">
+      <div className="w-full bg-[#0f172a] px-4 sm:px-6 lg:px-8 py-5 sm:py-6 lg:py-8 font-sans" dir="rtl">
+  <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
+    {/* Title and Subtitle */}
+    <div className="text-right order-1">
+      <h1 className="text-white text-2xl sm:text-3xl font-bold mb-2">
+        إدارة القضايا
+      </h1>
+      <p className="text-gray-400 text-sm sm:text-base leading-6">
+        نظرة عامة على جميع القضايا القانونية النشطة والمؤجلة والمغلقة
+      </p>
+    </div>
 
+    {/* Buttons */}
+    <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3 sm:gap-4 order-2 xl:order-1">
+      <button className="w-full sm:w-auto flex items-center justify-center gap-2 border border-gray-700 text-gray-300 px-4 py-2.5 rounded-lg hover:bg-gray-800 transition-colors">
+        <BiDownload size={18} />
+        <span className="text-sm">تصدير PDF / Excel</span>
+      </button>
 
-          {/* Export Button */}
-          <button className="flex items-center gap-2 border border-gray-700 text-gray-300 px-4 py-2.5 rounded-lg hover:bg-gray-800 transition-colors">
-            <BiDownload size={18} />
-            <span className="text-sm">تصدير PDF / Excel</span>
-          </button>
+      <Link to={"/CaseMangemnt/AddNewCase"} className="w-full sm:w-auto">
+        <button className="w-full sm:w-auto flex items-center justify-center cursor-pointer gap-2 bg-[#c5a059] hover:bg-[#b38f4d] text-[#0f172a] px-6 py-2.5 rounded-lg font-bold transition-colors shadow-lg">
+          <BiPlus size={20} />
+          <span>إضافة قضية جديدة</span>
+        </button>
+      </Link>
+    </div>
+  </div>
+</div>
 
-          {/* Add New Case Button */}
-          <Link to={"/CaseMangemnt/AddNewCase"}>
-
-            <button
-              className="flex items-center cursor-pointer gap-2 bg-[#c5a059] hover:bg-[#b38f4d] text-[#0f172a] px-6 py-2.5 rounded-lg font-bold transition-colors shadow-lg">
-              <BiPlus size={20} />
-              <span>إضافة قضية جديدة</span>
-            </button>
-          </Link>
-        </div>
-
-
-
-        {/* left Side: Title and Subtitle */}
-        <div className="text-right">
-          <h1 className="text-white text-3xl font-bold mb-2">إدارة القضايا</h1>
-          <p className="text-gray-400 text-sm">
-            نظرة عامة على جميع القضايا القانونية النشطة والمؤجلة والمغلقة
-          </p>
-        </div>
-
-
+<div className="w-full bg-[#0f172a] px-4 sm:px-6 lg:px-8 pb-4 sm:pb-6" dir="rtl">
+  <div className="bg-[#111827]/50 p-4 rounded-xl border border-gray-800">
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-3">
+      {/* Search Input */}
+      <div className="relative md:col-span-2 xl:col-span-5">
+        <span className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+          <BiSearch size={18} className="text-gray-500" />
+        </span>
+        <input
+          type="text"
+          className="w-full bg-[#0b0f1a] border border-gray-700 text-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 pr-10 placeholder-gray-500"
+          placeholder="البحث برقم القضية، اسم العميل، أو موضوع النزاع..."
+        />
       </div>
-      <div className="w-full bg-[#0f172a] p-4" dir="rtl">
-        <div className="flex flex-wrap items-center gap-3 bg-[#111827]/50 p-4 rounded-xl border border-gray-800">
 
-          {/* Search Input */}
-          <div className="relative grow max-w-2xl">
-            <span className="absolute inset-y-0 left-3 flex items-center pr-3 pointer-events-none">
-              <BiSearch size={18} className="text-gray-500" />
-            </span>
-            <input
-              type="text"
-              className="w-full bg-[#0b0f1a] border border-gray-700 text-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 pr-10 placeholder-gray-500"
-              placeholder="البحث برقم القضية، اسم العميل، أو موضوع النزاع..."
-            />
-          </div>
-
-          {/* Dropdown Filters */}
-          {filterOptions.map((filter, index) => (
-            <div key={index} className="relative min-w-[140px]">
-              <button className="w-full flex items-center justify-between bg-[#0b0f1a] border border-gray-700 text-gray-400 text-sm px-4 py-2.5 rounded-lg hover:bg-gray-800 transition-colors">
-                <BiChevronDown size={16} className="text-gray-500" />
-                <span>{filter.label}</span>
-              </button>
-            </div>
-          ))}
-
-          {/* Reset Button */}
-          <button className="flex items-center gap-2 text-gray-400 hover:text-white text-sm px-4 py-2 transition-colors mr-auto">
-            <FiRotateCcw size={16} />
-            <span>إعادة ضبط</span>
+      {/* Dropdown Filters */}
+      {filterOptions.map((filter, index) => (
+        <div key={index} className="xl:col-span-2">
+          <button className="w-full flex items-center justify-between bg-[#0b0f1a] border border-gray-700 text-gray-400 text-sm px-4 py-2.5 rounded-lg hover:bg-gray-800 transition-colors">
+            <BiChevronDown size={16} className="text-gray-500 shrink-0" />
+            <span className="truncate">{filter.label}</span>
           </button>
         </div>
+      ))}
+
+      {/* Reset Button */}
+      <div className="xl:col-span-1 flex items-center">
+        <button className="w-full xl:w-auto flex items-center justify-center gap-2 text-gray-400 hover:text-white text-sm px-4 py-2.5 transition-colors">
+          <FiRotateCcw size={16} />
+          <span>إعادة ضبط</span>
+        </button>
       </div>
+    </div>
+  </div>
+</div>
       {/* name of each tab group should be unique */}
 
       <div className="min-h-screen bg-[#061224] p-6 text-white" dir="rtl">

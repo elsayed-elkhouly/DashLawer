@@ -134,122 +134,169 @@ const AddMember = () => {
 
   return (
     <form onSubmit={handleSubmit(AddUser)}>
+  <div className="min-h-screen bg-[#101c2e] text-white px-4 sm:px-6 lg:px-8 py-6 sm:py-8 font-sans" dir="rtl">
+    {/* Header */}
+    <div className="max-w-6xl mx-auto flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-8 sm:mb-10">
+      <h1 className="text-xl sm:text-2xl font-bold text-right">
+        إضافة عضو فريق جديد
+      </h1>
 
-      <div
-        className=" min-h-screen bg-[#101c2e] text-white p-8 font-sans"
-        dir="rtl"
-      >
-        <div className="max-w-6xl mx-auto flex justify-between items-center mb-10">
-          <h1 className="text-2xl font-bold">إضافة عضو فريق جديد</h1>
-          <div className="flex gap-3">
-            <button
-              type="button"
-              onClick={() => reset()}
-              className="px-6 py-2 rounded-lg border border-gray-700 text-gray-400 hover:bg-gray-800 transition-colors cursor-pointer "
-            >
-              إلغاء
-            </button>
-            <Link to={"/TeamMember"}>
-            <button
-              type="button"
-              
-              className="px-6 py-2 rounded-lg border border-gray-700 text-white hover:bg-[#C9A14A] transition-colors duration-300 cursor-pointer flex items-center gap-2 justify-center"
-            >
-             Back  <IoArrowBack  />
-            </button>
-            </Link>
+      <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+        <button
+          type="button"
+          onClick={() => reset()}
+          className="w-full sm:w-auto px-6 py-2.5 rounded-lg border border-gray-700 text-gray-400 hover:bg-gray-800 transition-colors cursor-pointer"
+        >
+          إلغاء
+        </button>
+
+        <Link to={"/TeamMember"} className="w-full sm:w-auto">
+          <button
+            type="button"
+            className="w-full sm:w-auto px-6 py-2.5 rounded-lg border border-gray-700 text-white hover:bg-[#C9A14A] transition-colors duration-300 cursor-pointer flex items-center gap-2 justify-center"
+          >
+            Back
+            <IoArrowBack />
+          </button>
+        </Link>
+      </div>
+    </div>
+
+    {/* Content */}
+    <div className="mx-auto max-w-6xl grid grid-cols-1 xl:grid-cols-12 gap-6 lg:gap-8">
+      <div className="xl:col-span-8 space-y-8">
+        <div className="bg-[#151f2f] p-4 sm:p-6 lg:p-8 rounded-2xl border border-gray-800/50">
+          {/* Section title */}
+          <div className="flex items-center gap-2 mb-6 sm:mb-8 text-[#C59D4A]">
+            <div className="p-2 bg-[#C59D4A]/10 rounded-lg shrink-0">
+              <Info size={20} />
+            </div>
+            <h2 className="text-lg sm:text-xl font-bold text-white">
+              المعلومات الأساسية
+            </h2>
           </div>
-        </div>
 
-        <div className="mx-auto max-w-6xl  grid grid-cols-12 gap-8">
-          <div className="col-span-8 space-y-8">
-            <div className="bg-[#151f2f] p-8 rounded-2xl border border-gray-800/50">
-              <div className="flex items-center gap-2 mb-8 text-[#C59D4A]">
-                <div className="p-2 bg-[#C59D4A]/10 rounded-lg">
-                  <Info size={20} />
-                </div>
-                <h2 className="text-xl font-bold text-white">
-                  المعلومات الأساسية
-                </h2>
-              </div>
-              <div className='flex items-center gap-5 py-5 mb-5'>
-
-                <label className='bg-[#0b1220] w-25 h-25 rounded-full border-4 border-[#1E293B] flex items-center justify-center cursor-pointer overflow-hidden'>
-
-
-                  {imageFile && imageFile[0] ? (
-                    <img
-                      src={URL.createObjectURL(imageFile[0])}
-                      alt="preview"
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <IoIosCamera className='text-[#C9A14A] text-4xl' />
-                  )}
-
-
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    {...register("profile")}
-                  />
-                </label>
-
-                <div>
-                  <h4 className='text-xl'>صورة الملف الشخصي</h4>
-                  <p className='text-[17px] text-[#94A3B8]'>
-                    يُفضل استخدام صورة مربعة بجودة عالية (JPG, PNG)
-                  </p>
-                </div>
-
-              </div>
-
-              <div className="grid grid-cols-2 gap-6">
-                <InputField name="UserName" label="الاسم الكامل" placeholder="أدخل الاسم الرباعي" register={register} error={errors} />
-                <InputField name="email" label="البريد الإلكتروني" placeholder="name@gmail.com" type="email" register={register} error={errors} />
-                <InputField name="phone" label="رقم الهاتف" placeholder="+966" register={register} error={errors} />
-                <InputField name="jobTitle" label="المسمى الوظيفي" placeholder="مثال: محامي أول" register={register} error={errors} />
-                <SelectField register={register}
-                  error={errors}
-                  name="department"
-                  label="القسم"
-                  options={[
-                    { value: "القضايا التجارية", label: "القضايا التجارية" },
-                    { value: "القضايا الجنائية", label: "القضايا الجنائية" },
-                    { value: "الإدارة", label: "الإدارة" }
-                  ]}
+          {/* Profile image */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-5 py-4 sm:py-5 mb-5">
+            <label className="bg-[#0b1220] w-24 h-24 sm:w-25 sm:h-25 rounded-full border-4 border-[#1E293B] flex items-center justify-center cursor-pointer overflow-hidden shrink-0 mx-auto sm:mx-0">
+              {imageFile && imageFile[0] ? (
+                <img
+                  src={URL.createObjectURL(imageFile[0])}
+                  alt="preview"
+                  className="w-full h-full object-cover"
                 />
-                <SelectField
-                  register={register}
-                  error={errors}
-                  name="role"
-                  label="نوع الحساب"
-                  options={[
-                    { value: "ADMIN", label: "مدير النظام" },
-                    { value: "LAWYER", label: "محامي شريك" },
-                    { value: "STAFF", label: "سكرتارية" }
-                  ]}
-                />
-                <InputField name="lawyerRegistrationNo" label="رقم تسجيل المحاماة" placeholder="83724923798473298" register={register} error={errors} />
-                <InputField name="password" label="كلمة المرور" placeholder="********" type="password" register={register} error={errors} />
-              </div>
+              ) : (
+                <IoIosCamera className="text-[#C9A14A] text-4xl" />
+              )}
+
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                {...register("profile")}
+              />
+            </label>
+
+            <div className="text-center sm:text-right">
+              <h4 className="text-lg sm:text-xl">صورة الملف الشخصي</h4>
+              <p className="text-sm sm:text-base text-[#94A3B8] leading-6">
+                يُفضل استخدام صورة مربعة بجودة عالية (JPG, PNG)
+              </p>
             </div>
           </div>
-        </div>
 
+          {/* Fields */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+            <InputField
+              name="UserName"
+              label="الاسم الكامل"
+              placeholder="أدخل الاسم الرباعي"
+              register={register}
+              error={errors}
+            />
+
+            <InputField
+              name="email"
+              label="البريد الإلكتروني"
+              placeholder="name@gmail.com"
+              type="email"
+              register={register}
+              error={errors}
+            />
+
+            <InputField
+              name="phone"
+              label="رقم الهاتف"
+              placeholder="+966"
+              register={register}
+              error={errors}
+            />
+
+            <InputField
+              name="jobTitle"
+              label="المسمى الوظيفي"
+              placeholder="مثال: محامي أول"
+              register={register}
+              error={errors}
+            />
+
+            <SelectField
+              register={register}
+              error={errors}
+              name="department"
+              label="القسم"
+              options={[
+                { value: "القضايا التجارية", label: "القضايا التجارية" },
+                { value: "القضايا الجنائية", label: "القضايا الجنائية" },
+                { value: "الإدارة", label: "الإدارة" },
+              ]}
+            />
+
+            <SelectField
+              register={register}
+              error={errors}
+              name="role"
+              label="نوع الحساب"
+              options={[
+                { value: "ADMIN", label: "مدير النظام" },
+                { value: "LAWYER", label: "محامي شريك" },
+                { value: "STAFF", label: "سكرتارية" },
+              ]}
+            />
+
+            <InputField
+              name="lawyerRegistrationNo"
+              label="رقم تسجيل المحاماة"
+              placeholder="83724923798473298"
+              register={register}
+              error={errors}
+            />
+
+            <InputField
+              name="password"
+              label="كلمة المرور"
+              placeholder="********"
+              type="password"
+              register={register}
+              error={errors}
+            />
+          </div>
+
+          {/* Submit button */}
+          <div className="pt-8 sm:pt-10">
+            <button
+              type="submit"
+              className="cursor-pointer w-full sm:w-auto sm:min-w-[180px] mx-auto sm:mx-0 px-6 py-3 rounded-lg bg-[#C59D4A] text-[#0B121D] font-bold flex items-center justify-center gap-2 hover:bg-[#b08b3e] transition-colors shadow-lg shadow-[#C59D4A]/20"
+            >
+              <UserPlus size={18} />
+              حفظ العضو
+            </button>
+          </div>
+        </div>
       </div>
-      {/* submit Button */}
-      <div className='me-0 py-10 bg-[#101c2e]'>
-        <button
-          type="submit"
-          className="cursor-pointer mx-auto px-6 py-2 rounded-lg bg-[#C59D4A] text-[#0B121D] font-bold flex items-center gap-2 hover:bg-[#b08b3e] transition-colors shadow-lg shadow-[#C59D4A]/20"
-        >
-          <UserPlus size={18} />
-          حفظ العضو
-        </button>
-      </div>
-    </form>
+    </div>
+  </div>
+</form>
   );
 };
 

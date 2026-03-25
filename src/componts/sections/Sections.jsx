@@ -1,24 +1,26 @@
 import React from 'react'
 import { AiOutlineTeam } from 'react-icons/ai'
 import { CiCalendar, CiLogout } from 'react-icons/ci'
-import { FaRegFileAlt } from 'react-icons/fa'
-import { FaPeopleGroup } from 'react-icons/fa6'
+import { FaRegFileAlt, FaTasks } from 'react-icons/fa'
+import { Fa42Group, FaPeopleGroup } from 'react-icons/fa6'
 import { IoMdBook } from 'react-icons/io'
 import { IoCalendarOutline, IoSettingsOutline } from 'react-icons/io5'
-import { MdDashboard } from 'react-icons/md'
+import { MdDashboard, MdEventAvailable, MdOutlineDashboard } from 'react-icons/md'
 import { PiBag, PiFolderSimpleUser } from 'react-icons/pi'
 import { TbFileInvoice } from 'react-icons/tb'
 import { Link, Links, NavLink } from 'react-router-dom'
 
 const Sections = ({ onItemClick }) => {
   const menuItems = [
-    { to: "/", icon: MdDashboard, label: "لوحة التحكم" },
+    { to: "/", icon: MdOutlineDashboard , label: "لوحة التحكم" },
     { to: "/CaseMangemnt", icon: PiBag, label: "إدارة القضايا" },
     { to: "/TeamMember", icon: AiOutlineTeam, label: "أعضاء الفريق" },
     { to: "/Bills", icon: TbFileInvoice, label: "الفواتير" },
     { to: "/Calender", icon: IoCalendarOutline, label: "التقويم" },
     { to: "/DigitalArchive", icon: PiFolderSimpleUser, label: "الأرشيف الرقمي" },
     { to: "/Clients", icon: FaPeopleGroup, label: "إدارة العملاء" },
+    { to: "/TaskMangment", icon: FaTasks , label: "إدارة المهام" },
+    { to: "/BookMangment", icon: MdEventAvailable  , label: "إدارة الحجوزات" },
     { to: "/Setting", icon: IoSettingsOutline, label: "الإعدادات" },
   ]
 

@@ -19,7 +19,7 @@ const Clients = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const limit = 4;
 
- 
+
     async function exportClient() {
         try {
             const res = await api.get(
@@ -102,12 +102,6 @@ const Clients = () => {
 
 
 
-
-
-
-
-
-
     const {
         register,
         handleSubmit,
@@ -181,8 +175,8 @@ const Clients = () => {
     }
 
     async function deleteClient(id) {
-        try {          
-           const res = await api.delete(
+        try {
+            const res = await api.delete(
                 `/Client/${id}`,
                 {
                     headers: {
@@ -239,10 +233,7 @@ const Clients = () => {
             {/* header */}
             <section>
                 <div className="w-full bg-[#0e1a2b] p-6 flex flex-row-reverse items-center justify-between">
-                    {/* Right Side: Title */}
-                    <h1 className="text-white text-[47px] font-bold">
-                        إدارة العملاء
-                    </h1>
+
 
                     {/* Left Side: Buttons */}
                     <div className="flex gap-4 items-center">
@@ -376,7 +367,7 @@ const Clients = () => {
                                                 </label>
                                                 <input
                                                     className={inputClass}
-                                                   
+
                                                     {...register("address", {
                                                         minLength: {
                                                             value: 5,
@@ -492,6 +483,12 @@ const Clients = () => {
                             </div>
                         </button>
                     </div>
+
+                    {/* Right Side: Title */}
+                    <h1 className="text-white text-[47px] font-bold">
+                        إدارة العملاء
+                    </h1>
+
                 </div>
             </section>
             <section>
@@ -726,8 +723,6 @@ const Clients = () => {
                             }}
                         />
                     </div>
-
-
                 </div>
             </section>
 

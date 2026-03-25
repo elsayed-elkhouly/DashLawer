@@ -14,6 +14,7 @@ import {
   HiOutlineClipboardDocumentList,
   HiOutlineExclamationCircle,
   HiOutlinePrinter,
+  HiOutlineXMark,
 } from "react-icons/hi2";
 import { Link } from 'react-router-dom';
 import Cookies from "js-cookie";
@@ -22,13 +23,15 @@ import toast from 'react-hot-toast';
 import api from '../../api/axios';
 
 const Bills = () => {
+  const [open, setOpen] = useState(false);
+  const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [activeTab, setActiveTab] = useState("all");
   const queryClient = useQueryClient();
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 10;
- 
+
   const tabs = [
     { key: "late", label: "المتأخرة" },
     { key: "unpaid", label: "غير المدفوعة" },
@@ -173,10 +176,10 @@ const Bills = () => {
   });
 
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
-      
 
 
-async function PrintSingleInvoic(id) {
+
+  async function PrintSingleInvoic(id) {
     try {
       const res = await api.get(
         `/invoices/${id}/print`,
@@ -349,8 +352,8 @@ async function PrintSingleInvoic(id) {
 
                     <div
                       className={`text-center text-[12px] ${invoice.status === "متأخرة"
-                          ? "text-[#F05B5B]"
-                          : "text-[#8EA3BF]"
+                        ? "text-[#F05B5B]"
+                        : "text-[#8EA3BF]"
                         }`}
                     >
                       {invoice?.dueDate
@@ -369,7 +372,10 @@ async function PrintSingleInvoic(id) {
                     </div>
 
                     <div className="flex items-center justify-center gap-2 text-[#8EA3BF]">
-                      <button className="rounded-full cursor-pointer border border-white/10 bg-white/2 p-2 transition hover:bg-white/10 hover:text-white">
+                      <button
+                        onClick={() => setSelectedInvoice(invoice)}
+                        className="rounded-full cursor-pointer border border-white/10 bg-white/2 p-2 transition hover:bg-white/10 hover:text-white"
+                      >
                         <HiOutlineEye size={14} />
                       </button>
 
@@ -382,7 +388,7 @@ async function PrintSingleInvoic(id) {
                         <HiOutlineTrash size={14} />
                       </button>
                       <button
-                      onClick={() => {
+                        onClick={() => {
                           PrintSingleInvoic(invoice._id);
                         }}
                         type="button"
@@ -396,6 +402,37 @@ async function PrintSingleInvoic(id) {
               ) : (
                 <div className="px-6 py-8 text-center text-sm text-[#8EA3BF]">
                   لا توجد نتائج مطابقة
+                </div>
+              )}
+              {selectedInvoice && (
+                <div
+                  onClick={() => setSelectedInvoice(null)}
+                  className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+                >
+                  <div
+                    onClick={(e) => e.stopPropagation()}
+                    dir="rtl"
+                    className="w-full max-w-6xl rounded-3xl bg-[#081b31] border border-white/10 shadow-2xl p-6 md:p-10 relative"
+                  >
+
+                    {/* زرار القفل */}
+                    <button
+                      onClick={() => setSelectedInvoice(null)}
+                      className="absolute top-4 left-4 text-slate-400 hover:text-white"
+                    >
+                      <HiOutlineXMark size={22} />
+                    </button>
+
+                    {/* هنا تستخدم selectedInvoice بدل invoice */}
+                    <h2 className="text-xl font-bold mb-4">
+                      تفاصيل الفاتورة #{selectedInvoice.invoiceNumber}
+                    </h2>
+
+                    <p>{selectedInvoice.client.fullName}</p>
+                    <p>{selectedInvoice.total}</p>
+
+                    {/* كمل باقي التصميم بنفس الطريقة */}
+                  </div>
                 </div>
               )}
 
@@ -417,8 +454,8 @@ async function PrintSingleInvoic(id) {
                         key={pageNumber}
                         onClick={() => setCurrentPage(pageNumber)}
                         className={`flex h-8 min-w-8 items-center justify-center rounded-full border text-xs transition ${active
-                            ? "border-[#D7AE46] bg-[#D7AE46] text-[#071A2F]"
-                            : "border-white/10 bg-white/[0.02] text-[#8EA3BF] hover:bg-white/10 hover:text-white"
+                          ? "border-[#D7AE46] bg-[#D7AE46] text-[#071A2F]"
+                          : "border-white/10 bg-white/[0.02] text-[#8EA3BF] hover:bg-white/10 hover:text-white"
                           }`}
                       >
                         {pageNumber}

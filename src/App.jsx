@@ -24,6 +24,8 @@ import AddNewCase from './componts/AddCase/AddNewCase'
 import CaseDetails from './componts/CaseDetails/CaseDetails'
 import Eror from './componts/Eror/Eror'
 import AddNewFees from './componts/AddNewFees/AddNewFees'
+import TaskMangment from './componts/TaskMangment/TaskMangment'
+import BookMangment from './componts/BookMangment/BookMangment'
 function App() {
   const router = createBrowserRouter([{
     path: "", element: <Layout />, children: [
@@ -32,11 +34,13 @@ function App() {
       { path: "/CaseMangemnt/AddNewCase", element: <ProtectedRoute><AddNewCase /></ProtectedRoute> },
       { path: "/CaseMangemnt/CaseDetails/:id", element: <ProtectedRoute><CaseDetails /></ProtectedRoute> },
       { path: "/TeamMember", element: <ProtectedRoute><Team /></ProtectedRoute> },
+      { path: "/BookMangment", element: <ProtectedRoute><BookMangment /></ProtectedRoute> },
       { path: "/Bills", element: <ProtectedRoute><Bills /></ProtectedRoute> },
       { path: "/Bills/AddNewFees", element: <ProtectedRoute><AddNewFees /></ProtectedRoute> },
       { path: "/Calender", element: <ProtectedRoute><Calendar /></ProtectedRoute> },
       { path: "/DigitalArchive", element: <ProtectedRoute><DigitalArchive /></ProtectedRoute> },
       { path: "/Clients", element: <ProtectedRoute><Clients /></ProtectedRoute> },
+      { path: "/TaskMangment", element: <ProtectedRoute><TaskMangment/></ProtectedRoute> },
       { path: "/Setting", element: <ProtectedRoute><Setting /></ProtectedRoute> },
       { path: "/AddMember", element: <ProtectedRoute><AddMember /></ProtectedRoute> },
       { path: "/Clients/ClientProfile/:id", element: <ProtectedRoute><ClientProfile /></ProtectedRoute> },

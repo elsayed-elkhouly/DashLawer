@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useState } from 'react'
 import Cookies from 'js-cookie';
 import axios from 'axios';
+import api from '../api/axios';
 
 export const Authcontext = createContext()
 
@@ -13,7 +14,7 @@ const AuthContextProvider = ({ children }) => {
 
   function Logout() {
     try {
-      const res = axios.post("https://lawersystem-production.up.railway.app/auth/logout", null, {
+      const res = api.post("/auth/logout", null, {
         headers: {
           authorization: `Bearer ${token}`,
         }
@@ -25,7 +26,7 @@ const AuthContextProvider = ({ children }) => {
     }
   }
   async function getSetting() {
-    const res = await axios.get("https://lawersystem-production.up.railway.app/SettingsService/")
+    const res = await api.get("/SettingsService/")
     setSetting(res?.data)
   }
   useEffect(function () {

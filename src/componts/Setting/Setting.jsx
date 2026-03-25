@@ -11,8 +11,6 @@ import api from '../../api/axios';
 
 
 const Setting = () => {
-  const SETTINGS_STORAGE_KEY = "settings-form-draft";
-
   const emptyValues = {
     officeName: "",
     crNumber: "",
@@ -35,20 +33,13 @@ const Setting = () => {
     mapEmbedUrl: settings?.mapEmbedUrl || "",
   });
 
-  const savedDraft = (() => {
-    try {
-      return JSON.parse(localStorage.getItem(SETTINGS_STORAGE_KEY)) || emptyValues;
-    } catch {
-      return emptyValues;
-    }
-  })();
-
   const [activeToggleId, setActiveToggleId] = useState(null);
   const [logo, setLogo] = useState(null);
   const [logoFile, setLogoFile] = useState(null);
   const nameRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [caseError, setCaseError] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -59,7 +50,7 @@ const Setting = () => {
     watch,
     formState: { errors, isSubmitting },
   } = useForm({
-    defaultValues: savedDraft,
+    defaultValues: emptyValues,
   });
 
   const {
@@ -77,9 +68,7 @@ const Setting = () => {
   } = useForm();
 
   function getSetting() {
-    return api
-      .get("/SettingsService/")
-      .then((res) => res.data);
+    return api.get("/SettingsService/").then((res) => res.data);
   }
 
   function getCases() {
@@ -123,34 +112,19 @@ const Setting = () => {
   const watchedValues = watch();
 
   useEffect(() => {
-    if (!watchedValues) return;
-    localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(watchedValues));
-  }, [watchedValues]);
-
-  useEffect(() => {
     const settings = settingData?.Settings;
     if (!settings) return;
 
-    const savedLocalDraft = localStorage.getItem(SETTINGS_STORAGE_KEY);
-
-    if (savedLocalDraft) {
-      reset(JSON.parse(savedLocalDraft));
-    } else {
-      reset(mapSettingsToForm(settings));
-    }
+    reset(mapSettingsToForm(settings));
   }, [settingData, reset]);
 
   const addSettingMutation = useMutation({
     mutationFn: async (formData) => {
-      return await api.put(
-        "/SettingsService/",
-        formData,
-        {
-          headers: {
-            authorization: `Bearer ${Cookies.get("token")}`,
-          },
-        }
-      );
+      return await api.put("/SettingsService/", formData, {
+        headers: {
+          authorization: `Bearer ${Cookies.get("token")}`,
+        },
+      });
     },
     onSuccess: (_, variables) => {
       queryClient.setQueryData(["setting"], (oldData) => ({
@@ -161,26 +135,23 @@ const Setting = () => {
         },
       }));
 
-      localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(variables));
+      reset(variables);
+      setIsEditing(false);
       toast.success("تم تحديث الإعدادات");
     },
     onError: (error) => {
-      console.error("Submit Error:", error.response?.data?.message );
-      toast.error( error.response?.data?.message);
+      console.error("Submit Error:", error.response?.data?.message);
+      toast.error(error.response?.data?.message || "حدث خطأ أثناء التحديث");
     },
   });
 
   const addCaseMutation = useMutation({
     mutationFn: async (data) => {
-      return await api.post(
-        "/CaseType/createCaseType",
-        data,
-        {
-          headers: {
-            authorization: `Bearer ${Cookies.get("token")}`,
-          },
-        }
-      );
+      return await api.post("/CaseType/createCaseType", data, {
+        headers: {
+          authorization: `Bearer ${Cookies.get("token")}`,
+        },
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["Cases"] });
@@ -197,9 +168,7 @@ const Setting = () => {
 
   const toggleCaseMutation = useMutation({
     mutationFn: async ({ id, isActive }) => {
-      const url = isActive
-        ? `/CaseType/${id}/disable`
-        : `/CaseType/${id}/enable`;
+      const url = isActive ? `/CaseType/${id}/disable` : `/CaseType/${id}/enable`;
 
       return await api.patch(url, null, {
         headers: {
@@ -233,15 +202,11 @@ const Setting = () => {
         ],
       };
 
-      return await api.put(
-        "/SettingsService/work-hours",
-        data,
-        {
-          headers: {
-            authorization: `Bearer ${Cookies.get("token")}`,
-          },
-        }
-      );
+      return await api.put("/SettingsService/work-hours", data, {
+        headers: {
+          authorization: `Bearer ${Cookies.get("token")}`,
+        },
+      });
     },
     onSuccess: () => {
       toast.success("تم إضافة الموعد بنجاح");
@@ -260,17 +225,14 @@ const Setting = () => {
 
   const deleteDayMutation = useMutation({
     mutationFn: async (days) => {
-      return await api.delete(
-        "/SettingsService/work-hours",
-        {
-          headers: {
-            authorization: `Bearer ${Cookies.get("token")}`,
-          },
-          data: {
-            days: Array.isArray(days) ? days : [days],
-          },
-        }
-      );
+      return await api.delete("/SettingsService/work-hours", {
+        headers: {
+          authorization: `Bearer ${Cookies.get("token")}`,
+        },
+        data: {
+          days: Array.isArray(days) ? days : [days],
+        },
+      });
     },
     onSuccess: () => {
       toast.success("تم حذف الأيام بنجاح");
@@ -296,15 +258,11 @@ const Setting = () => {
         endAt: end.toISOString(),
       };
 
-      return await api.post(
-        "/slots/createSlot",
-        payload,
-        {
-          headers: {
-            authorization: `Bearer ${Cookies.get("token")}`,
-          },
-        }
-      );
+      return await api.post("/slots/createSlot", payload, {
+        headers: {
+          authorization: `Bearer ${Cookies.get("token")}`,
+        },
+      });
     },
     onSuccess: () => {
       toast.success("تم اضافه ميعاد جديد");
@@ -324,14 +282,11 @@ const Setting = () => {
 
   const deleteSlotMutation = useMutation({
     mutationFn: async (id) => {
-      return await api.delete(
-        `/slots/${id}`,
-        {
-          headers: {
-            authorization: `Bearer ${Cookies.get("token")}`,
-          },
-        }
-      );
+      return await api.delete(`/slots/${id}`, {
+        headers: {
+          authorization: `Bearer ${Cookies.get("token")}`,
+        },
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["Slots"] });
@@ -347,15 +302,11 @@ const Setting = () => {
       const formData = new FormData();
       formData.append("logo", logoFile);
 
-      return await api.patch(
-        "/SettingsService/logo",
-        formData,
-        {
-          headers: {
-            authorization: `Bearer ${Cookies.get("token")}`,
-          },
-        }
-      );
+      return await api.patch("/SettingsService/logo", formData, {
+        headers: {
+          authorization: `Bearer ${Cookies.get("token")}`,
+        },
+      });
     },
     onSuccess: () => {
       toast.success("تم تحديث اللوجو");
@@ -420,9 +371,17 @@ const Setting = () => {
     setLogoFile(null);
   };
 
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
+  const handleCancelEdit = () => {
+    reset(mapSettingsToForm(settingData?.Settings));
+    setIsEditing(false);
+  };
+
   const handleResetForm = () => {
-    localStorage.removeItem(SETTINGS_STORAGE_KEY);
-    reset(emptyValues);
+    reset(mapSettingsToForm(settingData?.Settings));
   };
 
   const validDays = [
@@ -450,7 +409,11 @@ const Setting = () => {
   }
 
   if (isLoading) {
-    return <div className="text-white text-center"><span className="loading loading-infinity   w-[50%]"></span></div>;
+    return (
+      <div className="text-white text-center">
+        <span className="loading loading-infinity w-[50%]"></span>
+      </div>
+    );
   }
 
   if (isError) {
@@ -463,7 +426,7 @@ const Setting = () => {
 
   return (
     <>
-      <div className=" text-right">
+      <div className="text-right">
         <h2 className="text-[37px] mt-10 mr-15 text-white font-bold">إعدادات المكتب</h2>
       </div>
 
@@ -474,29 +437,42 @@ const Setting = () => {
         >
           <div className="w-full max-w-5xl bg-[#162132] rounded-2xl p-8 shadow-2xl border border-[#1E2D3D]">
             <div className="flex justify-between items-center mb-8">
-              <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                <span className="w-2 h-2 bg-[#C6A24F] rounded-full"></span>
-                المعلومات الأساسية
+               <h2 className="text-[32px] font-bold text-white flex items-center ">
+                <span className="text-[#C6A24F]">👤</span>
+                المعلومات الشخصية
               </h2>
 
-              <div className="flex items-center gap-2">
+              {!isEditing ? (
                 <button
                   type="button"
-                  onClick={handleResetForm}
-                  className="text-white cursor-pointer px-5 py-2 rounded-xl font-medium hover:opacity-90 transition hover:bg-[#C6A24F]"
+                  onClick={handleEdit}
+                  className="flex items-center gap-2 text-[#F0A500] text-lg font-medium hover:opacity-90 transition"
                 >
-                  إعادة تعيين
+                  <span>✏️</span>
+                  تعديل
                 </button>
+              ) : (
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={handleCancelEdit}
+                    className="text-white cursor-pointer px-5 py-2 rounded-xl font-medium border border-[#1E2D3D] hover:bg-[#1d2b3d] transition"
+                  >
+                    إلغاء
+                  </button>
 
-                <button
-                  type="submit"
-                  form="basic-info-form"
-                  disabled={addSettingMutation.isPending}
-                  className="bg-[#C6A24F] cursor-pointer text-black px-5 py-2 rounded-xl font-medium hover:opacity-90 transition disabled:opacity-50"
-                >
-                  {addSettingMutation.isPending ? "جاري الحفظ..." : "حفظ التغييرات"}
-                </button>
-              </div>
+                  <button
+                    type="submit"
+                    form="basic-info-form"
+                    disabled={addSettingMutation.isPending}
+                    className="bg-[#C6A24F] cursor-pointer text-black px-5 py-2 rounded-xl font-medium hover:opacity-90 transition disabled:opacity-50"
+                  >
+                    {addSettingMutation.isPending ? "جاري الحفظ..." : "حفظ"}
+                  </button>
+                </div>
+              )}
+
+             
             </div>
 
             <form
@@ -504,123 +480,195 @@ const Setting = () => {
               className="space-y-6"
               onSubmit={handleSubmit(AddSetting)}
             >
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm text-gray-300 mb-2">
-                    اسم الشركة / المكتب
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="هيلبر للمحاماة"
-                    className="w-full bg-[#0B1623] border border-[#1E2D3D] text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C6A24F]"
-                    {...register("officeName", {
-                      minLength: {
-                        value: 2,
-                        message: "اسم الشركة لازم يكون حرفين على الأقل",
-                      },
-                    })}
-                  />
-                  {errors.officeName && (
-                    <p className="text-red-400 text-sm mt-2">{errors.officeName.message}</p>
-                  )}
-                </div>
+              {!isEditing ? (
+                <>
+                  <div className="grid md:grid-cols-2 gap-10">
+                    <div className="space-y-12">
+                      <div>
+                        <label className="block text-[18px] text-[#7f93b0] mb-3">
+                          الاسم الكامل
+                        </label>
+                        <p className="text-white text-[24px] font-bold">
+                          {watchedValues.officeName || "-"}
+                        </p>
+                      </div>
 
-                <div>
-                  <label className="block text-sm text-gray-300 mb-2">
-                    رقم السجل التجاري (CR)
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="1010XXXX"
-                    className="w-full bg-[#0B1623] border border-[#1E2D3D] text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C6A24F]"
-                    {...register("crNumber")}
-                  />
-                </div>
+                      <div>
+                        <label className="block text-[18px] text-[#7f93b0] mb-3">
+                          رقم الهاتف
+                        </label>
+                        <p className="text-white text-[24px] font-bold">
+                          {watchedValues.phone || "-"}
+                        </p>
+                      </div>
 
-                <div>
-                  <label className="block text-sm text-gray-300 mb-2">
-                    البريد الإلكتروني الرسمي
-                  </label>
-                  <input
-                    type="email"
-                    placeholder="contact@helper.com"
-                    className="w-full bg-[#0B1623] border border-[#1E2D3D] text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C6A24F]"
-                    {...register("officialEmail")}
-                  />
-                  {errors.officialEmail && (
-                    <p className="text-red-400 text-sm mt-2">
-                      {errors.officialEmail.message}
-                    </p>
-                  )}
-                </div>
+                      <div>
+                        <label className="block text-[18px] text-[#7f93b0] mb-3">
+                          العنوان
+                        </label>
+                        <p className="text-white text-[24px] font-bold">
+                          {[
+                            watchedValues.addressDetail,
+                            watchedValues.governorate,
+                            watchedValues.country,
+                          ]
+                            .filter(Boolean)
+                            .join(" - ") || "-"}
+                        </p>
+                      </div>
+                    </div>
 
-                <div>
-                  <label className="block text-sm text-gray-300 mb-2">
-                    رقم التواصل
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="+04 5212765"
-                    className="w-full bg-[#0B1623] border border-[#1E2D3D] text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C6A24F]"
-                    {...register("phone")}
-                  />
-                </div>
-              </div>
+                    <div className="space-y-12">
+                      <div>
+                        <label className="block text-[18px] text-[#7f93b0] mb-3 text-center">
+                          رقم السجل التجاري
+                        </label>
+                        <p className="text-white text-[24px] font-bold text-center">
+                          {watchedValues.crNumber || "-"}
+                        </p>
+                      </div>
 
-              <div>
-                <label className="block text-sm text-gray-300 mb-2">
-                  العنوان بالتفصيل
-                </label>
-                <textarea
-                  rows={3}
-                  placeholder="البحيرة - كفر الدوار - امام المحكمة"
-                  className="w-full bg-[#0B1623] border border-[#1E2D3D] text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C6A24F]"
-                  {...register("addressDetail")}
-                />
-              </div>
+                      <div>
+                        <label className="block text-[18px] text-[#7f93b0] mb-3 text-center">
+                          البريد الإلكتروني
+                        </label>
+                        <p className="text-white text-[24px] font-bold text-center break-all">
+                          {watchedValues.officialEmail || "-"}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
 
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm text-gray-300 mb-2">المحافظة</label>
-                  <input
-                    type="text"
-                    placeholder="البحيرة"
-                    className="w-full bg-[#0B1623] border border-[#1E2D3D] text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C6A24F]"
-                    {...register("governorate")}
-                  />
-                </div>
+                  <div>
+                    <label className="block text-[18px] text-[#7f93b0] mb-3">
+                      الموقع
+                    </label>
+                    <div className="w-full min-h-[56px] bg-[#1A2638] rounded-xl px-4 py-4 text-white break-all">
+                      {watchedValues.mapEmbedUrl || ""}
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm text-gray-300 mb-2">
+                        اسم الشركة / المكتب
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="هيلبر للمحاماة"
+                        className="w-full bg-[#1A2638] border border-[#1E2D3D] text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C6A24F]"
+                        {...register("officeName", {
+                          minLength: {
+                            value: 2,
+                            message: "اسم الشركة لازم يكون حرفين على الأقل",
+                          },
+                        })}
+                      />
+                      {errors.officeName && (
+                        <p className="text-red-400 text-sm mt-2">
+                          {errors.officeName.message}
+                        </p>
+                      )}
+                    </div>
 
-                <div>
-                  <label className="block text-sm text-gray-300 mb-2">الدولة</label>
-                  <input
-                    type="text"
-                    placeholder="مصر"
-                    className="w-full bg-[#0B1623] border border-[#1E2D3D] text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C6A24F]"
-                    {...register("country")}
-                  />
-                </div>
-              </div>
+                    <div>
+                      <label className="block text-sm text-gray-300 mb-2">
+                        رقم السجل التجاري (CR)
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="1010XXXX"
+                        className="w-full bg-[#1A2638] border border-[#1E2D3D] text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C6A24F]"
+                        {...register("crNumber")}
+                      />
+                    </div>
 
-              <div>
-                <label className="block text-sm text-gray-300 mb-2">الموقع</label>
-                <input
-                  type="text"
-                  placeholder="https://maps.app.goo.gl/BeywpLGaciVPwtfT9"
-                  className="w-full bg-[#0B1623] border border-[#1E2D3D] text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C6A24F]"
-                  {...register("mapEmbedUrl")}
-                />
-                {errors.mapEmbedUrl && (
-                  <p className="text-red-400 text-sm mt-2">{errors.mapEmbedUrl.message}</p>
-                )}
-              </div>
+                    <div>
+                      <label className="block text-sm text-gray-300 mb-2">
+                        البريد الإلكتروني الرسمي
+                      </label>
+                      <input
+                        type="email"
+                        placeholder="contact@helper.com"
+                        className="w-full bg-[#1A2638] border border-[#1E2D3D] text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C6A24F]"
+                        {...register("officialEmail")}
+                      />
+                      {errors.officialEmail && (
+                        <p className="text-red-400 text-sm mt-2">
+                          {errors.officialEmail.message}
+                        </p>
+                      )}
+                    </div>
 
-              <button
-                type="submit"
-                disabled={addSettingMutation.isPending}
-                className="bg-[#C6A24F] text-black px-6 py-3 rounded-xl font-medium disabled:opacity-50"
-              >
-                {addSettingMutation.isPending ? "جاري الحفظ..." : "حفظ التعديلات"}
-              </button>
+                    <div>
+                      <label className="block text-sm text-gray-300 mb-2">
+                        رقم التواصل
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="+04 5212765"
+                        className="w-full bg-[#1A2638] border border-[#1E2D3D] text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C6A24F]"
+                        {...register("phone")}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm text-gray-300 mb-2">
+                      العنوان بالتفصيل
+                    </label>
+                    <textarea
+                      rows={3}
+                      placeholder="البحيرة - كفر الدوار - امام المحكمة"
+                      className="w-full bg-[#1A2638] border border-[#1E2D3D] text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C6A24F]"
+                      {...register("addressDetail")}
+                    />
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm text-gray-300 mb-2">
+                        المحافظة
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="البحيرة"
+                        className="w-full bg-[#1A2638] border border-[#1E2D3D] text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C6A24F]"
+                        {...register("governorate")}
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm text-gray-300 mb-2">
+                        الدولة
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="مصر"
+                        className="w-full bg-[#1A2638] border border-[#1E2D3D] text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C6A24F]"
+                        {...register("country")}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm text-gray-300 mb-2">الموقع</label>
+                    <input
+                      type="text"
+                      placeholder="https://maps.app.goo.gl/BeywpLGaciVPwtfT9"
+                      className="w-full bg-[#1A2638] border border-[#1E2D3D] text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C6A24F]"
+                      {...register("mapEmbedUrl")}
+                    />
+                    {errors.mapEmbedUrl && (
+                      <p className="text-red-400 text-sm mt-2">
+                        {errors.mapEmbedUrl.message}
+                      </p>
+                    )}
+                  </div>
+                </>
+              )}
             </form>
           </div>
         </div>
@@ -996,16 +1044,17 @@ const Setting = () => {
                         disabled={
                           toggleCaseMutation.isPending && activeToggleId === issue._id
                         }
-                        className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-bold cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed ${issue.isActive
-                          ? "bg-emerald-500/15 text-emerald-400 ring-1 ring-emerald-500/25"
-                          : "bg-slate-500/10 text-slate-400 ring-1 ring-slate-500/20"
-                          }`}
+                        className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-bold cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed ${
+                          issue.isActive
+                            ? "bg-emerald-500/15 text-emerald-400 ring-1 ring-emerald-500/25"
+                            : "bg-slate-500/10 text-slate-400 ring-1 ring-slate-500/20"
+                        }`}
                       >
                         {toggleCaseMutation.isPending && activeToggleId === issue._id
                           ? "جاري التحديث..."
                           : issue.isActive
-                            ? "مفعل"
-                            : "غير مفعل"}
+                          ? "مفعل"
+                          : "غير مفعل"}
                       </button>
                     </div>
                   </div>

@@ -18,7 +18,7 @@ const SideBar = ({ onClose, isMobile = false }) => {
     navigate("/login")
     if (onClose) onClose()
   }
-
+ 
   return (
     <div
       className="flex flex-col h-full bg-[#101c2e] text-gray-300 font-sans"
