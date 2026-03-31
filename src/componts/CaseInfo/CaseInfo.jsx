@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { HiOutlineNoSymbol, HiOutlinePencil, HiOutlinePlusCircle, HiOutlinePrinter } from 'react-icons/hi2';
 import { Link } from 'react-router-dom';
 
-const CaseInfo = ({ Case, onSave, isSaving, lawer }) => {
+const CaseInfo = ({ Case, onSave, isSaving, lawer,id }) => {
 
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({
@@ -125,13 +125,15 @@ const CaseInfo = ({ Case, onSave, isSaving, lawer }) => {
                                 </>
                             )}
 
+                           <Link to={`/CaseMangemnt/CaseDetails/${id}/AddSession`}>
                             <button
                                 type="button"
-                                className="inline-flex h-11 items-center gap-2 rounded-full border border-[#7d6524] bg-transparent px-5 text-sm font-medium text-[#d3a53d] transition hover:bg-[#12233f]"
+                                className="inline-flex cursor-pointer h-11 items-center gap-2 rounded-full border border-[#7d6524] bg-transparent px-5 text-sm font-medium text-[#d3a53d] transition hover:bg-[#12233f]"
                             >
                                 <HiOutlinePlusCircle size={16} />
                                 إضافة جلسة
                             </button>
+                           </Link>
 
                             <Link to={"/CaseMangemnt"}
                             >

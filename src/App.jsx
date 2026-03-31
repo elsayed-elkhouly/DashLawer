@@ -26,6 +26,8 @@ import Eror from './componts/Eror/Eror'
 import AddNewFees from './componts/AddNewFees/AddNewFees'
 import TaskMangment from './componts/TaskMangment/TaskMangment'
 import BookMangment from './componts/BookMangment/BookMangment'
+import AddSession from './componts/AddSession/AddSession'
+import TeamProfile from './componts/TeamProfile/TeamProfile'
 function App() {
   const router = createBrowserRouter([{
     path: "", element: <Layout />, children: [
@@ -33,7 +35,9 @@ function App() {
       { path: "/CaseMangemnt", element: <ProtectedRoute><CaseMange /></ProtectedRoute> },
       { path: "/CaseMangemnt/AddNewCase", element: <ProtectedRoute><AddNewCase /></ProtectedRoute> },
       { path: "/CaseMangemnt/CaseDetails/:id", element: <ProtectedRoute><CaseDetails /></ProtectedRoute> },
+      { path: "/CaseMangemnt/CaseDetails/:id/AddSession", element: <ProtectedRoute><AddSession /></ProtectedRoute> },
       { path: "/TeamMember", element: <ProtectedRoute><Team /></ProtectedRoute> },
+      { path: "/TeamMember/TeamProfile/:id", element: <ProtectedRoute><TeamProfile /></ProtectedRoute> },
       { path: "/BookMangment", element: <ProtectedRoute><BookMangment /></ProtectedRoute> },
       { path: "/Bills", element: <ProtectedRoute><Bills /></ProtectedRoute> },
       { path: "/Bills/AddNewFees", element: <ProtectedRoute><AddNewFees /></ProtectedRoute> },

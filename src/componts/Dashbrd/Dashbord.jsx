@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React from 'react'
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { BiBell, BiCalendar, BiChevronLeft, BiChevronLeftCircle, BiChevronRight, BiDownload, BiFilter, BiMapPin, BiSearch, BiUserPlus } from 'react-icons/bi'
 import { BsEye, BsPlusSquare, BsPlusSquareDotted } from 'react-icons/bs'
 import { CgLock, CgLockUnlock } from 'react-icons/cg'
@@ -14,11 +14,66 @@ import { LuFileCheck } from 'react-icons/lu'
 import { MdGavel, MdOutlineElectricBolt } from 'react-icons/md'
 import { RiMicAiLine, RiMvAiLine } from 'react-icons/ri'
 import Cookies from 'js-cookie';
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import api from '../../api/axios'
-
+import { Authcontext } from '../../Context/AuthContextProvider'
+import { jwtDecode } from "jwt-decode";
 const Dashbord = () => {
+  const queryClient = useQueryClient();
+  const [dataoftkn, setDataoftkn] = useState(null)
+  const { token } = useContext(Authcontext);
+  const [open, setOpen] = useState(false);
+  const notificationRef = useRef(null);
+  useEffect(() => {
+    if (typeof token === "string" && token.trim() !== "") {
+      try {
+        const decoded = jwtDecode(token);
+        console.log("decoded token:", decoded.id);
+        setDataoftkn(decoded);
+      } catch (error) {
+        console.error("Invalid token", error);
+        setDataoftkn(null);
+      }
+    }
+  }, [token]);
+  console.log(dataoftkn?.id
+  );
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        notificationRef.current &&
+        !notificationRef.current.contains(event.target)
+      ) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+  function getTask() {
+    return api.get(`/task/notifications`, {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    });
+  }
+
+  const { data: taskLawer, isLoading, error } = useQuery({
+    queryKey: ["Tasks"],
+    queryFn: getTask,
+
+  });
+
+  console.log(taskLawer
+  );
+
+  const navigate = useNavigate()
   const hearingsData = [
     {
       id: 1,
@@ -41,9 +96,6 @@ const Dashbord = () => {
       tagStyle: "text-blue-400 border-blue-400/30 bg-blue-400/5",
     },
   ]
-
-  const navigate = useNavigate()
-
   function getData() {
     return api.get("/Dashboard/", {
       headers: {
@@ -100,20 +152,45 @@ const Dashbord = () => {
       icon: <MdGavel className="text-[#C9A14A] w-5 h-5 sm:w-6 sm:h-6" />,
     },
   ]
+async function readTask() {
+  try {
+    const hasUnread = taskLawer?.data?.notifications?.some((item) => !item.isRead);
 
+    if (!hasUnread) return;
+
+    const res = await api.patch(
+      "task/notifications/read",
+      null,
+      {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    console.log(res);
+
+    queryClient.invalidateQueries({ queryKey: ["Tasks"] });
+  } catch (error) {
+    console.log(error);
+  }
+}
+useEffect(() => {
+  const hasUnread = taskLawer?.data?.notifications?.some((item) => !item.isRead);
+
+  if (open && hasUnread) {
+    readTask();
+  }
+}, [open, taskLawer?.data?.notifications]);
   return (
-    <div className="min-h-screen bg-[#0b1120] text-white" dir="rtl">
+    <div className="min-h-screen bg-[#0b1120] text-white">
       {/* Header */}
       <nav className="w-full px-4 sm:px-6 lg:px-8 py-4 bg-[#0b1120] text-white border-b border-gray-800">
-        <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-          {/* Page Title */}
-          <div className="text-right order-1 xl:order-3">
-            <h1 className="text-lg sm:text-xl font-bold">لوحة التحكم التنفيذية</h1>
-            <p className="text-xs text-gray-400 mt-1">مرحباً بك مجدداً، المحامي أحمد</p>
-          </div>
+        <div className="flex gap-4 xl:flex-row xl:items-center xl:justify-between">
+
 
           {/* Search */}
-          <div className="w-full xl:flex-1 xl:max-w-xl xl:mx-6 order-3 xl:order-2">
+          {/* <div className="w-full xl:flex-1 xl:max-w-xl xl:mx-6 order-3 xl:order-2">
             <div className="relative group">
               <input
                 type="text"
@@ -122,30 +199,126 @@ const Dashbord = () => {
               />
               <BiSearch className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
             </div>
+          </div> */}
+          {/* Page Title */}
+          <div className="text-right">
+            <h1 className="text-lg sm:text-xl font-bold">لوحة التحكم التنفيذية</h1>
+            <p className="text-xs text-gray-400 mt-1">مرحباً بك مجدداً، المحامي  {dataoftkn?.userName}</p>
           </div>
-
           {/* Profile & Settings */}
-          <div className="flex items-center justify-between sm:justify-start gap-4 sm:gap-6 order-2 xl:order-1">
-            <div className="flex items-center gap-3">
-              <img
-                src="https://via.placeholder.com/40"
-                alt="User"
-                className="w-10 h-10 rounded-full border border-yellow-500 object-cover"
-              />
+          <div className="flex items-center justify-between  gap-4 sm:gap-6 ">
+            <div className="flex items-center gap-3"> {dataoftkn?.userName}
+
               <div className="text-right">
-                <p className="text-sm font-bold">أحمد مصطفى</p>
-                <p className="text-xs text-gray-400">شريك إداري</p>
+                <p className="text-sm font-bold"></p>
+                <p className="text-xs text-gray-400">     {dataoftkn?.role}       </p>
               </div>
             </div>
 
             <div className="flex items-center gap-4 text-gray-400">
               <CiSettings className="w-5 h-5 cursor-pointer hover:text-white transition" />
-              <div className="relative">
-                <BiBell className="w-5 h-5 cursor-pointer hover:text-white transition" />
-                <span className="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full border border-[#0b1120]"></span>
+
+              <div ref={notificationRef} className="relative">
+                {/* أيقونة الجرس */}
+                <div
+                  onClick={() => setOpen(!open)}
+                  className="relative cursor-pointer"
+                >
+                  <BiBell className="w-5 h-5 hover:text-white transition" />
+                  <span className="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full border border-[#0b1120]"></span>
+                </div>
+
+                {/* صندوق الإشعارات */}
+                {open && (
+                  <div
+                    className="
+      absolute
+      top-full
+      mt-3
+      left-0
+      w-80
+      max-w-[85vw]
+      bg-[#0f172a]
+      text-white
+      rounded-xl
+      shadow-xl
+      p-4
+      z-50
+      border border-gray-800
+    "
+                  >
+                    {/* Header */}
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="font-bold text-base">الإشعارات</h3>
+                      <span className="text-yellow-400 text-sm">
+                        {taskLawer?.data?.notifications?.length || 0} جديد
+                      </span>
+                    </div>
+
+                    {/* List */}
+                    <div className="space-y-3 max-h-80 overflow-y-auto pr-1">
+                      {taskLawer?.data?.notifications?.length > 0 ? (
+                        taskLawer?.data?.notifications.map((item) => (
+                          <div
+                            key={item._id}
+                            className={`
+              p-3 rounded-xl border transition
+              ${item.isRead
+                                ? "bg-[#111827] border-gray-800"
+                                : "bg-[#1a2236] border-yellow-500/30"
+                              }
+            `}
+                          >
+                            {/* Title */}
+                            <div className="flex items-center justify-between mb-1">
+                              <p className="text-sm font-semibold text-white">
+                                {item.title || "إشعار"}
+                              </p>
+
+                              {!item.isRead && (
+                                <span className="w-2 h-2 bg-yellow-400 rounded-full"></span>
+                              )}
+                            </div>
+
+                            {/* Body */}
+                            <p className="text-xs text-gray-300 leading-6 line-clamp-2">
+                              {item.body || "لا يوجد محتوى"}
+                            </p>
+
+                            {/* Client */}
+                            <p className="text-[11px] text-gray-400 mt-2">
+                              👤 {item.clientName || "غير معروف"}
+                            </p>
+
+                            {/* Footer */}
+                            <div className="flex items-center justify-between mt-2 text-[11px]">
+                              <span className="text-blue-400">
+                                {item.type === "task assigned"
+                                  ? "تم إسناد مهمة"
+                                  : item.type}
+                              </span>
+
+                              <span className="text-yellow-400">
+                                {item.createdAt
+                                  ? new Date(item.createdAt).toLocaleDateString("ar-EG")
+                                  : ""}
+                              </span>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="text-center text-sm text-gray-400 py-6">
+                          لا توجد إشعارات حالياً
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
+
+
         </div>
       </nav>
 
@@ -155,9 +328,9 @@ const Dashbord = () => {
           {statsCards.map((card, index) => (
             <div
               key={index}
-              className="bg-[#101c2e] rounded-xl p-5 sm:p-6 min-h-[150px] flex flex-col justify-between shadow-lg relative border border-[#C9A14A1A]"
+              className="bg-[#101c2e] rounded-xl p-5 sm:p-6 min-h-37.5 flex flex-col justify-between shadow-lg relative border border-[#C9A14A1A]"
             >
-             
+
 
               <div className="absolute top-5 right-5 bg-[#2A2A3D] p-3 rounded-full mb-3">
                 {card.icon}
@@ -165,7 +338,7 @@ const Dashbord = () => {
 
               <div className="mt-auto text-right pt-8 sm:pt-10">
                 <p className="text-gray-400 text-sm">{card.title}</p>
-                <p className="text-white text-xl sm:text-2xl font-bold mt-1 break-words">
+                <p className="text-white text-xl sm:text-2xl font-bold mt-1 wrap-break-word">
                   {card.value}
                 </p>
               </div>

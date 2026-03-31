@@ -186,6 +186,20 @@ const CaseDetails = () => {
 
         return date.toISOString().split("T")[0];
     };
+    function getAllSesions() {
+        return api.get(`/session/case/${id}`, {
+            headers: {
+                authorization: `Bearer ${Cookies.get("token")}`,
+
+            }
+        })
+    }
+    const { data: Sesions } = useQuery({
+        queryKey: ["Sesions"],
+        queryFn: getAllSesions
+    })
+    console.log(Sesions?.data?.sessions);
+
     return (
         <>
 
@@ -194,6 +208,7 @@ const CaseDetails = () => {
                 onSave={(updatedCase) => updateCaseMutation.mutate(updatedCase)}
                 isSaving={updateCaseMutation.isPending}
                 lawer={Lawer?.data}
+                id={id}
             />
             {/* وصف القضيه  */}
 
@@ -330,33 +345,54 @@ const CaseDetails = () => {
                                     </thead>
 
                                     <tbody>
-                                        <tr className="border-b border-[#13243b] text-sm text-[#dbe7f5]">
-                                            <td className="px-4 py-4">2023-11-20</td>
-                                            <td className="px-4 py-4">09:30 AM</td>
-                                            <td className="px-4 py-4">جلسة استماع</td>
-                                            <td className="px-4 py-4 text-[#9fb1c8]">
-                                                تقديم مذكرات الدفاع الأولى
-                                            </td>
-                                            <td className="px-4 py-4">
-                                                <span className="inline-flex rounded-full border border-[#1f5d43] bg-[#123326] px-3 py-1 text-xs font-medium text-[#58d68d]">
-                                                    منتهية
-                                                </span>
-                                            </td>
-                                        </tr>
+                                        {Sesions?.data?.sessions.map((session, index) => {
+                                            const dateObj = new Date(session.startAt);
 
-                                        <tr className="text-sm text-[#dbe7f5]">
-                                            <td className="px-4 py-4">2024-01-15</td>
-                                            <td className="px-4 py-4">11:00 AM</td>
-                                            <td className="px-4 py-4">جلسة كتابية</td>
-                                            <td className="px-4 py-4 text-[#9fb1c8]">
-                                                النطق بالحكم الابتدائي
-                                            </td>
-                                            <td className="px-4 py-4">
-                                                <span className="inline-flex rounded-full border border-[#5a4a18] bg-[#2b2410] px-3 py-1 text-xs font-medium text-[#f0c14a]">
-                                                    قادمة
-                                                </span>
-                                            </td>
-                                        </tr>
+                                            const date = dateObj.toLocaleDateString("en-CA"); // 2026-03-30
+                                            const time = dateObj.toLocaleTimeString([], {
+                                                hour: "2-digit",
+                                                minute: "2-digit",
+                                            });
+
+                                            return (
+                                                <tr
+                                                    key={session._id}
+                                                    className="border-b border-[#13243b] text-sm text-[#dbe7f5]"
+                                                >
+                                                    {/* التاريخ */}
+                                                    <td className="px-4 py-4">{date}</td>
+
+                                                    {/* الوقت */}
+                                                    <td className="px-4 py-4">{time}</td>
+
+                                                    {/* النوع */}
+                                                    <td className="px-4 py-4">{session.type}</td>
+
+                                                    {/* الملاحظات */}
+                                                    <td className="px-4 py-4 text-[#9fb1c8]">
+                                                        {session.notes || "لا يوجد ملاحظات"}
+                                                    </td>
+
+                                                    {/* الحالة */}
+                                                    <td className="px-4 py-4">
+                                                        <span
+                                                            className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${session.status === "مجدولة"
+                                                                    ? "bg-yellow-900 text-yellow-300"
+                                                                    : session.status === "تمت"
+                                                                        ? "bg-green-900 text-green-300"
+                                                                        : session.status === "مؤجلة"
+                                                                            ? "bg-blue-900 text-blue-300"
+                                                                            : session.status === "ملغية"
+                                                                                ? "bg-red-900 text-red-300"
+                                                                                : "bg-gray-700 text-white"
+                                                                }`}
+                                                        >
+                                                            {session.status}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
                                     </tbody>
                                 </table>
                             </div>

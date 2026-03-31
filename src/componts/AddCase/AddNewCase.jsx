@@ -84,9 +84,6 @@ const AddNewCase = () => {
 
   };
   const selectedPriority = watch("priority");
-
-
-
   function getCases() {
     return api.get("/CaseType/", {
       headers: {
