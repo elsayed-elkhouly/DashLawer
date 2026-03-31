@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import Cookies from 'js-cookie';
 import { HiOutlineBanknotes, HiOutlineCalendarDays, HiOutlineDocument, HiOutlineDocumentText, HiOutlineFolderOpen, HiOutlineNoSymbol, HiOutlinePencil, HiOutlinePlusCircle, HiOutlinePrinter } from 'react-icons/hi2';
 import { FaRegFilePdf, FaRegFileWord } from 'react-icons/fa';
@@ -9,6 +9,7 @@ import { RiDeleteBin6Line } from 'react-icons/ri';
 import CaseInfo from '../CaseInfo/CaseInfo';
 import FessInfo from '../FeesInfo/FessInfo';
 import api from '../../api/axios';
+import { Eye } from 'lucide-react';
 
 const CaseDetails = () => {
 
@@ -341,6 +342,7 @@ const CaseDetails = () => {
                                             <th className="px-4 py-3 text-right font-medium">نوع الجلسة</th>
                                             <th className="px-4 py-3 text-right font-medium">ملاحظات</th>
                                             <th className="px-4 py-3 text-right font-medium">الحالة</th>
+                                            <th className="px-4 py-3 text-right font-medium"></th>
                                         </tr>
                                     </thead>
 
@@ -359,37 +361,38 @@ const CaseDetails = () => {
                                                     key={session._id}
                                                     className="border-b border-[#13243b] text-sm text-[#dbe7f5]"
                                                 >
-                                                    {/* التاريخ */}
                                                     <td className="px-4 py-4">{date}</td>
 
-                                                    {/* الوقت */}
                                                     <td className="px-4 py-4">{time}</td>
 
-                                                    {/* النوع */}
                                                     <td className="px-4 py-4">{session.type}</td>
+                                                   
 
-                                                    {/* الملاحظات */}
                                                     <td className="px-4 py-4 text-[#9fb1c8]">
                                                         {session.notes || "لا يوجد ملاحظات"}
                                                     </td>
 
-                                                    {/* الحالة */}
                                                     <td className="px-4 py-4">
                                                         <span
                                                             className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${session.status === "مجدولة"
-                                                                    ? "bg-yellow-900 text-yellow-300"
-                                                                    : session.status === "تمت"
-                                                                        ? "bg-green-900 text-green-300"
-                                                                        : session.status === "مؤجلة"
-                                                                            ? "bg-blue-900 text-blue-300"
-                                                                            : session.status === "ملغية"
-                                                                                ? "bg-red-900 text-red-300"
-                                                                                : "bg-gray-700 text-white"
+                                                                ? "bg-yellow-900 text-yellow-300"
+                                                                : session.status === "تمت"
+                                                                    ? "bg-green-900 text-green-300"
+                                                                    : session.status === "مؤجلة"
+                                                                        ? "bg-blue-900 text-blue-300"
+                                                                        : session.status === "ملغية"
+                                                                            ? "bg-red-900 text-red-300"
+                                                                            : "bg-gray-700 text-white"
                                                                 }`}
                                                         >
                                                             {session.status}
                                                         </span>
                                                     </td>
+                                                     <td className="px-4 py-4"><Link to={`/CaseMangemnt/CaseDetails/${session?._id}/SessionDetails`}>
+                                                        <button className="p-1.5 cursor-pointer rounded-full border border-gray-700 text-gray-400 hover:text-[#C59D4A] hover:border-[#C59D4A] transition-colors">
+                                                            <Eye size={16} />
+                                                        </button>
+                                                    </Link></td>
                                                 </tr>
                                             );
                                         })}

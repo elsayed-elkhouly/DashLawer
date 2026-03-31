@@ -110,7 +110,7 @@ const CaseMange = () => {
   }, [activeTab, cases]);
   return (
     <>
-      <div className="w-full bg-[#0f172a] px-4 sm:px-6 lg:px-8 py-5 sm:py-6 lg:py-8 font-sans" dir="rtl">
+      <div className="w-full  px-4 sm:px-6 lg:px-8 py-5 sm:py-6 lg:py-8 font-sans" dir="rtl">
   <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
     {/* Title and Subtitle */}
     <div className="text-right order-1">
@@ -139,8 +139,8 @@ const CaseMange = () => {
   </div>
 </div>
 
-<div className="w-full bg-[#0f172a] px-4 sm:px-6 lg:px-8 pb-4 sm:pb-6" dir="rtl">
-  <div className="bg-[#111827]/50 p-4 rounded-xl border border-gray-800">
+<div className="w-full  px-4 sm:px-6 lg:px-8 pb-4 sm:pb-6" dir="rtl">
+  <div className="bg-[#061224]/50 p-4 rounded-xl border border-gray-800">
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-3">
       {/* Search Input */}
       <div className="relative md:col-span-2 xl:col-span-5">

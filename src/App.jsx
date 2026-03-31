@@ -28,6 +28,8 @@ import TaskMangment from './componts/TaskMangment/TaskMangment'
 import BookMangment from './componts/BookMangment/BookMangment'
 import AddSession from './componts/AddSession/AddSession'
 import TeamProfile from './componts/TeamProfile/TeamProfile'
+import MyProfile from './componts/MyProfile/MyProfile'
+import SessionDetails from './componts/SessionDetails/SessionDetails'
 function App() {
   const router = createBrowserRouter([{
     path: "", element: <Layout />, children: [
@@ -35,6 +37,7 @@ function App() {
       { path: "/CaseMangemnt", element: <ProtectedRoute><CaseMange /></ProtectedRoute> },
       { path: "/CaseMangemnt/AddNewCase", element: <ProtectedRoute><AddNewCase /></ProtectedRoute> },
       { path: "/CaseMangemnt/CaseDetails/:id", element: <ProtectedRoute><CaseDetails /></ProtectedRoute> },
+      { path: "/CaseMangemnt/CaseDetails/:id/SessionDetails", element: <ProtectedRoute><SessionDetails /></ProtectedRoute> },
       { path: "/CaseMangemnt/CaseDetails/:id/AddSession", element: <ProtectedRoute><AddSession /></ProtectedRoute> },
       { path: "/TeamMember", element: <ProtectedRoute><Team /></ProtectedRoute> },
       { path: "/TeamMember/TeamProfile/:id", element: <ProtectedRoute><TeamProfile /></ProtectedRoute> },
@@ -46,6 +49,7 @@ function App() {
       { path: "/Clients", element: <ProtectedRoute><Clients /></ProtectedRoute> },
       { path: "/TaskMangment", element: <ProtectedRoute><TaskMangment/></ProtectedRoute> },
       { path: "/Setting", element: <ProtectedRoute><Setting /></ProtectedRoute> },
+      { path: "/MyProfile", element: <ProtectedRoute><MyProfile /></ProtectedRoute> },
       { path: "/AddMember", element: <ProtectedRoute><AddMember /></ProtectedRoute> },
       { path: "/Clients/ClientProfile/:id", element: <ProtectedRoute><ClientProfile /></ProtectedRoute> },
       { path: "/Login", element: <Login /> },

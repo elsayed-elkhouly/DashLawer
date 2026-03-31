@@ -1,13 +1,14 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { ArrowLeftRight, ChevronDown, ChevronLeft, ChevronRight, Download, Edit2, Eye, PlusCircle, RotateCcw, Search, Trash2 } from 'lucide-react'
 import React from 'react'
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import api from '../../api/axios';
+import toast from 'react-hot-toast';
 
 const Team = () => {
-
+  const queryClient = useQueryClient();
   const formatEgyptDate = (dateString) => {
     if (!dateString) return "—";
 
@@ -26,9 +27,6 @@ const Team = () => {
   };
 
 
-
-
-
   function getUSers() {
     return api.get("/users", {
       headers: {
@@ -44,7 +42,26 @@ const Team = () => {
 
   console.log(data?.data);
 
+  const deleteMutation = useMutation({
+    mutationFn: (id) =>
+      api.delete(`/users/hardDeleteUser/${id}`, {
+        headers: {
+          authorization: `Bearer ${Cookies.get("token")}`,
+        },
+      }),
 
+    onSuccess: () => {
+      toast.success(" تم المسح")
+      queryClient.invalidateQueries(["Users"]);
+    },
+
+    onError: (error) => {
+      console.log(error.response?.data || error.message);
+    },
+  });
+  const handleDelete = (id) => {
+    deleteMutation.mutate(id);
+  };
   return (
 
     <>
@@ -53,16 +70,16 @@ const Team = () => {
         className="w-full bg-[#0e1a2b] px-4 sm:px-6 lg:px-8 py-5 mt-5 font-sans"
         dir="rtl"
       >
-        <div className="flex flex-col gap-5 lg:flex-row lg:flex-row-reverse lg:items-center lg:justify-between">
+        <div className="flex flex-col gap-5 lg:flex-row-reverse lg:items-center lg:justify-between">
           {/* Left Side: Buttons */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
-            <button className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 border border-[#C59D4A] text-[#C59D4A] rounded-3xl hover:bg-[#C59D4A] hover:text-white transition-all duration-300">
+            <button className="w-full cursor-pointer sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 border border-[#C59D4A] text-[#C59D4A] rounded-3xl hover:bg-[#C59D4A] hover:text-white transition-all duration-300">
               <Download size={18} />
               <span className="text-sm font-medium">تصدير PDF / Excel</span>
             </button>
 
             <Link to={"/AddMember"} className="w-full sm:w-auto">
-              <button className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 sm:px-7 py-3 bg-[#C59D4A] text-white rounded-2xl hover:bg-[#b08b3e] transition-all duration-300 shadow-lg shadow-[#C59D4A]/20">
+              <button className="w-full cursor-pointer sm:w-auto flex items-center justify-center gap-2 px-5 sm:px-7 py-3 bg-[#C59D4A] text-white rounded-2xl hover:bg-[#b08b3e] transition-all duration-300 shadow-lg shadow-[#C59D4A]/20">
                 <PlusCircle size={18} />
                 <span className="text-sm font-medium">إضافة عضو جديد</span>
               </button>
@@ -84,13 +101,13 @@ const Team = () => {
 
       {/* Filters */}
       {/* <section className="px-3 sm:px-4 lg:px-6"> */}
-        {/* <div
+      {/* <div
           className="w-full mx-auto bg-[#101c2e] py-6 sm:py-8 px-4 sm:px-5 rounded-xl border border-gray-800/50"
           dir="rtl"
         > */}
-          {/* <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4"> */}
-            {/* Search Input */}
-            {/* <div className="md:col-span-2 xl:col-span-5">
+      {/* <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4"> */}
+      {/* Search Input */}
+      {/* <div className="md:col-span-2 xl:col-span-5">
               <label className="block text-gray-400 text-sm mb-2 mr-1">البحث</label>
               <div className="relative">
                 <input
@@ -105,8 +122,8 @@ const Team = () => {
               </div>
             </div> */}
 
-            {/* Account Type Dropdown */}
-            {/* <div className="xl:col-span-2">
+      {/* Account Type Dropdown */}
+      {/* <div className="xl:col-span-2">
               <label className="block text-gray-400 text-sm mb-2 mr-1">نوع الحساب</label>
               <div className="relative">
                 <select className="w-full bg-[#16253a] border border-gray-700 text-white rounded-lg py-2.5 pr-4 pl-10 appearance-none focus:outline-none focus:border-[#C59D4A]">
@@ -121,8 +138,8 @@ const Team = () => {
               </div>
             </div> */}
 
-            {/* Status Dropdown */}
-            {/* <div className="xl:col-span-2">
+      {/* Status Dropdown */}
+      {/* <div className="xl:col-span-2">
               <label className="block text-gray-400 text-sm mb-2 mr-1">الحالة</label>
               <div className="relative">
                 <select className="w-full bg-[#16253a] border border-gray-700 text-white rounded-lg py-2.5 pr-4 pl-10 appearance-none focus:outline-none focus:border-[#C59D4A]">
@@ -137,15 +154,15 @@ const Team = () => {
               </div>
             </div> */}
 
-            {/* Search Button */}
-            {/* <div className="xl:col-span-2 flex items-end">
+      {/* Search Button */}
+      {/* <div className="xl:col-span-2 flex items-end">
               <button className="w-full bg-[#C59D4A] hover:bg-[#b08b3e] text-white font-bold py-2.5 px-6 rounded-lg transition-colors shadow-lg shadow-[#C59D4A]/10">
                 بحث
               </button>
             </div> */}
 
-            {/* Reset Button */}
-            {/* <div className="xl:col-span-1 flex items-end">
+      {/* Reset Button */}
+      {/* <div className="xl:col-span-1 flex items-end">
               <button
                 type="reset"
                 className="w-full xl:w-auto flex items-center justify-center gap-2 text-gray-400 hover:text-white py-2.5 px-2 transition-colors"
@@ -154,7 +171,7 @@ const Team = () => {
                 <span className="text-sm">إعادة ضبط</span>
               </button>
             </div> */}
-          {/* </div>
+      {/* </div>
         </div> */}
       {/* </section> */}
 
@@ -205,11 +222,12 @@ const Team = () => {
                           )}
                           <div className="min-w-0">
                             <div className="text-white font-bold text-sm truncate">
-                              {member.name}
+                              {member.UserName
+                              }
                             </div>
-                            <div className="text-gray-500 text-xs truncate">
+                            {/* <div className="text-gray-500 text-xs truncate">
                               {member.role}
-                            </div>
+                            </div> */}
                           </div>
                         </div>
                       </td>
@@ -226,8 +244,8 @@ const Team = () => {
                       <td className="p-4 text-center whitespace-nowrap">
                         <span
                           className={`px-3 py-1 rounded-full text-xs border ${member.role === "ADMIN"
-                              ? "border-[#C59D4A] text-[#C59D4A]"
-                              : "border-gray-700 text-gray-400"
+                            ? "border-[#C59D4A] text-[#C59D4A]"
+                            : "border-gray-700 text-gray-400"
                             } bg-gray-800/30`}
                         >
                           {member.role}
@@ -238,17 +256,9 @@ const Team = () => {
                       <td className="p-4 text-center whitespace-nowrap">
                         <div className="flex items-center justify-center gap-2">
                           <span
-                            className={`w-2 h-2 rounded-full ${member.status === "نشط" ? "bg-emerald-500" : "bg-gray-500"
+                            className={`w-2 h-2 rounded-full ${member.isDeleted ? "bg-gray-500" : "bg-emerald-500"
                               }`}
                           ></span>
-                          <span
-                            className={`text-xs ${member.status === "نشط"
-                                ? "text-emerald-500"
-                                : "text-gray-500"
-                              }`}
-                          >
-                            {member.status}
-                          </span>
                         </div>
                       </td>
 
@@ -260,17 +270,15 @@ const Team = () => {
                       <td className="p-4">
                         <div className="flex items-center justify-center gap-2 whitespace-nowrap">
                           <Link to={`/TeamMember/TeamProfile/${member?.id}`}>
-                            <button className="p-1.5 rounded-full border border-gray-700 text-gray-400 hover:text-[#C59D4A] hover:border-[#C59D4A] transition-colors">
+                            <button className="p-1.5 cursor-pointer rounded-full border border-gray-700 text-gray-400 hover:text-[#C59D4A] hover:border-[#C59D4A] transition-colors">
                               <Eye size={16} />
                             </button>
                           </Link>
-                          <button className="p-1.5 rounded-full border border-gray-700 text-gray-400 hover:text-[#C59D4A] hover:border-[#C59D4A] transition-colors">
-                            <Edit2 size={16} />
-                          </button>
-                          <button className="p-1.5 rounded-full border border-gray-700 text-gray-400 hover:text-[#C59D4A] hover:border-[#C59D4A] transition-colors">
-                            <ArrowLeftRight size={16} />
-                          </button>
-                          <button className="p-1.5 rounded-full border border-gray-700 text-red-500 hover:bg-red-500/10 transition-colors">
+
+
+                          <button
+                            onClick={() => handleDelete(member?.id)}
+                            className="p-1.5 cursor-pointer rounded-full border border-gray-700 text-red-500 hover:bg-red-500/10 transition-colors">
                             <Trash2 size={16} />
                           </button>
                         </div>

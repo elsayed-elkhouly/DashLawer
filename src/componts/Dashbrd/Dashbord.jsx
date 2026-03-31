@@ -2,7 +2,7 @@ import axios from 'axios'
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { BiBell, BiCalendar, BiChevronLeft, BiChevronLeftCircle, BiChevronRight, BiDownload, BiFilter, BiMapPin, BiSearch, BiUserPlus } from 'react-icons/bi'
 import { BsEye, BsPlusSquare, BsPlusSquareDotted } from 'react-icons/bs'
-import { CgLock, CgLockUnlock } from 'react-icons/cg'
+import { CgLock, CgLockUnlock, CgProfile } from 'react-icons/cg'
 import { CiSettings } from 'react-icons/ci'
 import { FaMoneyBills, FaUserPlus } from 'react-icons/fa6'
 import { FcElectricity } from 'react-icons/fc'
@@ -15,7 +15,7 @@ import { MdGavel, MdOutlineElectricBolt } from 'react-icons/md'
 import { RiMicAiLine, RiMvAiLine } from 'react-icons/ri'
 import Cookies from 'js-cookie';
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import api from '../../api/axios'
 import { Authcontext } from '../../Context/AuthContextProvider'
 import { jwtDecode } from "jwt-decode";
@@ -152,40 +152,40 @@ const Dashbord = () => {
       icon: <MdGavel className="text-[#C9A14A] w-5 h-5 sm:w-6 sm:h-6" />,
     },
   ]
-async function readTask() {
-  try {
+  async function readTask() {
+    try {
+      const hasUnread = taskLawer?.data?.notifications?.some((item) => !item.isRead);
+
+      if (!hasUnread) return;
+
+      const res = await api.patch(
+        "task/notifications/read",
+        null,
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log(res);
+
+      queryClient.invalidateQueries({ queryKey: ["Tasks"] });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  useEffect(() => {
     const hasUnread = taskLawer?.data?.notifications?.some((item) => !item.isRead);
 
-    if (!hasUnread) return;
-
-    const res = await api.patch(
-      "task/notifications/read",
-      null,
-      {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    console.log(res);
-
-    queryClient.invalidateQueries({ queryKey: ["Tasks"] });
-  } catch (error) {
-    console.log(error);
-  }
-}
-useEffect(() => {
-  const hasUnread = taskLawer?.data?.notifications?.some((item) => !item.isRead);
-
-  if (open && hasUnread) {
-    readTask();
-  }
-}, [open, taskLawer?.data?.notifications]);
+    if (open && hasUnread) {
+      readTask();
+    }
+  }, [open, taskLawer?.data?.notifications]);
   return (
-    <div className="min-h-screen bg-[#0b1120] text-white">
+    <div className="min-h-screen  text-white">
       {/* Header */}
-      <nav className="w-full px-4 sm:px-6 lg:px-8 py-4 bg-[#0b1120] text-white border-b border-gray-800">
+      <nav className="w-full px-4 sm:px-6 lg:px-8 py-4  text-white border-b border-gray-800">
         <div className="flex gap-4 xl:flex-row xl:items-center xl:justify-between">
 
 
@@ -216,8 +216,18 @@ useEffect(() => {
             </div>
 
             <div className="flex items-center gap-4 text-gray-400">
-              <CiSettings className="w-5 h-5 cursor-pointer hover:text-white transition" />
+              <button>
 
+                <div className="dropdown dropdown-end">
+                  <div tabIndex={0} role="button" className=" m-1"><CiSettings className="w-5 h-5 cursor-pointer hover:text-white transition" /></div>
+                  <ul tabIndex="-1" className="dropdown-content menu bg-[#0f172a] rounded-box z-1 w-40 p-2 mt-2 shadow-sm ">
+                    <li><Link to={'/MyProfile'} className=' flex flex-row-reverse items-center hover:bg-[#2e3b59] text-white'>
+                      <CgProfile />        profile
+                    </Link></li>
+                    <li><a>Item 2</a></li>
+                  </ul>
+                </div>
+              </button>
               <div ref={notificationRef} className="relative">
                 {/* أيقونة الجرس */}
                 <div

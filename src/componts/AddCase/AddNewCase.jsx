@@ -136,7 +136,7 @@ const AddNewCase = () => {
   return (
     <>
       {/* header */}
-      <div dir="rtl" className="bg-slate-950 p-6 text-white">
+      <div dir="rtl" className=" p-6 text-white">
         <div className="mx-auto w-full max-w-7xl rounded-3xl bg-[#071a33] px-8 py-7 shadow-2xl ring-1 ring-white/10">
           <div className="flex items-start justify-between gap-6">
             <div className="text-right">
@@ -181,7 +181,7 @@ const AddNewCase = () => {
         </div>
       </div>
       <div
-        className="min-h-screen bg-[#041124] px-4 py-8 text-white md:px-8"
+        className="min-h-screen  px-4 py-8 text-white md:px-8"
         dir="rtl"
       >
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">

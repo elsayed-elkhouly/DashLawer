@@ -1,4 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
+import api from '../../api/axios'
+import Cookies from 'js-cookie';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { HiCheck, HiOutlineDotsVertical } from 'react-icons/hi';
 import {
     HiOutlinePencil,
@@ -9,16 +14,27 @@ import {
     HiOutlineBriefcase,
     HiXMark,
 } from "react-icons/hi2";
-import api from '../../api/axios';
-import { useParams } from 'react-router-dom';
-import Cookies from 'js-cookie';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
-const TeamProfile = () => {
+const MyProfile = () => {
+    function getProfile() {
+        return api.get("/users/profile/me", {
+            headers: {
+                authorization: `Bearer ${Cookies.get("token")}`,
 
-    const { id } = useParams();
+            }
+        })
+
+    }
+    const { data,isLoading } = useQuery({
+        queryKey: ["MyProfile"],
+        queryFn: getProfile
+    })
+    console.log(data);
+      
+   
+
+    
     const queryClient = useQueryClient();
     const [showAccountMenu, setShowAccountMenu] = useState(false);
     const menuRef = useRef(null);
@@ -29,19 +45,10 @@ const TeamProfile = () => {
     const [photoLoading, setPhotoLoading] = useState(false);
     const [previewImage, setPreviewImage] = useState("");
 
-    function getUserData() {
-        return api.get(`/users/${id}`, {
-            headers: {
-                authorization: `Bearer ${Cookies.get("token")}`,
-            },
-        });
-    }
+    
+   
 
-    const { data, isLoading } = useQuery({
-        queryKey: ["UserProfile", id],
-        queryFn: getUserData,
-        enabled: !!id,
-    });
+   
 
     const UserData = data?.data?.user
     console.log(UserData);
@@ -86,58 +93,61 @@ const TeamProfile = () => {
         setPreviewImage(UserData?.ProfilePhoto?.url || "");
         setIsEditing(true);
     };
-    const handleFreezeUser = async () => {
+    // const handleFreezeUser = async () => {
+    //     if (!window.confirm("هل أنت متأكد من تجميد الحساب؟")) return;
 
-        try {
-            await api.patch(
-                `/users/${id}/freeze`,
-                {},
-                {
-                    headers: {
-                        authorization: `Bearer ${Cookies.get("token")}`,
-                    },
-                }
-            );
+    //     try {
+    //         await api.patch(
+    //             `/users/${id}/freeze`,
+    //             {},
+    //             {
+    //                 headers: {
+    //                     authorization: `Bearer ${Cookies.get("token")}`,
+    //                 },
+    //             }
+    //         );
 
-            toast.success("تم تجميد الحساب");
-            queryClient.invalidateQueries({ queryKey: ["UserProfile", id] });
-        } catch (error) {
-            console.log(error);
-            toast.error("حصل خطأ");
-        }
-    };
+    //         toast.success("تم تجميد الحساب");
 
-    const handleUnfreezeUser = async () => {
+    //         queryClient.invalidateQueries(["UserProfile", id]);
+    //     } catch (error) {
+    //         console.log(error);
+    //         toast.error("حصل خطأ");
+    //     }
+    // };
 
-        try {
-            await api.patch(
-                `/users/${id}/unfreeze`,
-                {},
-                {
-                    headers: {
-                        authorization: `Bearer ${Cookies.get("token")}`,
-                    },
-                }
-            );
+    // const handleUnfreezeUser = async () => {
+    //     if (!window.confirm("هل أنت متأكد من فك التجميد؟")) return;
 
-            toast.success("تم فك التجميد");
+    //     try {
+    //         await api.patch(
+    //             `/users/${id}/unfreeze`,
+    //             {},
+    //             {
+    //                 headers: {
+    //                     authorization: `Bearer ${Cookies.get("token")}`,
+    //                 },
+    //             }
+    //         );
 
-            queryClient.invalidateQueries(["UserProfile", id]);
-        } catch (error) {
-            console.log(error);
-            toast.error("حصل خطأ");
-        }
-    };
-    useEffect(() => {
-        const handleClickOutside = (e) => {
-            if (menuRef.current && !menuRef.current.contains(e.target)) {
-                setShowAccountMenu(false);
-            }
-        };
+    //         toast.success("تم فك التجميد");
 
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
+    //         queryClient.invalidateQueries(["UserProfile", id]);
+    //     } catch (error) {
+    //         console.log(error);
+    //         toast.error("حصل خطأ");
+    //     }
+    // };
+    // useEffect(() => {
+    //     const handleClickOutside = (e) => {
+    //         if (menuRef.current && !menuRef.current.contains(e.target)) {
+    //             setShowAccountMenu(false);
+    //         }
+    //     };
+
+    //     document.addEventListener("mousedown", handleClickOutside);
+    //     return () => document.removeEventListener("mousedown", handleClickOutside);
+    // }, []);
 
     const handleCancel = () => {
         reset({
@@ -222,7 +232,7 @@ const TeamProfile = () => {
             const formData = new FormData();
             formData.append("profile", file);
 
-            const response = await api.patch(`/users/updateProfilePhoto`, formData, {
+            const response = await api.patch(`users/updateProfilePhoto`, formData, {
                 headers: {
                     authorization: `Bearer ${Cookies.get("token")}`,
 
@@ -232,13 +242,7 @@ const TeamProfile = () => {
             const updatedUser =
                 response?.data?.user || response?.data?.data || response?.data;
 
-            queryClient.setQueryData(["UserProfile", id], (oldData) => ({
-                ...oldData,
-                data: {
-                    ...oldData?.data,
-                    user: updatedUser,
-                },
-            }));
+            
 
             setPreviewImage(updatedUser?.ProfilePhoto?.url || localPreview);
             toast.success("تم تحديث الصورة بنجاح");
@@ -252,9 +256,6 @@ const TeamProfile = () => {
             setPhotoLoading(false);
         }
     };
-    function Cases() {
-        return api.get(`/LegalCase/${id}`)
-    }
 
     if (isLoading) {
         return (
@@ -274,10 +275,7 @@ const TeamProfile = () => {
                     {/* Header */}
                     <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                         {/* Info */}
-                        <form
-                            onSubmit={handleSubmit(onSubmit)}
-                            className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between"
-                        >
+                        
                             <div className="flex items-center gap-4">
                                 <div className="relative">
                                     {previewImage ? (
@@ -325,100 +323,23 @@ const TeamProfile = () => {
                                             نشط
                                         </span>
 
-                                        {isEditing ? (
-                                            <input
-                                                {...register("jobTitle", {
-                                                    required: "المسمى الوظيفي مطلوب",
-                                                })}
-                                                className="rounded-full bg-amber-400/20 px-2 py-1 text-xs text-amber-300 outline-none border border-white/10"
-                                            />
-                                        ) : (
+                                      
                                             <span className="rounded-full bg-amber-400/20 px-2 py-1 text-xs text-amber-300">
                                                 {UserData?.jobTitle}
                                             </span>
-                                        )}
+                                      
                                     </div>
 
-                                    {isEditing ? (
-                                        <div className="mt-2">
-                                            <input
-                                                {...register("UserName", {
-                                                    required: "الاسم مطلوب",
-                                                })}
-                                                className="text-2xl font-bold bg-transparent border-b border-white/20 outline-none text-right"
-                                            />
-                                            {errors.UserName && (
-                                                <p className="mt-1 text-xs text-red-400">
-                                                    {errors.UserName.message}
-                                                </p>
-                                            )}
-                                        </div>
-                                    ) : (
+                                  
                                         <h2 className="mt-2 text-2xl font-bold">{UserData?.UserName}</h2>
-                                    )}
+                                  
 
                                     <p className="rounded-full bg-amber-400/20 px-2 py-1 text-xs text-amber-300 w-fit mt-2">
                                         {UserData?.role}
                                     </p>
 
                                     <div className="mt-2 space-y-2">
-                                        {isEditing ? (
-                                            <>
-                                                <div>
-                                                    <input
-                                                        {...register("department", {
-                                                            required: "القسم مطلوب",
-                                                        })}
-                                                        placeholder="القسم"
-                                                        className="block w-full text-sm bg-transparent border border-white/10 rounded-lg px-3 py-2 outline-none"
-                                                    />
-                                                    {errors.department && (
-                                                        <p className="mt-1 text-xs text-red-400">
-                                                            {errors.department.message}
-                                                        </p>
-                                                    )}
-                                                </div>
-
-                                                <div>
-                                                    <input
-                                                        {...register("email", {
-                                                            required: "الإيميل مطلوب",
-                                                            pattern: {
-                                                                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                                                                message: "صيغة الإيميل غير صحيحة",
-                                                            },
-                                                        })}
-                                                        placeholder="البريد الإلكتروني"
-                                                        className="block w-full text-sm bg-transparent border border-white/10 rounded-lg px-3 py-2 outline-none"
-                                                    />
-                                                    {errors.email && (
-                                                        <p className="mt-1 text-xs text-red-400">
-                                                            {errors.email.message}
-                                                        </p>
-                                                    )}
-                                                </div>
-
-                                                <div>
-                                                    <input
-                                                        type="text"
-                                                        {...register("phone", {
-                                                            required: "رقم الهاتف مطلوب",
-                                                            pattern: {
-                                                                value: /^01[0125][0-9]{8}$/,
-                                                                message: "رقم الهاتف يجب أن يكون 11 رقم ويبدأ بـ 010 أو 011 أو 012 أو 015",
-                                                            },
-                                                        })}
-                                                        placeholder="رقم الهاتف"
-                                                        className="block w-full text-sm bg-transparent border border-white/10 rounded-lg px-3 py-2 outline-none"
-                                                    />
-                                                    {errors.phone && (
-                                                        <p className="mt-1 text-xs text-red-400">
-                                                            {errors.phone.message}
-                                                        </p>
-                                                    )}
-                                                </div>
-                                            </>
-                                        ) : (
+                                        
                                             <>
                                                 <p className="text-sm text-[#8EA3BF]">
                                                     القسم: {UserData?.department}
@@ -432,84 +353,12 @@ const TeamProfile = () => {
                                                     {UserData?.email} • {UserData?.phone}
                                                 </p>
                                             </>
-                                        )}
+                                      
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-3">
-                                {!isEditing ? (
-                                    <button
-                                        type="button"
-                                        onClick={handleEditClick}
-                                        className="flex items-center gap-2 rounded-xl bg-[#D7AE46] px-5 py-2 text-sm font-semibold text-[#071a2f]"
-                                    >
-                                        <HiOutlinePencil size={16} />
-                                        تعديل البيانات
-                                    </button>
-                                ) : (
-                                    <>
-                                        <button
-                                            type="submit"
-                                            disabled={loading}
-                                            className="flex items-center gap-2 rounded-xl bg-green-500 px-5 py-2 text-sm font-semibold text-white disabled:opacity-60"
-                                        >
-                                            <HiCheck size={16} />
-                                            {loading ? "جاري الحفظ..." : "حفظ"}
-                                        </button>
-
-                                        <button
-                                            type="button"
-                                            onClick={handleCancel}
-                                            className="flex items-center gap-2 rounded-xl border border-white/10 px-5 py-2 text-sm text-[#8EA3BF] hover:bg-white/5"
-                                        >
-                                            <HiXMark size={16} />
-                                            إلغاء
-                                        </button>
-                                    </>
-                                )}
-
-                                <div className="relative" ref={menuRef}>
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowAccountMenu((prev) => !prev)}
-                                        className="flex items-center gap-2 rounded-xl border border-white/10 px-5 py-2 text-sm text-[#8EA3BF] hover:bg-white/5 transition"
-                                    >
-                                        <HiOutlineCog6Tooth size={16} />
-                                        تعديل الحساب
-                                    </button>
-
-                                    <div
-                                        className={`absolute left-0 mt-2 w-44 rounded-xl border border-white/10 bg-[#071a2f] shadow-lg z-50 transition-all duration-200 origin-top
-        ${showAccountMenu ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"}`}
-                                    >
-                                        {!UserData?.isDeleted ? (
-                                            <button
-                                                type="button"
-                                                onClick={() => {
-                                                    handleFreezeUser();
-                                                    setShowAccountMenu(false);
-                                                }}
-                                                className="w-full text-right px-4 py-3 text-sm text-red-400 hover:bg-white/5 transition"
-                                            >
-                                                🔒 تجميد الحساب
-                                            </button>
-                                        ) : (
-                                            <button
-                                                type="button"
-                                                onClick={() => {
-                                                    handleUnfreezeUser();
-                                                    setShowAccountMenu(false);
-                                                }}
-                                                className="w-full text-right px-4 py-3 text-sm text-green-400 hover:bg-white/5 transition"
-                                            >
-                                                🔓 فك التجميد
-                                            </button>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
+                       
 
 
 
@@ -630,4 +479,5 @@ const TeamProfile = () => {
         </>)
 }
 
-export default TeamProfile
+
+export default MyProfile

@@ -74,7 +74,7 @@ const CaseInfo = ({ Case, onSave, isSaving, lawer,id }) => {
 
             <section>
                 <div
-                    className="w-full bg-[#071a31] px-6 py-5 text-white mb-10"
+                    className="w-full  px-6 py-5 text-white mb-10"
                     dir="rtl"
                 >
                     <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">

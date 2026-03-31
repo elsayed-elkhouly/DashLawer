@@ -182,7 +182,7 @@ const BookMangment = () => {
     }
     return (
         <>
-            <div dir="rtl" className="w-full bg-[#071a2f] p-6 text-white">
+            <div dir="rtl" className="w-full  p-6 text-white">
                 <div className="mb-6 text-right">
                     <h1 className="text-3xl font-bold">إدارة الحجوزات</h1>
                     <p className="mt-1 text-sm text-[#8EA3BF]">
@@ -212,7 +212,7 @@ const BookMangment = () => {
                 </div>
             </div>
             <section>
-                <div dir="rtl" className=" bg-[#071a2f] p-6 text-white">
+                <div dir="rtl" className="  p-6 text-white">
                     <div className="mx-auto max-w-7xl">
                         {/* Top Controls */}
                         <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">

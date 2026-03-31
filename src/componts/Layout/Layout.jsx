@@ -36,7 +36,7 @@ const Layout = () => {
           <SideBar onClose={() => setSidebarOpen(false)} isMobile />
         </div>
       )}
-      <main className="flex-1 h-screen overflow-y-auto bg-[#0e1a2b] relative">
+      <main className="flex-1 h-screen overflow-y-auto bg-[radial-gradient(circle_at_top,#0d2847_0%,#07192e_45%,#05111f_100%)] relative">
         {/* Mobile Top Bar */}
         {token && (
           <div className="lg:hidden sticky top-0 z-30 flex items-center justify-between px-4 py-3 bg-[#101c2e] border-b border-gray-800">
