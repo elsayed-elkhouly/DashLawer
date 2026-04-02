@@ -98,6 +98,8 @@ const Setting = () => {
     staleTime: 1000 * 60 * 10,
     gcTime: 1000 * 60 * 30,
   });
+  console.log(settingData);
+  
 
   const { data: cases } = useQuery({
     queryKey: ["Cases"],
@@ -433,9 +435,9 @@ const Setting = () => {
       <section>
         <div
           dir="rtl"
-          className="min-h-screen bg-[#0e1a2b] flex items-center justify-center p-6"
+          className="min-h-screen flex items-center justify-center p-6"
         >
-          <div className="w-full max-w-5xl bg-[#162132] rounded-2xl p-8 shadow-2xl border border-[#1E2D3D]">
+          <div className="w-full max-w-5xl bg-[#081226] rounded-2xl p-8 shadow-2xl border border-[#1E2D3D]">
             <div className="flex justify-between items-center mb-8">
                <h2 className="text-[32px] font-bold text-white flex items-center ">
                 <span className="text-[#C6A24F]">👤</span>
@@ -675,7 +677,7 @@ const Setting = () => {
       </section>
 
       <section className="flex items-center justify-center py-5">
-        <div className="bg-[#162132] w-255 p-8 rounded-xl text-white border border-gray-700">
+        <div className="bg-[#081226] w-255 p-8 rounded-xl text-white border border-gray-700">
           <div dir="rtl">
             <h2 className="text-[20px] font-semibold text-white mb-4 flex items-center gap-2 mr-15">
               <span className="w-2.5 h-2.5 bg-[#C6A24F] rounded-full"></span>
@@ -804,7 +806,7 @@ const Setting = () => {
           </div>
 
           <div className="bg-slate-900 rounded-xl overflow-hidden border border-[#2D3245] shadow-2xl">
-            <div className="p-4 font-bold text-lg md:text-xl bg-[#162132] text-[#C9A14A] border border-[#2D3245]">
+            <div className="p-4 font-bold text-lg md:text-xl bg-[#081226] text-[#C9A14A] border border-[#2D3245]">
               مواعيد العمل
             </div>
 
@@ -823,7 +825,7 @@ const Setting = () => {
                   {settingData?.Settings?.workHours?.map((item, index) => (
                     <tr
                       key={index}
-                      className="border bg-[#162132] border-slate-800 hover:bg-slate-800/50"
+                      className="border bg-[#081226] border-slate-800 hover:bg-slate-800/50"
                     >
                       <td className="ps-6 md:ps-20 py-3">{item.days?.join(" , ")}</td>
                       <td className="p-3 md:p-4">{formatTime(item.from)}</td>
@@ -905,7 +907,7 @@ const Setting = () => {
 
           <div dir="rtl" className="p-6 flex items-start justify-center">
             <div className="w-full max-w-5xl overflow-hidden rounded-2xl border border-white/10 bg-[#151b2b] shadow-2xl shadow-black/40">
-              <div className="px-6 py-5 border-b bg-[#162132] border-white/5">
+              <div className="px-6 py-5 border-b bg-[#081226] border-white/5">
                 <h2 className="text-xl font-semibold text-[#f0b44b]">مواعيد العمل</h2>
               </div>
 
@@ -982,7 +984,7 @@ const Setting = () => {
               </p>
             </div>
 
-            <div className="rounded-3xl border border-white/5 bg-[#162132] shadow-2xl shadow-black/20 p-4 md:p-5">
+            <div className="rounded-3xl border border-white/5 bg-[#081226] shadow-2xl shadow-black/20 p-4 md:p-5">
               <div className="flex flex-col md:flex-row-reverse gap-4 items-stretch md:items-center">
                 <button
                   onClick={AddCase}
@@ -1032,7 +1034,7 @@ const Setting = () => {
                 {cases?.data?.caseTypes?.map((issue) => (
                   <div
                     key={issue._id}
-                    className="grid grid-cols-2 bg-[#162132] items-center border-b border-white/4"
+                    className="grid grid-cols-2 bg-[#081226] items-center border-b border-white/4"
                   >
                     <div className="px-6 py-5 text-right text-sm md:text-base text-slate-100">
                       {issue.name}

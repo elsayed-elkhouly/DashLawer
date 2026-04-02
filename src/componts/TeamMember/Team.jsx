@@ -67,7 +67,7 @@ const Team = () => {
     <>
       {/* Header */}
       <div
-        className="w-full bg-[#0e1a2b] px-4 sm:px-6 lg:px-8 py-5 mt-5 font-sans"
+        className="w-full  px-4 sm:px-6 lg:px-8 py-5 mt-5 font-sans"
         dir="rtl"
       >
         <div className="flex flex-col gap-5 lg:flex-row-reverse lg:items-center lg:justify-between">

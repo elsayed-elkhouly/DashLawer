@@ -42,6 +42,8 @@ const TeamProfile = () => {
         queryFn: getUserData,
         enabled: !!id,
     });
+    console.log(data);
+    
 
     const UserData = data?.data?.user
     console.log(UserData);
@@ -252,9 +254,19 @@ const TeamProfile = () => {
             setPhotoLoading(false);
         }
     };
-    function Cases() {
-        return api.get(`/LegalCase/${id}`)
+    function getTasks() {
+        return api.get(`/task/lawyer/${id}`, {
+            headers: {
+                authorization: `Bearer ${Cookies.get("token")}`,
+
+            }
+        })
     }
+    const { data: Tasks } = useQuery({
+        queryKey: ["Tasks"],
+        queryFn: getTasks
+    })
+
 
     if (isLoading) {
         return (
@@ -589,37 +601,63 @@ const TeamProfile = () => {
                         </div>
 
                         <div className="space-y-3">
-                            {[
-                                {
-                                    title: "مراجعة العقود النهائية لشركة الوفاق",
-                                    status: "أولوية قصوى",
-                                    color: "text-red-400",
-                                },
-                                {
-                                    title: "تقديم مذكرة الدفاع في القضية #4398",
-                                    status: "متأخرة",
-                                    color: "text-amber-400",
-                                },
-                                {
-                                    title: "اتصال مع العميل سالم عبد العزيز",
-                                    status: "منخفضة",
-                                    color: "text-blue-400",
-                                },
-                            ].map((t, i) => (
-                                <div
-                                    key={i}
-                                    className="flex items-center justify-between rounded-xl bg-[#081b31] px-4 py-4"
-                                >
-                                    <HiOutlineDotsVertical className="text-[#8EA3BF]" />
+                            {Tasks?.data?.tasks?.map((t, i) => {
+                                const date = new Date(t.dueDate);
 
-                                    <div className="text-right">
-                                        <p>{t.title}</p>
-                                        <p className={`text-xs ${t.color}`}>{t.status}</p>
+                                const day = date.getDate();
+
+                                const months = [
+                                    "يناير", "فبراير", "مارس", "أبريل",
+                                    "مايو", "يونيو", "يوليو", "أغسطس",
+                                    "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"
+                                ];
+
+                                const month = months[date.getMonth()];
+
+                                return (
+                                    <div
+                                        key={i}
+                                        className="flex items-center justify-between rounded-2xl bg-[#081b31] px-4 py-4"
+                                    >
+
+
+                                        {/* Right content */}
+                                        <div className="flex items-center gap-4">
+
+                                            <div className="flex flex-col items-center justify-center rounded-xl border border-[#d4af37] px-3 py-2 text-center min-w-[60px]">
+                                                <span className="text-lg font-bold text-[#d4af37]">
+                                                    {day}
+                                                </span>
+                                                <span className="text-xs text-gray-300">
+                                                    {month}
+                                                </span>
+                                            </div>
+
+                                            {/* Text content */}
+                                            <div className="text-right">
+                                                <p className="text-white font-medium">{t.title}</p>
+
+                                                <div className="flex items-center gap-2 justify-end mt-1">
+                                                    <span className="text-xs text-gray-400">
+                                                        {new Date(t.dueDate).toLocaleTimeString([], {
+                                                            hour: "2-digit",
+                                                            minute: "2-digit",
+                                                        })}
+                                                    </span>
+
+                                                    <span className="text-xs bg-red-600 text-white px-2 py-1 rounded-full">
+                                                        {t.priority}
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <HiOutlineDotsVertical className="text-[#8EA3BF]" />
+                                        </div>
                                     </div>
-
-                                    <input type="checkbox" className="accent-amber-400" />
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
                     </div>
                 </div>

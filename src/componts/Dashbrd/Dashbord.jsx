@@ -70,8 +70,7 @@ const Dashbord = () => {
 
   });
 
-  console.log(taskLawer
-  );
+
 
   const navigate = useNavigate()
   const hearingsData = [
@@ -175,6 +174,45 @@ const Dashbord = () => {
       console.log(error);
     }
   }
+
+  function getSessions() {
+    return api.get("/session/", {
+      headers: {
+        authorization: `Bearer ${token}`,
+      }
+    })
+  }
+  const { data: Session } = useQuery({
+    queryKey: ["Sessions"],
+    queryFn: getSessions
+  })
+  console.log(Session?.data?.sessions);
+  const formatDate = (date) => {
+    if (!date) return "غير متوفر";
+
+    return new Date(date).toLocaleString("ar-EG", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+  function formatDateArabic(dateString) {
+  const date = new Date(dateString);
+
+  const day = date.getDate();
+
+  const months = [
+    "يناير", "فبراير", "مارس", "أبريل",
+    "مايو", "يونيو", "يوليو", "أغسطس",
+    "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"
+  ];
+
+  const month = months[date.getMonth()];
+
+  return `${day} ${month}`;
+}
   useEffect(() => {
     const hasUnread = taskLawer?.data?.notifications?.some((item) => !item.isRead);
 
@@ -189,17 +227,7 @@ const Dashbord = () => {
         <div className="flex gap-4 xl:flex-row xl:items-center xl:justify-between">
 
 
-          {/* Search */}
-          {/* <div className="w-full xl:flex-1 xl:max-w-xl xl:mx-6 order-3 xl:order-2">
-            <div className="relative group">
-              <input
-                type="text"
-                placeholder="...بحث عن قضية، موكل، أو مستند"
-                className="w-full bg-[#151c2c] border border-gray-700 rounded-lg py-2.5 pr-10 pl-4 text-right text-sm focus:outline-none focus:border-gray-500 transition"
-              />
-              <BiSearch className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-            </div>
-          </div> */}
+
           {/* Page Title */}
           <div className="text-right">
             <h1 className="text-lg sm:text-xl font-bold">لوحة التحكم التنفيذية</h1>
@@ -372,34 +400,34 @@ const Dashbord = () => {
           </div>
 
           <div className="space-y-4">
-            {hearingsData.map((hearing) => (
+            {Session?.data?.sessions.map((hearing) => (
               <div
                 key={hearing.id}
                 className="p-4 bg-[#101c2e] border border-gray-800 rounded-2xl hover:border-gray-700 transition-colors cursor-pointer group"
               >
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                   <div className="flex items-start sm:items-center gap-4">
-                    <div className="bg-[#0b1220] border border-amber-500/20 rounded-xl px-4 py-2 text-center min-w-[70px] shrink-0">
-                      <span className="block text-xl font-bold text-[#C9A14A]">{hearing.day}</span>
-                      <span className="block text-xs text-gray-400">{hearing.month}</span>
+                    <div className="bg-[#0b1220] border border-amber-500/20 rounded-xl px-4 py-2 text-center min-w-17.5 shrink-0">
+                      <span className="block text-xl font-bold text-[#C9A14A]">{formatDateArabic(hearing.startAt)}</span>
                     </div>
 
                     <div className="text-right min-w-0">
-                      <h3 className="font-semibold text-sm sm:text-base mb-1 break-words">
-                        {hearing.title}
+                      <h3 className="font-semibold text-sm sm:text-base mb-1 wrap-break-word">
+                        {hearing.legalCase.description}
                       </h3>
                       <div className="flex items-center gap-1 text-xs sm:text-sm text-gray-500">
                         <BiMapPin className="w-3 h-3 shrink-0" />
-                        <span className="break-words">{hearing.court}</span>
+                        <span className="wrap-break-word">{hearing.courtName} - {hearing.city
+                        }</span>
                       </div>
                     </div>
                   </div>
 
                   <div className="flex items-center justify-between lg:justify-end gap-4 lg:gap-6">
                     <div className="text-right lg:text-left">
-                      <p className="text-sm font-bold mb-1">{hearing.time}</p>
-                      <span className={`inline-block text-[10px] sm:text-xs px-3 py-1 rounded-full border ${hearing.tagStyle}`}>
-                        {hearing.tag}
+                      <p className="text-sm font-bold mb-1">{formatDate(hearing.startAt)}</p>
+                      <span className={`inline-block text-[10px] sm:text-xs px-3 py-1 rounded-full border  bg-[#101c2e]`}>
+                        {hearing.type}
                       </span>
                     </div>
                     <BiChevronLeft className="w-5 h-5 text-gray-600 group-hover:text-white transition-colors shrink-0" />

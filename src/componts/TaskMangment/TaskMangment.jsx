@@ -231,11 +231,11 @@ const TaskMangment = () => {
 
     <>
       {/* header */}
-      <div dir="rtl" className="w-full bg-[#081b31] px-4 sm:px-6 lg:px-8 py-5">
+      <div dir="rtl" className="w-full  px-4 sm:px-6 lg:px-8 py-5">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           {/* Right Side (Title) */}
           <div className="text-right">
-            <h1 className="text-xl sm:text-2xl font-bold text-white">إدارة المهام</h1>
+            <h1 className="text-2xl sm:text-4xl font-bold text-white">إدارة المهام</h1>
             <p className="mt-1 text-sm text-[#8EA3BF] leading-6">
               عرض وصيانة كافة مهام المكتب القانوني بنظام الجداول
             </p>

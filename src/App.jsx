@@ -30,6 +30,7 @@ import AddSession from './componts/AddSession/AddSession'
 import TeamProfile from './componts/TeamProfile/TeamProfile'
 import MyProfile from './componts/MyProfile/MyProfile'
 import SessionDetails from './componts/SessionDetails/SessionDetails'
+import PyrollMangment from './componts/PyrollMangment/PyrollMangment'
 function App() {
   const router = createBrowserRouter([{
     path: "", element: <Layout />, children: [
@@ -48,6 +49,7 @@ function App() {
       { path: "/DigitalArchive", element: <ProtectedRoute><DigitalArchive /></ProtectedRoute> },
       { path: "/Clients", element: <ProtectedRoute><Clients /></ProtectedRoute> },
       { path: "/TaskMangment", element: <ProtectedRoute><TaskMangment/></ProtectedRoute> },
+      { path: "/PyrollMangment", element: <ProtectedRoute><PyrollMangment/></ProtectedRoute> },
       { path: "/Setting", element: <ProtectedRoute><Setting /></ProtectedRoute> },
       { path: "/MyProfile", element: <ProtectedRoute><MyProfile /></ProtectedRoute> },
       { path: "/AddMember", element: <ProtectedRoute><AddMember /></ProtectedRoute> },

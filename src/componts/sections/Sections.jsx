@@ -9,7 +9,7 @@ import { MdDashboard, MdEventAvailable, MdOutlineDashboard } from 'react-icons/m
 import { PiBag, PiFolderSimpleUser } from 'react-icons/pi'
 import { TbFileInvoice } from 'react-icons/tb'
 import { Link, Links, NavLink } from 'react-router-dom'
-
+import { GiReceiveMoney } from "react-icons/gi";
 const Sections = ({ onItemClick }) => {
   const menuItems = [
     { to: "/", icon: MdOutlineDashboard , label: "لوحة التحكم" },
@@ -21,6 +21,7 @@ const Sections = ({ onItemClick }) => {
     { to: "/Clients", icon: FaPeopleGroup, label: "إدارة العملاء" },
     { to: "/TaskMangment", icon: FaTasks , label: "إدارة المهام" },
     { to: "/BookMangment", icon: MdEventAvailable  , label: "إدارة الحجوزات" },
+    { to: "/PyrollMangment", icon: GiReceiveMoney, label: "ادارة الرواتب" },
     { to: "/Setting", icon: IoSettingsOutline, label: "الإعدادات" },
   ]
 

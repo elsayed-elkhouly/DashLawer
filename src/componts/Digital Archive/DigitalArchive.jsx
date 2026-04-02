@@ -25,7 +25,7 @@ const DigitalArchive = () => {
 
   return (
     <>
-      <div className="min-h-75 w-full bg-[#0e1a2b] p-8 font-sans" dir="rtl">
+      <div className="min-h-75 w-full  p-8 font-sans" dir="rtl">
         {/* Title Section */}
         <div className="mb-8 text-right">
           <h1 className="text-3xl font-bold text-white">الأرشيف الرقمي</h1>

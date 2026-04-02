@@ -232,7 +232,7 @@ const Clients = () => {
         <>
             {/* header */}
             <section>
-                <div className="w-full bg-[#0e1a2b] p-6 flex flex-row-reverse items-center justify-between">
+                <div className="w-full  p-6 flex flex-row-reverse items-center justify-between">
 
 
                     {/* Left Side: Buttons */}
@@ -485,7 +485,7 @@ const Clients = () => {
                     </div>
 
                     {/* Right Side: Title */}
-                    <h1 className="text-white text-[47px] font-bold">
+                    <h1 className="text-white text-[37px] font-bold">
                         إدارة العملاء
                     </h1>
 
@@ -493,7 +493,7 @@ const Clients = () => {
             </section>
             <section>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 lg:grid-cols-4  place-items-center">
-                    <div className="w-full max-w-70 p-6 bg-[#141d2f] border border-[#EF444433] rounded-3xl shadow-xl flex flex-col justify-between h-49.25 hover:border-[#EF4444] duration-300">
+                    <div className="w-full max-w-70 p-6 bg-[#081226] border border-[#EF444433] rounded-3xl shadow-xl flex flex-col justify-between h-49.25 hover:border-[#EF4444] duration-300">
                         <div className="flex justify-start">
                             <span className="text-[#EF4444] font-semibold text-sm">
                                 متأخرات
@@ -515,7 +515,7 @@ const Clients = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="w-full max-w-70 p-6 bg-[#141d2f] border border-slate-800 rounded-3xl shadow-xl flex flex-col justify-between h-49.25 hover:border-amber-200 duration-300">
+                    <div className="w-full max-w-70 p-6 bg-[#081226] border border-slate-800 rounded-3xl shadow-xl flex flex-col justify-between h-49.25 hover:border-amber-200 duration-300">
                         <div className="flex justify-start">
                             <span className="text-[#C9A34A] font-semibold text-sm">
                                 هذا الشهر
@@ -537,7 +537,7 @@ const Clients = () => {
                         </div>
                     </div>
 
-                    <div className="w-full max-w-70 p-6 bg-[#141d2f] border border-slate-800 rounded-3xl shadow-xl flex flex-col justify-between h-49.25 hover:border-amber-200 duration-300">
+                    <div className="w-full max-w-70 p-6 bg-[#081226] border border-slate-800 rounded-3xl shadow-xl flex flex-col justify-between h-49.25 hover:border-amber-200 duration-300">
                         <div className="flex justify-start">
                             <span className="text-emerald-400 font-semibold text-sm">
                                 +5%
@@ -560,7 +560,7 @@ const Clients = () => {
                         </div>
                     </div>
 
-                    <div className="w-full max-w-70 p-6 bg-[#141d2f] border border-slate-800 rounded-3xl shadow-xl flex flex-col justify-between h-49.25 hover:border-amber-200 duration-300">
+                    <div className="w-full max-w-70 p-6 bg-[#081226] border border-slate-800 rounded-3xl shadow-xl flex flex-col justify-between h-49.25 hover:border-amber-200 duration-300">
                         <div className="flex justify-start">
                             <span className="text-emerald-400 font-semibold text-sm">
                                 +12%
@@ -586,7 +586,7 @@ const Clients = () => {
                 </div>
             </section>
             <section>
-                <div dir="rtl" className=" bg-[#071224] p-6 text-white">
+                <div dir="rtl" className="  p-6 text-white">
                     <div className="mx-auto max-w-7xl rounded-3xl border border-white/10 bg-[linear-gradient(180deg,#0b1830_0%,#0a162b_100%)] shadow-2xl shadow-black/20 overflow-hidden">
                         <div className="border-b border-white/5 p-4 md:p-5">
                             <div className="flex items-center gap-3 rounded-[20px] border border-white/10 bg-[#0a1730] p-3 md:p-4">
