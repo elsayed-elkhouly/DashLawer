@@ -31,6 +31,7 @@ import TeamProfile from './componts/TeamProfile/TeamProfile'
 import MyProfile from './componts/MyProfile/MyProfile'
 import SessionDetails from './componts/SessionDetails/SessionDetails'
 import PyrollMangment from './componts/PyrollMangment/PyrollMangment'
+import BookOfLaw from './componts/BookofLaw/BookOfLaw'
 function App() {
   const router = createBrowserRouter([{
     path: "", element: <Layout />, children: [
@@ -51,6 +52,7 @@ function App() {
       { path: "/TaskMangment", element: <ProtectedRoute><TaskMangment/></ProtectedRoute> },
       { path: "/PyrollMangment", element: <ProtectedRoute><PyrollMangment/></ProtectedRoute> },
       { path: "/Setting", element: <ProtectedRoute><Setting /></ProtectedRoute> },
+      { path: "/BookOfLaw", element: <ProtectedRoute>< BookOfLaw /></ProtectedRoute> },
       { path: "/MyProfile", element: <ProtectedRoute><MyProfile /></ProtectedRoute> },
       { path: "/AddMember", element: <ProtectedRoute><AddMember /></ProtectedRoute> },
       { path: "/Clients/ClientProfile/:id", element: <ProtectedRoute><ClientProfile /></ProtectedRoute> },

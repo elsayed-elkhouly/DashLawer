@@ -18,6 +18,7 @@ const Sections = ({ onItemClick }) => {
     { to: "/Bills", icon: TbFileInvoice, label: "الفواتير" },
     { to: "/Calender", icon: IoCalendarOutline, label: "التقويم" },
     { to: "/DigitalArchive", icon: PiFolderSimpleUser, label: "الأرشيف الرقمي" },
+    { to: "/BookOfLaw", icon: PiFolderSimpleUser, label: " مرجع الكتب " },
     { to: "/Clients", icon: FaPeopleGroup, label: "إدارة العملاء" },
     { to: "/TaskMangment", icon: FaTasks , label: "إدارة المهام" },
     { to: "/BookMangment", icon: MdEventAvailable  , label: "إدارة الحجوزات" },

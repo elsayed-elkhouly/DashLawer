@@ -215,7 +215,7 @@ function EventBadge({ item }) {
 
 export default function Calendar({
 
-  previewLimit = 50,
+  previewLimit = 150,
 }) {
   const initialRange = getMonthRange(new Date());
 
