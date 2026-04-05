@@ -26,32 +26,28 @@ const MyProfile = () => {
         })
 
     }
-    const { data,isLoading } = useQuery({
+    const { data, isLoading } = useQuery({
         queryKey: ["MyProfile"],
         queryFn: getProfile
     })
     console.log(data);
-      
-   
 
-    
+
+
+
     const queryClient = useQueryClient();
-    const [showAccountMenu, setShowAccountMenu] = useState(false);
-    const menuRef = useRef(null);
+    // const menuRef = useRef(null);
     const fileInputRef = useRef(null);
 
-    const [isEditing, setIsEditing] = useState(false);
-    const [loading, setLoading] = useState(false);
     const [photoLoading, setPhotoLoading] = useState(false);
     const [previewImage, setPreviewImage] = useState("");
 
-    
-   
-
-   
-
     const UserData = data?.data?.user
-    console.log(UserData);
+    const Stats =data?.data?.stats
+
+    // console.log(UserData);
+    // console.log(Stats);
+    
 
     const {
         register,
@@ -82,137 +78,9 @@ const MyProfile = () => {
         }
     }, [UserData, reset]);
 
-    const handleEditClick = () => {
-        reset({
-            UserName: UserData?.UserName || "",
-            email: UserData?.email || "",
-            phone: UserData?.phone ? String(UserData.phone) : "",
-            department: UserData?.department || "",
-            jobTitle: UserData?.jobTitle || "",
-        });
-        setPreviewImage(UserData?.ProfilePhoto?.url || "");
-        setIsEditing(true);
-    };
-    // const handleFreezeUser = async () => {
-    //     if (!window.confirm("هل أنت متأكد من تجميد الحساب؟")) return;
 
-    //     try {
-    //         await api.patch(
-    //             `/users/${id}/freeze`,
-    //             {},
-    //             {
-    //                 headers: {
-    //                     authorization: `Bearer ${Cookies.get("token")}`,
-    //                 },
-    //             }
-    //         );
 
-    //         toast.success("تم تجميد الحساب");
 
-    //         queryClient.invalidateQueries(["UserProfile", id]);
-    //     } catch (error) {
-    //         console.log(error);
-    //         toast.error("حصل خطأ");
-    //     }
-    // };
-
-    // const handleUnfreezeUser = async () => {
-    //     if (!window.confirm("هل أنت متأكد من فك التجميد؟")) return;
-
-    //     try {
-    //         await api.patch(
-    //             `/users/${id}/unfreeze`,
-    //             {},
-    //             {
-    //                 headers: {
-    //                     authorization: `Bearer ${Cookies.get("token")}`,
-    //                 },
-    //             }
-    //         );
-
-    //         toast.success("تم فك التجميد");
-
-    //         queryClient.invalidateQueries(["UserProfile", id]);
-    //     } catch (error) {
-    //         console.log(error);
-    //         toast.error("حصل خطأ");
-    //     }
-    // };
-    // useEffect(() => {
-    //     const handleClickOutside = (e) => {
-    //         if (menuRef.current && !menuRef.current.contains(e.target)) {
-    //             setShowAccountMenu(false);
-    //         }
-    //     };
-
-    //     document.addEventListener("mousedown", handleClickOutside);
-    //     return () => document.removeEventListener("mousedown", handleClickOutside);
-    // }, []);
-
-    const handleCancel = () => {
-        reset({
-            UserName: UserData?.UserName || "",
-            email: UserData?.email || "",
-            phone: UserData?.phone ? String(UserData.phone) : "",
-            department: UserData?.department || "",
-            jobTitle: UserData?.jobTitle || "",
-        });
-        setPreviewImage(UserData?.ProfilePhoto?.url || "");
-        setIsEditing(false);
-    };
-
-    const onSubmit = async (formValues) => {
-        try {
-            setLoading(true);
-
-            const response = await api.patch(
-                `/users/updateUser/${id}`,
-                {
-                    UserName: formValues.UserName,
-                    email: formValues.email,
-                    phone: String(formValues.phone),
-                    department: formValues.department,
-                    jobTitle: formValues.jobTitle,
-                    employmentDate: UserData?.employmentDate,
-                },
-                {
-                    headers: {
-                        authorization: `Bearer ${Cookies.get("token")}`,
-                    },
-                }
-            );
-
-            const updatedUser =
-                response?.data?.user || response?.data?.data || response?.data;
-
-            queryClient.setQueryData(["UserProfile", id], (oldData) => ({
-                ...oldData,
-                data: {
-                    ...oldData?.data,
-                    user: updatedUser,
-                },
-            }));
-
-            reset({
-                UserName: updatedUser?.UserName || "",
-                email: updatedUser?.email || "",
-                phone: updatedUser?.phone ? String(updatedUser.phone) : "",
-                department: updatedUser?.department || "",
-                jobTitle: updatedUser?.jobTitle || "",
-            });
-
-            setPreviewImage(updatedUser?.ProfilePhoto?.url || "");
-            setIsEditing(false);
-            toast.success("تم تعديل البيانات بنجاح");
-        } catch (error) {
-            console.log(error);
-            toast.error(
-                error?.response?.data?.message || "حصل خطأ أثناء تعديل البيانات"
-            );
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const handlePhotoClick = () => {
         fileInputRef.current?.click();
@@ -242,7 +110,7 @@ const MyProfile = () => {
             const updatedUser =
                 response?.data?.user || response?.data?.data || response?.data;
 
-            
+
 
             setPreviewImage(updatedUser?.ProfilePhoto?.url || localPreview);
             toast.success("تم تحديث الصورة بنجاح");
@@ -256,6 +124,20 @@ const MyProfile = () => {
             setPhotoLoading(false);
         }
     };
+//     function getProfile() {
+//         return api.get("/users/profile/me", {
+//             headers: {
+//                 authorization: `Bearer ${Cookies.get("token")}`,
+
+//             }
+//         })
+//     }
+//    const {data:Profile}= useQuery({
+//     queryKey:["Profile"],
+//     queryFn:getProfile
+//    })
+//    console.log(Profile);
+   
 
     if (isLoading) {
         return (
@@ -275,90 +157,90 @@ const MyProfile = () => {
                     {/* Header */}
                     <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                         {/* Info */}
-                        
-                            <div className="flex items-center gap-4">
-                                <div className="relative">
-                                    {previewImage ? (
-                                        <img
-                                            src={previewImage}
-                                            alt="user"
-                                            onClick={handlePhotoClick}
-                                            className="h-20 w-20 rounded-full border-2 object-cover cursor-pointer"
-                                        />
-                                    ) : (
-                                        <div
-                                            onClick={handlePhotoClick}
-                                            className="h-20 w-20 rounded-full border-2 flex items-center justify-center bg-gray-200 text-xl font-bold text-gray-700 cursor-pointer"
-                                        >
-                                            {UserData?.UserName?.charAt(0)?.toUpperCase() || "?"}
-                                        </div>
-                                    )}
 
-                                    <button
-                                        type="button"
+                        <div className="flex items-center gap-4">
+                            <div className="relative">
+                                {previewImage ? (
+                                    <img
+                                        src={previewImage}
+                                        alt="user"
                                         onClick={handlePhotoClick}
-                                        className="absolute -bottom-1 -right-1 rounded-full bg-[#D7AE46] p-2 text-[#071a2f]"
-                                    >
-                                        <HiOutlinePencil size={14} />
-                                    </button>
-
-                                    <input
-                                        ref={fileInputRef}
-                                        type="file"
-                                        accept="image/*"
-                                        className="hidden"
-                                        onChange={handleChangePhoto}
+                                        className="h-20 w-20 rounded-full border-2 object-cover cursor-pointer"
                                     />
-
-                                    {photoLoading && (
-                                        <span className="absolute -bottom-8 right-0 text-xs text-amber-300 whitespace-nowrap">
-                                            جاري رفع الصورة...
-                                        </span>
-                                    )}
-                                </div>
-
-                                <div className="text-right">
-                                    <div className="flex items-center justify-end gap-2">
-                                        <span className="rounded-full bg-green-500/20 px-2 py-1 text-xs text-green-400">
-                                            نشط
-                                        </span>
-
-                                      
-                                            <span className="rounded-full bg-amber-400/20 px-2 py-1 text-xs text-amber-300">
-                                                {UserData?.jobTitle}
-                                            </span>
-                                      
+                                ) : (
+                                    <div
+                                        onClick={handlePhotoClick}
+                                        className="h-20 w-20 rounded-full border-2 flex items-center justify-center bg-gray-200 text-xl font-bold text-gray-700 cursor-pointer"
+                                    >
+                                        {UserData?.UserName?.charAt(0)?.toUpperCase() || "?"}
                                     </div>
+                                )}
 
-                                  
-                                        <h2 className="mt-2 text-2xl font-bold">{UserData?.UserName}</h2>
-                                  
+                                <button
+                                    type="button"
+                                    onClick={handlePhotoClick}
+                                    className="absolute -bottom-1 -right-1 rounded-full bg-[#D7AE46] p-2 text-[#071a2f]"
+                                >
+                                    <HiOutlinePencil size={14} />
+                                </button>
 
-                                    <p className="rounded-full bg-amber-400/20 px-2 py-1 text-xs text-amber-300 w-fit mt-2">
-                                        {UserData?.role}
-                                    </p>
+                                <input
+                                    ref={fileInputRef}
+                                    type="file"
+                                    accept="image/*"
+                                    className="hidden"
+                                    onChange={handleChangePhoto}
+                                />
 
-                                    <div className="mt-2 space-y-2">
-                                        
-                                            <>
-                                                <p className="text-sm text-[#8EA3BF]">
-                                                    القسم: {UserData?.department}
-                                                </p>
-
-                                                <p className="text-sm text-[#8EA3BF]">
-                                                    رقم التسجيل: 83742939847
-                                                </p>
-
-                                                <p className="mt-2 text-xs text-[#8EA3BF]">
-                                                    {UserData?.email} • {UserData?.phone}
-                                                </p>
-                                            </>
-                                      
-                                    </div>
-                                </div>
+                                {photoLoading && (
+                                    <span className="absolute -bottom-8 right-0 text-xs text-amber-300 whitespace-nowrap">
+                                        جاري رفع الصورة...
+                                    </span>
+                                )}
                             </div>
 
-                       
+                            <div className="text-right">
+                                <div className="flex items-center justify-end gap-2">
+                                    <span className="rounded-full bg-green-500/20 px-2 py-1 text-xs text-green-400">
+                                        نشط
+                                    </span>
+
+
+                                    <span className="rounded-full bg-amber-400/20 px-2 py-1 text-xs text-amber-300">
+                                        {UserData?.jobTitle}
+                                    </span>
+
+                                </div>
+
+
+                                <h2 className="mt-2 text-2xl font-bold">{UserData?.UserName}</h2>
+
+
+                                <p className="rounded-full bg-amber-400/20 px-2 py-1 text-xs text-amber-300 w-fit mt-2">
+                                    {UserData?.role}
+                                </p>
+
+                                <div className="mt-2 space-y-2">
+
+                                    <>
+                                        <p className="text-sm text-[#8EA3BF]">
+                                            القسم: {UserData?.department}
+                                        </p>
+
+                                        <p className="text-sm text-[#8EA3BF]">
+                                            رقم التسجيل: 83742939847
+                                        </p>
+
+                                        <p className="mt-2 text-xs text-[#8EA3BF]">
+                                            {UserData?.email} • {UserData?.phone}
+                                        </p>
+                                    </>
+
+                                </div>
+                            </div>
+                        </div>
+
+
 
 
 
@@ -367,10 +249,10 @@ const MyProfile = () => {
                     {/* Stats */}
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
                         {[
-                            { title: "مواعيد اليوم", value: 3, icon: <HiOutlineCalendarDays />, color: "text-red-400" },
-                            { title: "القضايا النشطة", value: 12, icon: <HiOutlineBriefcase />, color: "text-purple-400" },
-                            { title: "القضايا المنجزة", value: 18, icon: <HiOutlineFolder />, color: "text-blue-400" },
-                            { title: "إجمالي القضايا", value: 42, icon: <HiOutlineClipboardDocumentList />, color: "text-amber-400" },
+                            { title: " مهام الاسبوع", value: Stats.thisWeekSessions, icon: <HiOutlineCalendarDays />, color: "text-red-400" },
+                            { title: "القضايا النشطة", value: Stats.activeCases, icon: <HiOutlineBriefcase />, color: "text-purple-400" },
+                            { title: "القضايا المنجزة", value: Stats.completedCases, icon: <HiOutlineFolder />, color: "text-blue-400" },
+                            { title: "إجمالي القضايا", value: Stats.totalCases, icon: <HiOutlineClipboardDocumentList />, color: "text-amber-400" },
                         ].map((item, i) => (
                             <div
                                 key={i}

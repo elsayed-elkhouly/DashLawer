@@ -42,8 +42,8 @@ const TeamProfile = () => {
         queryFn: getUserData,
         enabled: !!id,
     });
-    console.log(data);
-    
+    // console.log(data);
+
 
     const UserData = data?.data?.user
     console.log(UserData);
@@ -266,6 +266,19 @@ const TeamProfile = () => {
         queryKey: ["Tasks"],
         queryFn: getTasks
     })
+    function getLawerCase() {
+        return api.get(`/LegalCase/lawyer/${id}`, {
+            headers: {
+                authorization: `Bearer ${Cookies.get("token")}`,
+
+            }
+        })
+    }
+    const { data: LawerCases } = useQuery({
+        queryKey: ["LawerCases"],
+        queryFn: getLawerCase
+    })
+    console.log(LawerCases?.data?.cases);
 
 
     if (isLoading) {
@@ -556,38 +569,16 @@ const TeamProfile = () => {
                         </div>
 
                         <div className="space-y-3 text-sm">
-                            {[
-                                {
-                                    id: "#CASE-4412",
-                                    client: "شركة الأركان المحدودة",
-                                    type: "نزاع تجاري",
-                                    status: "قيد المراجعة",
-                                    date: "2024/05/12",
-                                },
-                                {
-                                    id: "#CASE-4398",
-                                    client: "مؤسسة النجاح",
-                                    type: "قضية عمالية",
-                                    status: "تحضير الجلسة",
-                                    date: "2024/05/10",
-                                },
-                                {
-                                    id: "#CASE-4201",
-                                    client: "سالم عبد العزيز",
-                                    type: "تحصيل ديون",
-                                    status: "مكتمل",
-                                    date: "2024/04/28",
-                                },
-                            ].map((c, i) => (
+                            {LawerCases?.data?.cases.map((c, i) => (
                                 <div
                                     key={i}
                                     className="grid grid-cols-5 items-center rounded-xl bg-[#081b31] px-4 py-3"
                                 >
-                                    <div>{c.date}</div>
+                                    <div>{c.openedAt}</div>
                                     <div className="text-blue-400">{c.status}</div>
-                                    <div>{c.type}</div>
-                                    <div>{c.client}</div>
-                                    <div className="text-amber-400">{c.id}</div>
+                                    <div>{c.court}</div>
+                                    <div>{c.client?.fullName}</div>
+                                    <div className="text-amber-400">{c.caseNumber}</div>
                                 </div>
                             ))}
                         </div>
