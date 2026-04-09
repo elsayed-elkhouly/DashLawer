@@ -223,9 +223,7 @@ function PyrollMangment() {
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <button className="rounded-xl border border-white/10 px-4 py-2 text-sm text-[#8EA3BF] hover:bg-white/5">
-              PDF تنزيل
-            </button>
+           
 
             <button
               onClick={() => setOpenModal(true)}

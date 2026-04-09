@@ -86,7 +86,10 @@ const TaskMangment = () => {
     },
     onError: (err) => {
       toast.error("حصل خطأ أثناء الإرسال ❌");
+
       console.error(err);
+      console.error(err.response);
+
     },
   });
   const onSubmit = (data) => {
@@ -304,9 +307,9 @@ const TaskMangment = () => {
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
-                    <div>
+                    {/* <div>
                       <label className="text-sm text-slate-400">العميل</label>
-                      <select {...register("client", { required: true })}
+                      <select {...register("client")}
                         className="mt-2 w-full h-11 rounded-xl bg-[#0a2038] border border-white/10 px-4">
                         <option value="">اختر عميل</option>
                         {Clients?.clients.map((c) => (
@@ -318,7 +321,7 @@ const TaskMangment = () => {
                       {errors.client && (
                         <p className="text-red-400 text-xs mt-1">{errors.client.message}</p>
                       )}
-                    </div>
+                    </div> */}
 
                     <div>
                       <label className="text-sm text-slate-400">إسناد إلى</label>

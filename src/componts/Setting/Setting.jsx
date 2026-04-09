@@ -99,7 +99,6 @@ const Setting = () => {
     gcTime: 1000 * 60 * 30,
   });
   console.log(settingData);
-  
 
   const { data: cases } = useQuery({
     queryKey: ["Cases"],
@@ -116,7 +115,6 @@ const Setting = () => {
   useEffect(() => {
     const settings = settingData?.Settings;
     if (!settings) return;
-
     reset(mapSettingsToForm(settings));
   }, [settingData, reset]);
 
@@ -136,7 +134,6 @@ const Setting = () => {
           ...variables,
         },
       }));
-
       reset(variables);
       setIsEditing(false);
       toast.success("تم تحديث الإعدادات");
@@ -171,7 +168,6 @@ const Setting = () => {
   const toggleCaseMutation = useMutation({
     mutationFn: async ({ id, isActive }) => {
       const url = isActive ? `/CaseType/${id}/disable` : `/CaseType/${id}/enable`;
-
       return await api.patch(url, null, {
         headers: {
           authorization: `Bearer ${Cookies.get("token")}`,
@@ -203,7 +199,6 @@ const Setting = () => {
           },
         ],
       };
-
       return await api.put("/SettingsService/work-hours", data, {
         headers: {
           authorization: `Bearer ${Cookies.get("token")}`,
@@ -254,12 +249,10 @@ const Setting = () => {
     mutationFn: async (values) => {
       const start = new Date(`${values.date}T${values.startTime}`);
       const end = new Date(`${values.date}T${values.endTime}`);
-
       const payload = {
         startAt: start.toISOString(),
         endAt: end.toISOString(),
       };
-
       return await api.post("/slots/createSlot", payload, {
         headers: {
           authorization: `Bearer ${Cookies.get("token")}`,
@@ -303,7 +296,6 @@ const Setting = () => {
     mutationFn: async () => {
       const formData = new FormData();
       formData.append("logo", logoFile);
-
       return await api.patch("/SettingsService/logo", formData, {
         headers: {
           authorization: `Bearer ${Cookies.get("token")}`,
@@ -326,13 +318,11 @@ const Setting = () => {
 
   const AddCase = () => {
     const value = nameRef.current?.value.trim();
-
     if (!value) {
       setCaseError("من فضلك اكتب نوع القضية");
       nameRef.current?.focus();
       return;
     }
-
     addCaseMutation.mutate({ name: value });
   };
 
@@ -382,10 +372,6 @@ const Setting = () => {
     setIsEditing(false);
   };
 
-  const handleResetForm = () => {
-    reset(mapSettingsToForm(settingData?.Settings));
-  };
-
   const validDays = [
     "الأحد",
     "الاثنين",
@@ -398,11 +384,9 @@ const Setting = () => {
 
   function formatTime(time) {
     const [hour, minute] = time.split(":");
-
     const date = new Date();
     date.setHours(hour);
     date.setMinutes(minute);
-
     return date.toLocaleTimeString("en-EG", {
       hour: "numeric",
       minute: "2-digit",
@@ -428,18 +412,24 @@ const Setting = () => {
 
   return (
     <>
-      <div className="text-right">
-        <h2 className="text-[37px] mt-10 mr-15 text-white font-bold">إعدادات المكتب</h2>
+      {/* ===== الهيدر ===== */}
+      <div className="text-right px-4 md:px-8">
+        <h2 className="text-2xl md:text-[37px] mt-6 md:mt-10 text-white font-bold">
+          إعدادات المكتب
+        </h2>
       </div>
 
+      {/* ===== المعلومات الشخصية ===== */}
       <section>
         <div
           dir="rtl"
-          className="min-h-screen flex items-center justify-center p-6"
+          className="min-h-screen flex items-center justify-center p-3 md:p-6"
         >
-          <div className="w-full max-w-5xl bg-[#081226] rounded-2xl p-8 shadow-2xl border border-[#1E2D3D]">
-            <div className="flex justify-between items-center mb-8">
-               <h2 className="text-[32px] font-bold text-white flex items-center ">
+          <div className="w-full max-w-5xl bg-[#081226] rounded-2xl p-4 md:p-8 shadow-2xl border border-[#1E2D3D]">
+
+            {/* هيدر الكارت */}
+            <div className="flex flex-wrap justify-between items-center gap-3 mb-6 md:mb-8">
+              <h2 className="text-2xl md:text-[32px] font-bold text-white flex items-center gap-2">
                 <span className="text-[#C6A24F]">👤</span>
                 المعلومات الشخصية
               </h2>
@@ -448,33 +438,30 @@ const Setting = () => {
                 <button
                   type="button"
                   onClick={handleEdit}
-                  className="flex items-center gap-2 text-[#F0A500] text-lg font-medium hover:opacity-90 transition"
+                  className="flex items-center gap-2 text-[#F0A500] text-base md:text-lg font-medium hover:opacity-90 transition"
                 >
                   <span>✏️</span>
                   تعديل
                 </button>
               ) : (
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 md:gap-3">
                   <button
                     type="button"
                     onClick={handleCancelEdit}
-                    className="text-white cursor-pointer px-5 py-2 rounded-xl font-medium border border-[#1E2D3D] hover:bg-[#1d2b3d] transition"
+                    className="text-white cursor-pointer px-3 md:px-5 py-2 rounded-xl font-medium border border-[#1E2D3D] hover:bg-[#1d2b3d] transition text-sm md:text-base"
                   >
                     إلغاء
                   </button>
-
                   <button
                     type="submit"
                     form="basic-info-form"
                     disabled={addSettingMutation.isPending}
-                    className="bg-[#C6A24F] cursor-pointer text-black px-5 py-2 rounded-xl font-medium hover:opacity-90 transition disabled:opacity-50"
+                    className="bg-[#C6A24F] cursor-pointer text-black px-3 md:px-5 py-2 rounded-xl font-medium hover:opacity-90 transition disabled:opacity-50 text-sm md:text-base"
                   >
                     {addSettingMutation.isPending ? "جاري الحفظ..." : "حفظ"}
                   </button>
                 </div>
               )}
-
-             
             </div>
 
             <form
@@ -483,32 +470,33 @@ const Setting = () => {
               onSubmit={handleSubmit(AddSetting)}
             >
               {!isEditing ? (
+                /* ===== View Mode ===== */
                 <>
-                  <div className="grid md:grid-cols-2 gap-10">
-                    <div className="space-y-12">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
+                    <div className="space-y-6 md:space-y-12">
                       <div>
-                        <label className="block text-[18px] text-[#7f93b0] mb-3">
+                        <label className="block text-sm md:text-[18px] text-[#7f93b0] mb-2 md:mb-3">
                           الاسم الكامل
                         </label>
-                        <p className="text-white text-[24px] font-bold">
+                        <p className="text-white text-lg md:text-[24px] font-bold break-words">
                           {watchedValues.officeName || "-"}
                         </p>
                       </div>
 
                       <div>
-                        <label className="block text-[18px] text-[#7f93b0] mb-3">
+                        <label className="block text-sm md:text-[18px] text-[#7f93b0] mb-2 md:mb-3">
                           رقم الهاتف
                         </label>
-                        <p className="text-white text-[24px] font-bold">
+                        <p className="text-white text-lg md:text-[24px] font-bold">
                           {watchedValues.phone || "-"}
                         </p>
                       </div>
 
                       <div>
-                        <label className="block text-[18px] text-[#7f93b0] mb-3">
+                        <label className="block text-sm md:text-[18px] text-[#7f93b0] mb-2 md:mb-3">
                           العنوان
                         </label>
-                        <p className="text-white text-[24px] font-bold">
+                        <p className="text-white text-lg md:text-[24px] font-bold break-words">
                           {[
                             watchedValues.addressDetail,
                             watchedValues.governorate,
@@ -520,21 +508,21 @@ const Setting = () => {
                       </div>
                     </div>
 
-                    <div className="space-y-12">
+                    <div className="space-y-6 md:space-y-12">
                       <div>
-                        <label className="block text-[18px] text-[#7f93b0] mb-3 text-center">
+                        <label className="block text-sm md:text-[18px] text-[#7f93b0] mb-2 md:mb-3 md:text-center">
                           رقم السجل التجاري
                         </label>
-                        <p className="text-white text-[24px] font-bold text-center">
+                        <p className="text-white text-lg md:text-[24px] font-bold md:text-center">
                           {watchedValues.crNumber || "-"}
                         </p>
                       </div>
 
                       <div>
-                        <label className="block text-[18px] text-[#7f93b0] mb-3 text-center">
+                        <label className="block text-sm md:text-[18px] text-[#7f93b0] mb-2 md:mb-3 md:text-center">
                           البريد الإلكتروني
                         </label>
-                        <p className="text-white text-[24px] font-bold text-center break-all">
+                        <p className="text-white text-lg md:text-[24px] font-bold md:text-center break-all">
                           {watchedValues.officialEmail || "-"}
                         </p>
                       </div>
@@ -542,17 +530,18 @@ const Setting = () => {
                   </div>
 
                   <div>
-                    <label className="block text-[18px] text-[#7f93b0] mb-3">
+                    <label className="block text-sm md:text-[18px] text-[#7f93b0] mb-2 md:mb-3">
                       الموقع
                     </label>
-                    <div className="w-full min-h-[56px] bg-[#1A2638] rounded-xl px-4 py-4 text-white break-all">
+                    <div className="w-full min-h-[56px] bg-[#1A2638] rounded-xl px-4 py-4 text-white break-all text-sm md:text-base">
                       {watchedValues.mapEmbedUrl || ""}
                     </div>
                   </div>
                 </>
               ) : (
+                /* ===== Edit Mode ===== */
                 <>
-                  <div className="grid md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                     <div>
                       <label className="block text-sm text-gray-300 mb-2">
                         اسم الشركة / المكتب
@@ -560,7 +549,7 @@ const Setting = () => {
                       <input
                         type="text"
                         placeholder="هيلبر للمحاماة"
-                        className="w-full bg-[#1A2638] border border-[#1E2D3D] text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C6A24F]"
+                        className="w-full bg-[#1A2638] border border-[#1E2D3D] text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C6A24F] text-sm md:text-base"
                         {...register("officeName", {
                           minLength: {
                             value: 2,
@@ -582,7 +571,7 @@ const Setting = () => {
                       <input
                         type="text"
                         placeholder="1010XXXX"
-                        className="w-full bg-[#1A2638] border border-[#1E2D3D] text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C6A24F]"
+                        className="w-full bg-[#1A2638] border border-[#1E2D3D] text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C6A24F] text-sm md:text-base"
                         {...register("crNumber")}
                       />
                     </div>
@@ -594,7 +583,7 @@ const Setting = () => {
                       <input
                         type="email"
                         placeholder="contact@helper.com"
-                        className="w-full bg-[#1A2638] border border-[#1E2D3D] text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C6A24F]"
+                        className="w-full bg-[#1A2638] border border-[#1E2D3D] text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C6A24F] text-sm md:text-base"
                         {...register("officialEmail")}
                       />
                       {errors.officialEmail && (
@@ -611,7 +600,7 @@ const Setting = () => {
                       <input
                         type="text"
                         placeholder="+04 5212765"
-                        className="w-full bg-[#1A2638] border border-[#1E2D3D] text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C6A24F]"
+                        className="w-full bg-[#1A2638] border border-[#1E2D3D] text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C6A24F] text-sm md:text-base"
                         {...register("phone")}
                       />
                     </div>
@@ -624,12 +613,12 @@ const Setting = () => {
                     <textarea
                       rows={3}
                       placeholder="البحيرة - كفر الدوار - امام المحكمة"
-                      className="w-full bg-[#1A2638] border border-[#1E2D3D] text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C6A24F]"
+                      className="w-full bg-[#1A2638] border border-[#1E2D3D] text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C6A24F] text-sm md:text-base"
                       {...register("addressDetail")}
                     />
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                     <div>
                       <label className="block text-sm text-gray-300 mb-2">
                         المحافظة
@@ -637,7 +626,7 @@ const Setting = () => {
                       <input
                         type="text"
                         placeholder="البحيرة"
-                        className="w-full bg-[#1A2638] border border-[#1E2D3D] text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C6A24F]"
+                        className="w-full bg-[#1A2638] border border-[#1E2D3D] text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C6A24F] text-sm md:text-base"
                         {...register("governorate")}
                       />
                     </div>
@@ -649,7 +638,7 @@ const Setting = () => {
                       <input
                         type="text"
                         placeholder="مصر"
-                        className="w-full bg-[#1A2638] border border-[#1E2D3D] text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C6A24F]"
+                        className="w-full bg-[#1A2638] border border-[#1E2D3D] text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C6A24F] text-sm md:text-base"
                         {...register("country")}
                       />
                     </div>
@@ -660,7 +649,7 @@ const Setting = () => {
                     <input
                       type="text"
                       placeholder="https://maps.app.goo.gl/BeywpLGaciVPwtfT9"
-                      className="w-full bg-[#1A2638] border border-[#1E2D3D] text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C6A24F]"
+                      className="w-full bg-[#1A2638] border border-[#1E2D3D] text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C6A24F] text-sm md:text-base"
                       {...register("mapEmbedUrl")}
                     />
                     {errors.mapEmbedUrl && (
@@ -676,18 +665,19 @@ const Setting = () => {
         </div>
       </section>
 
-      <section className="flex items-center justify-center py-5">
-        <div className="bg-[#081226] w-255 p-8 rounded-xl text-white border border-gray-700">
+      {/* ===== الهوية البصرية ===== */}
+      <section className="flex items-center justify-center py-5 px-4">
+        <div className="bg-[#081226] w-full max-w-4xl p-4 md:p-8 rounded-xl text-white border border-gray-700">
           <div dir="rtl">
-            <h2 className="text-[20px] font-semibold text-white mb-4 flex items-center gap-2 mr-15">
-              <span className="w-2.5 h-2.5 bg-[#C6A24F] rounded-full"></span>
+            <h2 className="text-lg md:text-[20px] font-semibold text-white mb-4 flex items-center gap-2">
+              <span className="w-2.5 h-2.5 bg-[#C6A24F] rounded-full flex-shrink-0"></span>
               الهوية البصرية
             </h2>
           </div>
 
-          <div className="flex justify-between text-right items-center gap-8 px-10">
-            <div className="flex-1">
-              <p className="text-white text-l leading-relaxed">
+          <div className="flex flex-col-reverse md:flex-row justify-between items-center gap-6 px-2 md:px-6">
+            <div className="flex-1 text-right w-full">
+              <p className="text-white text-sm md:text-base leading-relaxed">
                 سيتم استخدام هذا الشعار في ترويسات الفواتير، العقود، والمخاطبات
                 الرسمية. يفضل استخدام شعار بخلفية شفافة وبأبعاد 500x500 بكسل على الأقل.
               </p>
@@ -702,7 +692,7 @@ const Setting = () => {
               )}
             </div>
 
-            <div className="w-40 h-40 bg-[#222c3c] border-2 border-dashed border-gray-600 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-blue-500 transition-colors relative overflow-hidden">
+            <div className="w-32 h-32 md:w-40 md:h-40 flex-shrink-0 bg-[#222c3c] border-2 border-dashed border-gray-600 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-blue-500 transition-colors relative overflow-hidden">
               <input
                 type="file"
                 accept="image/png, image/jpeg"
@@ -732,23 +722,23 @@ const Setting = () => {
               {putLogoMutation.isPending && (
                 <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
               )}
-
               {putLogoMutation.isPending ? "جاري الرفع..." : "إرسال"}
             </button>
           </div>
         </div>
       </section>
 
+      {/* ===== مواعيد العمل ===== */}
       <section>
-        <div className="w-full max-w-300 px-4 mx-auto min-h-screen text-white" dir="rtl">
+        <div className="w-full max-w-4xl px-4 mx-auto text-white" dir="rtl">
           <div className="bg-[#081226] p-4 md:p-6 rounded-xl mb-8">
-            <h2 className="text-2xl md:text-[40px] font-bold mb-1">إضافة مواعيد العمل</h2>
+            <h2 className="text-xl md:text-[40px] font-bold mb-1">إضافة مواعيد العمل</h2>
             <p className="text-gray-400 text-sm md:text-[20px] mb-6">
               قم بتحديد المواعيد المتاحة للعمل
             </p>
 
             <form onSubmit={handleSubmitWork(AddDate)}>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">
                 <div className="flex flex-col gap-1">
                   <select
                     multiple
@@ -761,7 +751,6 @@ const Setting = () => {
                       </option>
                     ))}
                   </select>
-
                   {errorsWork.days && (
                     <p className="text-red-500 text-sm">{errorsWork.days.message}</p>
                   )}
@@ -781,7 +770,7 @@ const Setting = () => {
                   )}
                 </div>
 
-                <div className="flex flex-col gap-1">
+                <div className="flex flex-col gap-1 sm:col-span-2 md:col-span-1">
                   <label className="text-gray-300 text-sm">إلى</label>
                   <input
                     type="time"
@@ -805,19 +794,20 @@ const Setting = () => {
             </form>
           </div>
 
+          {/* جدول مواعيد العمل */}
           <div className="bg-[#081226] rounded-xl overflow-hidden border border-[#2D3245] shadow-2xl">
             <div className="p-4 font-bold text-lg md:text-xl bg-[#081226] text-[#C9A14A] border border-[#2D3245]">
               مواعيد العمل
             </div>
 
             <div className="overflow-x-auto">
-              <table className="w-full text-right border-collapse min-w-150">
+              <table className="w-full text-right border-collapse min-w-[480px]">
                 <thead>
                   <tr className="text-gray-400 bg-[#1C1F2B80]">
-                    <th className="ps-6 md:ps-20 py-3">اليوم</th>
-                    <th className="p-3 md:p-4">من الساعة</th>
-                    <th className="p-3 md:p-4">إلى الساعة</th>
-                    <th className="p-3 md:p-4">إجراءات</th>
+                    <th className="ps-4 md:ps-10 py-3 text-sm md:text-base">اليوم</th>
+                    <th className="p-3 md:p-4 text-sm md:text-base">من الساعة</th>
+                    <th className="p-3 md:p-4 text-sm md:text-base">إلى الساعة</th>
+                    <th className="p-3 md:p-4 text-sm md:text-base">إجراءات</th>
                   </tr>
                 </thead>
 
@@ -827,9 +817,11 @@ const Setting = () => {
                       key={index}
                       className="border bg-[#081226] border-slate-800 hover:bg-slate-800/50"
                     >
-                      <td className="ps-6 md:ps-20 py-3">{item.days?.join(" , ")}</td>
-                      <td className="p-3 md:p-4">{formatTime(item.from)}</td>
-                      <td className="p-3 md:p-4">{formatTime(item.to)}</td>
+                      <td className="ps-4 md:ps-10 py-3 text-sm md:text-base">
+                        {item.days?.join(" , ")}
+                      </td>
+                      <td className="p-3 md:p-4 text-sm md:text-base">{formatTime(item.from)}</td>
+                      <td className="p-3 md:p-4 text-sm md:text-base">{formatTime(item.to)}</td>
                       <td
                         className="p-3 md:p-4 cursor-pointer text-red-400 text-lg"
                         onClick={() => deleteDay(item.days)}
@@ -845,10 +837,13 @@ const Setting = () => {
         </div>
       </section>
 
+      {/* ===== مواعيد الحجز ===== */}
       <section>
-        <div dir="rtl" className="bg-[#081226] text-white mx-auto p-8 rounded-xl max-w-300 mt-10">
-          <h2 className="text-xl font-bold mb-2">إضافة مواعيد الحجز</h2>
-          <p className="text-gray-400 mb-6">قم بتحديد المواعيد المتاحة لاستقبال العملاء</p>
+        <div dir="rtl" className="bg-[#081226] text-white mx-auto p-4 md:p-8 rounded-xl w-full max-w-4xl mt-6 md:mt-10">
+          <h2 className="text-lg md:text-xl font-bold mb-2">إضافة مواعيد الحجز</h2>
+          <p className="text-gray-400 mb-6 text-sm md:text-base">
+            قم بتحديد المواعيد المتاحة لاستقبال العملاء
+          </p>
 
           <form onSubmit={handleSubmitBooking(AddSlots)} className="space-y-5">
             <div>
@@ -856,7 +851,7 @@ const Setting = () => {
               <input
                 type="date"
                 {...registerBooking("date", { required: "من فضلك اختر اليوم" })}
-                className="w-full bg-[#1d293d] border border-gray-600 rounded-lg p-3"
+                className="w-full bg-[#1d293d] border border-gray-600 rounded-lg p-3 text-white text-sm md:text-base"
               />
               {errorsBooking.date && (
                 <p className="text-red-500 text-sm mt-1">{errorsBooking.date.message}</p>
@@ -871,7 +866,7 @@ const Setting = () => {
                   {...registerBooking("startTime", {
                     required: "من فضلك اختر وقت البداية",
                   })}
-                  className="w-full bg-[#1d293d] border border-gray-600 rounded-lg p-3"
+                  className="w-full bg-[#1d293d] border border-gray-600 rounded-lg p-3 text-white text-sm md:text-base"
                 />
                 {errorsBooking.startTime && (
                   <p className="text-red-500 text-sm mt-1">
@@ -887,7 +882,7 @@ const Setting = () => {
                   {...registerBooking("endTime", {
                     required: "من فضلك اختر وقت النهاية",
                   })}
-                  className="w-full bg-[#1d293d] border border-gray-600 rounded-lg p-3"
+                  className="w-full bg-[#1d293d] border border-gray-600 rounded-lg p-3 text-white text-sm md:text-base"
                 />
                 {errorsBooking.endTime && (
                   <p className="text-red-500 text-sm mt-1">
@@ -899,26 +894,29 @@ const Setting = () => {
 
             <button
               type="submit"
-              className="bg-[#C9A14A] text-black px-4 py-2 rounded-lg mt-4 cursor-pointer"
+              className="bg-[#C9A14A] text-black px-4 py-2 rounded-lg mt-4 cursor-pointer w-full md:w-auto text-sm md:text-base"
             >
               + إضافة موعد
             </button>
           </form>
 
-          <div dir="rtl" className="p-6 flex items-start justify-center">
-            <div className="w-full max-w-5xl overflow-hidden rounded-2xl border border-white/10 bg-[#151b2b] shadow-2xl shadow-black/40">
-              <div className="px-6 py-5 border-b bg-[#081226] border-white/5">
-                <h2 className="text-xl font-semibold text-[#f0b44b]">مواعيد العمل</h2>
+          {/* جدول مواعيد الحجز */}
+          <div dir="rtl" className="mt-6 flex items-start justify-center">
+            <div className="w-full overflow-hidden rounded-2xl border border-white/10 bg-[#151b2b] shadow-2xl shadow-black/40">
+              <div className="px-4 md:px-6 py-5 border-b bg-[#081226] border-white/5">
+                <h2 className="text-lg md:text-xl font-semibold text-[#f0b44b]">
+                  مواعيد العمل
+                </h2>
               </div>
 
               <div className="overflow-x-auto">
-                <table className="w-full text-sm text-right text-white/90">
+                <table className="w-full text-xs md:text-sm text-right text-white/90 min-w-[420px]">
                   <thead>
                     <tr className="text-white/60">
-                      <th className="px-6 py-4 font-medium">اليوم</th>
-                      <th className="px-6 py-4 font-medium">من الساعة</th>
-                      <th className="px-6 py-4 font-medium">إلى الساعة</th>
-                      <th className="px-6 py-4 font-medium">إجراءات</th>
+                      <th className="px-3 md:px-6 py-4 font-medium">اليوم</th>
+                      <th className="px-3 md:px-6 py-4 font-medium">من الساعة</th>
+                      <th className="px-3 md:px-6 py-4 font-medium">إلى الساعة</th>
+                      <th className="px-3 md:px-6 py-4 font-medium">إجراءات</th>
                     </tr>
                   </thead>
 
@@ -949,10 +947,10 @@ const Setting = () => {
                           key={row._id}
                           className="border-t bg-[#19202e] border-white/5 hover:bg-white/2 transition-colors"
                         >
-                          <td className="px-6 py-6 font-medium">{day}</td>
-                          <td className="px-6 py-6 text-white/85">{from}</td>
-                          <td className="px-6 py-6 text-white/85">{to}</td>
-                          <td className="px-6 py-6">
+                          <td className="px-3 md:px-6 py-4 md:py-6 font-medium">{day}</td>
+                          <td className="px-3 md:px-6 py-4 md:py-6 text-white/85">{from}</td>
+                          <td className="px-3 md:px-6 py-4 md:py-6 text-white/85">{to}</td>
+                          <td className="px-3 md:px-6 py-4 md:py-6">
                             <button
                               onClick={() => deleteSlots(row._id)}
                               className="cursor-pointer inline-flex h-8 w-8 items-center justify-center rounded-md text-white/40 transition hover:bg-white/5 hover:text-red-500"
@@ -972,11 +970,12 @@ const Setting = () => {
         </div>
       </section>
 
+      {/* ===== إعدادات القضايا ===== */}
       <section>
         <div className="min-h-screen text-white p-4 md:p-8" dir="rtl">
-          <div className="mx-auto max-w-6xl">
-            <div className="mb-8 text-right">
-              <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-white">
+          <div className="mx-auto max-w-4xl">
+            <div className="mb-6 md:mb-8 text-right">
+              <h1 className="text-2xl md:text-4xl font-extrabold tracking-tight text-white">
                 إعدادات القضايا
               </h1>
               <p className="mt-2 text-sm md:text-base text-slate-400">
@@ -984,17 +983,17 @@ const Setting = () => {
               </p>
             </div>
 
+            {/* إضافة قضية */}
             <div className="rounded-3xl border border-white/5 bg-[#081226] shadow-2xl shadow-black/20 p-4 md:p-5">
-              <div className="flex flex-col md:flex-row-reverse gap-4 items-stretch md:items-center">
+              <div className="flex flex-col gap-3 sm:flex-row-reverse sm:items-center">
                 <button
                   onClick={AddCase}
                   disabled={addCaseMutation.isPending}
-                  className="cursor-pointer h-12 px-6 rounded-2xl bg-[#d9ae45] text-[#101828] font-bold hover:opacity-95 transition shadow-lg shadow-[#d9ae45]/20 flex items-center justify-center gap-2 whitespace-nowrap disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="cursor-pointer h-12 px-6 rounded-2xl bg-[#d9ae45] text-[#101828] font-bold hover:opacity-95 transition shadow-lg shadow-[#d9ae45]/20 flex items-center justify-center gap-2 whitespace-nowrap disabled:opacity-60 disabled:cursor-not-allowed w-full sm:w-auto"
                 >
                   <span className="text-xl leading-none">
                     {addCaseMutation.isPending ? "..." : "+"}
                   </span>
-
                   <span>
                     {addCaseMutation.isPending ? "جاري الإضافة..." : "إضافة النوع"}
                   </span>
@@ -1012,11 +1011,9 @@ const Setting = () => {
                       }
                     }}
                   />
-
                   <span className="pointer-events-none absolute -top-5 right-1 text-xs text-slate-500">
                     إضافة نوع قضية جديد
                   </span>
-
                   {caseError && (
                     <p className="mt-2 text-sm text-red-400 text-right">{caseError}</p>
                   )}
@@ -1024,10 +1021,11 @@ const Setting = () => {
               </div>
             </div>
 
+            {/* جدول القضايا */}
             <div className="mt-6 overflow-hidden rounded-3xl border border-white/5 shadow-2xl shadow-black/20">
-              <div className="grid grid-cols-2 bg-[#232e3d] text-sm text-slate-300 border-b border-white/5">
-                <div className="px-6 py-4 text-right font-semibold">نوع القضية</div>
-                <div className="px-6 py-4 text-center font-semibold">الحالة</div>
+              <div className="grid grid-cols-2 bg-[#232e3d] text-xs md:text-sm text-slate-300 border-b border-white/5">
+                <div className="px-4 md:px-6 py-4 text-right font-semibold">نوع القضية</div>
+                <div className="px-4 md:px-6 py-4 text-center font-semibold">الحالة</div>
               </div>
 
               <div>
@@ -1036,17 +1034,17 @@ const Setting = () => {
                     key={issue._id}
                     className="grid grid-cols-2 bg-[#081226] items-center border-b border-white/4"
                   >
-                    <div className="px-6 py-5 text-right text-sm md:text-base text-slate-100">
+                    <div className="px-4 md:px-6 py-4 md:py-5 text-right text-sm md:text-base text-slate-100 break-words">
                       {issue.name}
                     </div>
 
-                    <div className="px-6 py-5 flex justify-center">
+                    <div className="px-4 md:px-6 py-4 md:py-5 flex justify-center">
                       <button
                         onClick={() => toggleCase(issue._id, issue.isActive)}
                         disabled={
                           toggleCaseMutation.isPending && activeToggleId === issue._id
                         }
-                        className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-bold cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed ${
+                        className={`inline-flex items-center rounded-full px-2 md:px-3 py-1 text-xs font-bold cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed ${
                           issue.isActive
                             ? "bg-emerald-500/15 text-emerald-400 ring-1 ring-emerald-500/25"
                             : "bg-slate-500/10 text-slate-400 ring-1 ring-slate-500/20"
