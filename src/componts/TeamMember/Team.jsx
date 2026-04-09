@@ -73,10 +73,10 @@ const Team = () => {
         <div className="flex flex-col gap-5 lg:flex-row-reverse lg:items-center lg:justify-between">
           {/* Left Side: Buttons */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
-            <button className="w-full cursor-pointer sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 border border-[#C59D4A] text-[#C59D4A] rounded-3xl hover:bg-[#C59D4A] hover:text-white transition-all duration-300">
+            {/* <button className="w-full cursor-pointer sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 border border-[#C59D4A] text-[#C59D4A] rounded-3xl hover:bg-[#C59D4A] hover:text-white transition-all duration-300">
               <Download size={18} />
               <span className="text-sm font-medium">تصدير PDF / Excel</span>
-            </button>
+            </button> */}
 
             <Link to={"/AddMember"} className="w-full sm:w-auto">
               <button className="w-full cursor-pointer sm:w-auto flex items-center justify-center gap-2 px-5 sm:px-7 py-3 bg-[#C59D4A] text-white rounded-2xl hover:bg-[#b08b3e] transition-all duration-300 shadow-lg shadow-[#C59D4A]/20">
@@ -99,86 +99,12 @@ const Team = () => {
         </div>
       </div>
 
-      {/* Filters */}
-      {/* <section className="px-3 sm:px-4 lg:px-6"> */}
-      {/* <div
-          className="w-full mx-auto bg-[#101c2e] py-6 sm:py-8 px-4 sm:px-5 rounded-xl border border-gray-800/50"
-          dir="rtl"
-        > */}
-      {/* <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4"> */}
-      {/* Search Input */}
-      {/* <div className="md:col-span-2 xl:col-span-5">
-              <label className="block text-gray-400 text-sm mb-2 mr-1">البحث</label>
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="ابحث بالاسم، البريد، أو التخصص..."
-                  className="w-full bg-[#16253a] border border-gray-700 text-white rounded-lg py-2.5 pr-10 pl-4 focus:outline-none focus:border-[#C59D4A] transition-colors"
-                />
-                <Search
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
-                  size={18}
-                />
-              </div>
-            </div> */}
-
-      {/* Account Type Dropdown */}
-      {/* <div className="xl:col-span-2">
-              <label className="block text-gray-400 text-sm mb-2 mr-1">نوع الحساب</label>
-              <div className="relative">
-                <select className="w-full bg-[#16253a] border border-gray-700 text-white rounded-lg py-2.5 pr-4 pl-10 appearance-none focus:outline-none focus:border-[#C59D4A]">
-                  <option>الكل</option>
-                  <option>موظف</option>
-                  <option>مستشار</option>
-                </select>
-                <ChevronDown
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"
-                  size={18}
-                />
-              </div>
-            </div> */}
-
-      {/* Status Dropdown */}
-      {/* <div className="xl:col-span-2">
-              <label className="block text-gray-400 text-sm mb-2 mr-1">الحالة</label>
-              <div className="relative">
-                <select className="w-full bg-[#16253a] border border-gray-700 text-white rounded-lg py-2.5 pr-4 pl-10 appearance-none focus:outline-none focus:border-[#C59D4A]">
-                  <option>الكل</option>
-                  <option>نشط</option>
-                  <option>غير نشط</option>
-                </select>
-                <ChevronDown
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"
-                  size={18}
-                />
-              </div>
-            </div> */}
-
-      {/* Search Button */}
-      {/* <div className="xl:col-span-2 flex items-end">
-              <button className="w-full bg-[#C59D4A] hover:bg-[#b08b3e] text-white font-bold py-2.5 px-6 rounded-lg transition-colors shadow-lg shadow-[#C59D4A]/10">
-                بحث
-              </button>
-            </div> */}
-
-      {/* Reset Button */}
-      {/* <div className="xl:col-span-1 flex items-end">
-              <button
-                type="reset"
-                className="w-full xl:w-auto flex items-center justify-center gap-2 text-gray-400 hover:text-white py-2.5 px-2 transition-colors"
-              >
-                <RotateCcw size={16} />
-                <span className="text-sm">إعادة ضبط</span>
-              </button>
-            </div> */}
-      {/* </div>
-        </div> */}
-      {/* </section> */}
+ 
 
       {/* Table */}
       <section className="px-3 sm:px-4 lg:px-6">
         <div
-          className="w-full mx-auto mt-5 bg-[#101c2e] rounded-xl border border-gray-800 overflow-hidden mb-10"
+          className="w-full mx-auto mt-5 bg-[#061328] rounded-xl border border-gray-800 overflow-hidden mb-10"
           dir="rtl"
         >
           {isLoading ? (
@@ -187,9 +113,9 @@ const Team = () => {
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[980px] text-right border-collapse">
+              <table className="w-full min-w-245 text-right border-collapse">
                 <thead>
-                  <tr className="text-gray-400 text-sm border-b border-gray-800 bg-[#0f172a]">
+                  <tr className="text-gray-400 text-sm border-b border-gray-800 bg-[#09172b]">
                     <th className="p-4 font-medium">العضو</th>
                     <th className="p-4 font-medium">البريد الإلكتروني</th>
                     <th className="p-4 font-medium">رقم الجوال</th>

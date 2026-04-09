@@ -157,7 +157,7 @@ const AddMember = () => {
       <label className="mr-1 text-sm text-gray-400">{label}</label>
       <select
         {...register(name)}
-        className="w-full rounded-xl border border-gray-700 bg-[#161D27] px-4 py-3 text-white focus:border-[#C59D4A] focus:outline-none"
+        className="w-full rounded-xl border border-gray-700 bg-[#09172b] px-4 py-3 text-white focus:border-[#C59D4A] focus:outline-none"
       >
         <option value="">اختر...</option>
         {options.map((opt) => (
@@ -176,7 +176,7 @@ const AddMember = () => {
   return (
     <form onSubmit={handleSubmit(AddUser)}>
       <div
-        className="min-h-screen bg-[#101c2e] px-4 py-6 font-sans text-white sm:px-6 sm:py-8 lg:px-8"
+        className="min-h-screen bg-[radial-gradient(circle_at_top,#0d2847_0%,#07192e_45%,#05111f_100%)] px-4 py-6 font-sans text-white sm:px-6 sm:py-8 lg:px-8"
         dir="rtl"
       >
         <div className="mx-auto mb-8 flex max-w-6xl flex-col gap-4 md:mb-10 md:flex-row md:items-center md:justify-between">
@@ -188,7 +188,7 @@ const AddMember = () => {
             <button
               type="button"
               onClick={() => reset()}
-              className="w-full cursor-pointer rounded-lg border border-gray-700 px-6 py-2.5 text-gray-400 transition-colors hover:bg-gray-800 sm:w-auto"
+              className="w-full cursor-pointer rounded-lg border border-gray-700 px-6 py-2.5 text-gray-400 transition-colors hover:bg-[#09172b] sm:w-auto"
             >
               إلغاء
             </button>
@@ -207,9 +207,9 @@ const AddMember = () => {
 
         <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 lg:gap-8 xl:grid-cols-12">
           <div className="space-y-8 xl:col-span-8">
-            <div className="rounded-2xl border border-gray-800/50 bg-[#151f2f] p-4 sm:p-6 lg:p-8">
+            <div className="rounded-2xl border border-gray-800/50 bg-[#061328] p-4 sm:p-6 lg:p-8">
               <div className="mb-6 flex items-center gap-2 text-[#C59D4A] sm:mb-8">
-                <div className="shrink-0 rounded-lg bg-[#C59D4A]/10 p-2">
+                <div className="shrink-0 rounded-lg bg-[#09172b]/10 p-2">
                   <Info size={20} />
                 </div>
                 <h2 className="text-lg font-bold text-white sm:text-xl">
@@ -288,6 +288,7 @@ const AddMember = () => {
                     { value: "القضايا التجارية", label: "القضايا التجارية" },
                     { value: "القضايا الجنائية", label: "القضايا الجنائية" },
                     { value: "الإدارة", label: "الإدارة" },
+                    { value: "اخري", label: "اخري" },
                   ]}
                 />
 
@@ -334,7 +335,7 @@ const AddMember = () => {
                 <button
                   type="submit"
                   disabled={loding}
-                  className="mx-auto flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#C59D4A] px-6 py-3 font-bold text-[#0B121D] shadow-lg shadow-[#C59D4A]/20 transition-colors hover:bg-[#b08b3e] disabled:cursor-not-allowed disabled:opacity-70 sm:mx-0 sm:min-w-[180px] sm:w-auto"
+                  className="mx-auto flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#C59D4A] px-6 py-3 font-bold text-[#0B121D] shadow-lg shadow-[#C59D4A]/20 transition-colors hover:bg-[#b08b3e] disabled:cursor-not-allowed disabled:opacity-70 sm:mx-0 sm:min-w-45 sm:w-auto"
                 >
                   <UserPlus size={18} />
                   {loding ? (

@@ -32,6 +32,8 @@ import MyProfile from './componts/MyProfile/MyProfile'
 import SessionDetails from './componts/SessionDetails/SessionDetails'
 import PyrollMangment from './componts/PyrollMangment/PyrollMangment'
 import BookOfLaw from './componts/BookofLaw/BookOfLaw'
+import AllSesions from './componts/AllSesions/AllSesions'
+import AddNewCaseinvoice from './componts/AddNewCaseinvoice/AddNewCaseinvoice'
 function App() {
   const router = createBrowserRouter([{
     path: "", element: <Layout />, children: [
@@ -41,6 +43,7 @@ function App() {
       { path: "/CaseMangemnt/CaseDetails/:id", element: <ProtectedRoute><CaseDetails /></ProtectedRoute> },
       { path: "/CaseMangemnt/CaseDetails/:id/SessionDetails", element: <ProtectedRoute><SessionDetails /></ProtectedRoute> },
       { path: "/CaseMangemnt/CaseDetails/:id/AddSession", element: <ProtectedRoute><AddSession /></ProtectedRoute> },
+      { path: "/CaseMangemnt/CaseDetails/:id/AddNewCaseinvoice", element: <ProtectedRoute><AddNewCaseinvoice /></ProtectedRoute> },
       { path: "/TeamMember", element: <ProtectedRoute><Team /></ProtectedRoute> },
       { path: "/TeamMember/TeamProfile/:id", element: <ProtectedRoute><TeamProfile /></ProtectedRoute> },
       { path: "/BookMangment", element: <ProtectedRoute><BookMangment /></ProtectedRoute> },
@@ -55,6 +58,7 @@ function App() {
       { path: "/BookOfLaw", element: <ProtectedRoute>< BookOfLaw /></ProtectedRoute> },
       { path: "/MyProfile", element: <ProtectedRoute><MyProfile /></ProtectedRoute> },
       { path: "/AddMember", element: <ProtectedRoute><AddMember /></ProtectedRoute> },
+      { path: "/AllSesions", element: <ProtectedRoute><AllSesions /></ProtectedRoute> },
       { path: "/Clients/ClientProfile/:id", element: <ProtectedRoute><ClientProfile /></ProtectedRoute> },
       { path: "/Login", element: <Login /> },
       { path: "*", element: <Eror /> },

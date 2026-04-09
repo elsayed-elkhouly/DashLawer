@@ -154,7 +154,7 @@ const ClientProfile = () => {
   }
 
 
-  async function PrintAllInvoic() {
+  async function PrintAllInvoic(id) {
     try {
       const res = await api.get(
         `/invoices/client/${id}/print-all`,
@@ -218,7 +218,7 @@ const ClientProfile = () => {
 
   function Card({ icon, title, value, color }) {
     return (
-      <div className="bg-[#162132] border border-gray-700 rounded-xl p-4 h-25.25 flex items-center justify-between">
+      <div className="bg-[#061328] border border-gray-700 rounded-xl p-4 h-25.25 flex items-center justify-between">
         <div className="">
           <p className="text-gray-400 text-sm">{title}</p>
           <p className={`text-xl font-bold ${color || "text-white"}`}>
@@ -239,16 +239,16 @@ const ClientProfile = () => {
   return (
     <>
       {/* Header */}
-      <div dir="rtl" className="bg-[#0b1b2b] text-white p-6 rounded-xl">
+      <div dir="rtl" className="text-white p-6 rounded-xl">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold">{data?.data?.client?.fullName}</h1>
           </div>
-          <div className="flex items-center gap-3">
+          {/* <div className="flex items-center gap-3">
             <button className="bg-[#f5c35c] text-black px-4 py-2 rounded-lg flex items-center gap-2">
               إضافة قضية جديدة +
             </button>
-          </div>
+          </div> */}
         </div>
 
 
@@ -286,7 +286,7 @@ const ClientProfile = () => {
       </div>
       {/* all about client  */}
       <section>
-        <div dir="rtl" className="bg-[#0b1b2b] min-h-screen p-6 text-white">
+        <div dir="rtl" className=" min-h-screen p-6 text-white">
           <div className="grid grid-cols-12 gap-6">
             {/* Content */}
             <div className="col-span-9 space-y-6">
@@ -300,7 +300,7 @@ const ClientProfile = () => {
             </div>
             {/* Sidebar */}
             <div className="col-span-3">
-              <div className="bg-[#162132] p-4 rounded-xl border border-slate-700">
+              <div className="bg-[#061328] p-4 rounded-xl border border-slate-700">
 
                 <div className="flex justify-between mb-4">
                   <h2 className="text-yellow-400 font-semibold">

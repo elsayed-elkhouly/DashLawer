@@ -7,7 +7,7 @@ const InputField = ({ label, placeholder, type = "text", name ,register,error}) 
         type={type}
         placeholder={placeholder}
         {...register(name)}
-        className="w-full bg-[#161D27] border border-gray-700 text-white rounded-xl py-3 px-4 focus:outline-none focus:border-[#C59D4A] transition-colors"
+        className="w-full bg-[#09172b] border border-gray-700 text-white rounded-xl py-3 px-4 focus:outline-none focus:border-[#C59D4A] transition-colors"
       />
       {error[name] && (
         <p className="text-red-500 text-xs">{error[name].message}</p>

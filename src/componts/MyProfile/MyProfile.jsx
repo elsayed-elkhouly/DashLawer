@@ -17,6 +17,7 @@ import {
 import toast from 'react-hot-toast';
 
 const MyProfile = () => {
+
     function getProfile() {
         return api.get("/users/profile/me", {
             headers: {
@@ -30,9 +31,36 @@ const MyProfile = () => {
         queryKey: ["MyProfile"],
         queryFn: getProfile
     })
-    console.log(data);
+    // console.log(data);
 
 
+    function getTask() {
+        return api.get('/task/', {
+            headers: {
+                authorization: `Bearer ${Cookies.get("token")}`,
+
+            }
+        })
+    }
+    const { data: Task } = useQuery({
+        queryKey: ["Task"],
+        queryFn: getTask
+    })
+    // console.log(Task?.data?.tasks);
+
+    function getCase() {
+        return api.get('/LegalCase/', {
+            headers: {
+                authorization: `Bearer ${Cookies.get("token")}`,
+
+            }
+        })
+    }
+    const { data: Case } = useQuery({
+        queryKey: ["case"],
+        queryFn: getCase
+    })
+    // console.log(Case?.data.cases);
 
 
     const queryClient = useQueryClient();
@@ -43,11 +71,11 @@ const MyProfile = () => {
     const [previewImage, setPreviewImage] = useState("");
 
     const UserData = data?.data?.user
-    const Stats =data?.data?.stats
+    const Stats = data?.data?.stats
 
     // console.log(UserData);
     // console.log(Stats);
-    
+
 
     const {
         register,
@@ -78,6 +106,12 @@ const MyProfile = () => {
         }
     }, [UserData, reset]);
 
+    const formatDateISO = (dateString) => {
+        if (!dateString) return "-"
+        const date = new Date(dateString)
+        if (isNaN(date.getTime())) return "-"
+        return date.toISOString().split("T")[0]
+    }
 
 
 
@@ -124,25 +158,13 @@ const MyProfile = () => {
             setPhotoLoading(false);
         }
     };
-//     function getProfile() {
-//         return api.get("/users/profile/me", {
-//             headers: {
-//                 authorization: `Bearer ${Cookies.get("token")}`,
 
-//             }
-//         })
-//     }
-//    const {data:Profile}= useQuery({
-//     queryKey:["Profile"],
-//     queryFn:getProfile
-//    })
-//    console.log(Profile);
-   
+
 
     if (isLoading) {
         return (
-            <div className="flex items-center justify-center py-10 text-white">
-                جاري تحميل البيانات...
+            <div className="flex items-center justify-center py-10 text-[#C9A14A]">
+               <span className="loading loading-infinity loading-xl"></span>
             </div>
         );
     }
@@ -228,7 +250,7 @@ const MyProfile = () => {
                                         </p>
 
                                         <p className="text-sm text-[#8EA3BF]">
-                                            رقم التسجيل: 83742939847
+                                            رقم التسجيل: {UserData?.lawyerRegistrationNo}
                                         </p>
 
                                         <p className="mt-2 text-xs text-[#8EA3BF]">
@@ -275,38 +297,16 @@ const MyProfile = () => {
                         </div>
 
                         <div className="space-y-3 text-sm">
-                            {[
-                                {
-                                    id: "#CASE-4412",
-                                    client: "شركة الأركان المحدودة",
-                                    type: "نزاع تجاري",
-                                    status: "قيد المراجعة",
-                                    date: "2024/05/12",
-                                },
-                                {
-                                    id: "#CASE-4398",
-                                    client: "مؤسسة النجاح",
-                                    type: "قضية عمالية",
-                                    status: "تحضير الجلسة",
-                                    date: "2024/05/10",
-                                },
-                                {
-                                    id: "#CASE-4201",
-                                    client: "سالم عبد العزيز",
-                                    type: "تحصيل ديون",
-                                    status: "مكتمل",
-                                    date: "2024/04/28",
-                                },
-                            ].map((c, i) => (
+                            {Case?.data.cases.map((c, i) => (
                                 <div
                                     key={i}
                                     className="grid grid-cols-5 items-center rounded-xl bg-[#081b31] px-4 py-3"
                                 >
-                                    <div>{c.date}</div>
+                                    <div>{formatDateISO(c.openedAt)}</div>
                                     <div className="text-blue-400">{c.status}</div>
-                                    <div>{c.type}</div>
-                                    <div>{c.client}</div>
-                                    <div className="text-amber-400">{c.id}</div>
+                                    <div>{c.court}</div>
+                                    <div>{c.client?.fullName}</div>
+                                    <div className="text-amber-400">{c.caseNumber}</div>
                                 </div>
                             ))}
                         </div>
@@ -320,37 +320,63 @@ const MyProfile = () => {
                         </div>
 
                         <div className="space-y-3">
-                            {[
-                                {
-                                    title: "مراجعة العقود النهائية لشركة الوفاق",
-                                    status: "أولوية قصوى",
-                                    color: "text-red-400",
-                                },
-                                {
-                                    title: "تقديم مذكرة الدفاع في القضية #4398",
-                                    status: "متأخرة",
-                                    color: "text-amber-400",
-                                },
-                                {
-                                    title: "اتصال مع العميل سالم عبد العزيز",
-                                    status: "منخفضة",
-                                    color: "text-blue-400",
-                                },
-                            ].map((t, i) => (
-                                <div
-                                    key={i}
-                                    className="flex items-center justify-between rounded-xl bg-[#081b31] px-4 py-4"
-                                >
-                                    <HiOutlineDotsVertical className="text-[#8EA3BF]" />
+                            {Task?.data?.tasks.map((t, i) => {
+                                const date = new Date(t.dueDate);
 
-                                    <div className="text-right">
-                                        <p>{t.title}</p>
-                                        <p className={`text-xs ${t.color}`}>{t.status}</p>
+                                const day = date.getDate();
+
+                                const months = [
+                                    "يناير", "فبراير", "مارس", "أبريل",
+                                    "مايو", "يونيو", "يوليو", "أغسطس",
+                                    "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"
+                                ];
+
+                                const month = months[date.getMonth()];
+
+                                return (
+                                    <div
+                                        key={i}
+                                        className="flex items-center justify-between rounded-2xl bg-[#081b31] px-4 py-4"
+                                    >
+
+
+                                        {/* Right content */}
+                                        <div className="flex items-center gap-4">
+
+                                            <div className="flex flex-col items-center justify-center rounded-xl border border-[#d4af37] px-3 py-2 text-center min-w-[60px]">
+                                                <span className="text-lg font-bold text-[#d4af37]">
+                                                    {day}
+                                                </span>
+                                                <span className="text-xs text-gray-300">
+                                                    {month}
+                                                </span>
+                                            </div>
+
+                                            {/* Text content */}
+                                            <div className="text-right">
+                                                <p className="text-white font-medium">{t.title}</p>
+
+                                                <div className="flex items-center gap-2 justify-end mt-1">
+                                                    <span className="text-xs text-gray-400">
+                                                        {new Date(t.dueDate).toLocaleTimeString([], {
+                                                            hour: "2-digit",
+                                                            minute: "2-digit",
+                                                        })}
+                                                    </span>
+
+                                                    <span className="text-xs bg-red-600 text-white px-2 py-1 rounded-full">
+                                                        {t.priority}
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <HiOutlineDotsVertical className="text-[#8EA3BF]" />
+                                        </div>
                                     </div>
-
-                                    <input type="checkbox" className="accent-amber-400" />
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
                     </div>
                 </div>

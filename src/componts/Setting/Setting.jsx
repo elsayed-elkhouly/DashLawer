@@ -412,7 +412,7 @@ const Setting = () => {
 
   if (isLoading) {
     return (
-      <div className="text-white text-center">
+      <div className="text-[#C9A14A] text-center">
         <span className="loading loading-infinity w-[50%]"></span>
       </div>
     );
@@ -741,7 +741,7 @@ const Setting = () => {
 
       <section>
         <div className="w-full max-w-300 px-4 mx-auto min-h-screen text-white" dir="rtl">
-          <div className="bg-[#0e1a2b] p-4 md:p-6 rounded-xl mb-8">
+          <div className="bg-[#081226] p-4 md:p-6 rounded-xl mb-8">
             <h2 className="text-2xl md:text-[40px] font-bold mb-1">إضافة مواعيد العمل</h2>
             <p className="text-gray-400 text-sm md:text-[20px] mb-6">
               قم بتحديد المواعيد المتاحة للعمل
@@ -805,7 +805,7 @@ const Setting = () => {
             </form>
           </div>
 
-          <div className="bg-slate-900 rounded-xl overflow-hidden border border-[#2D3245] shadow-2xl">
+          <div className="bg-[#081226] rounded-xl overflow-hidden border border-[#2D3245] shadow-2xl">
             <div className="p-4 font-bold text-lg md:text-xl bg-[#081226] text-[#C9A14A] border border-[#2D3245]">
               مواعيد العمل
             </div>
@@ -846,7 +846,7 @@ const Setting = () => {
       </section>
 
       <section>
-        <div dir="rtl" className="bg-[#0e1a2b] text-white mx-auto p-8 rounded-xl max-w-300 mt-10">
+        <div dir="rtl" className="bg-[#081226] text-white mx-auto p-8 rounded-xl max-w-300 mt-10">
           <h2 className="text-xl font-bold mb-2">إضافة مواعيد الحجز</h2>
           <p className="text-gray-400 mb-6">قم بتحديد المواعيد المتاحة لاستقبال العملاء</p>
 

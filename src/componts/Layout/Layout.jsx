@@ -39,7 +39,7 @@ const Layout = () => {
       <main className="flex-1 h-screen overflow-y-auto bg-[radial-gradient(circle_at_top,#0d2847_0%,#07192e_45%,#05111f_100%)] relative">
         {/* Mobile Top Bar */}
         {token && (
-          <div className="lg:hidden sticky top-0 z-30 flex items-center justify-between px-4 py-3 bg-[#101c2e] border-b border-gray-800">
+          <div className="lg:hidden sticky top-0 z-30 flex items-center justify-between px-4 py-3 bg-[#061328] border-b border-gray-800">
             <button
               onClick={() => setSidebarOpen(true)}
               className="p-2 rounded-xl bg-[#1a2a40] text-white hover:bg-[#223550] transition"
@@ -47,7 +47,7 @@ const Layout = () => {
               <HiOutlineMenuAlt3 size={24} />
             </button>
 
-            <h2 className="text-white font-bold text-sm">لوحة التحكم</h2>
+            {/* <h2 className="text-white font-bold text-sm">لوحة التحكم</h2> */}
           </div>
         )}
 

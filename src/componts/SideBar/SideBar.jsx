@@ -21,7 +21,7 @@ const SideBar = ({ onClose, isMobile = false }) => {
  
   return (
     <div
-      className="flex flex-col h-full bg-[#101c2e] text-gray-300 font-sans"
+      className="flex flex-col h-full bg-[#061328] text-gray-300 font-sans"
       dir="rtl"
     >
       {/* Header */}

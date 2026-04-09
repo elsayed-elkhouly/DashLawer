@@ -3,7 +3,7 @@ import React from 'react'
 
 const CaseTable = ({ cases }) => {
     return (
-        <div className="bg-[#162132] rounded-xl border border-slate-700">
+        <div className="bg-[#061328] rounded-xl border border-slate-700">
 
             <div className="flex justify-between p-4">
                 <h2>القضايا المرتبطة</h2>
@@ -15,13 +15,12 @@ const CaseTable = ({ cases }) => {
             <table className="w-full text-sm">
 
                 <thead className="text-gray-400 border-t border-slate-700">
-                    <tr className="text-center bg-[#FFFFFF0D]">
+                    <tr className="text-center bg-[#09172b]">
                         <th className="p-3">رقم القضية</th>
                         <th>نوع القضية</th>
                         <th>الحالة</th>
                         <th>الجلسة القادمة</th>
                         <th>المحامي المسؤول</th>
-                        <th></th>
                     </tr>
                 </thead>
 
@@ -49,9 +48,7 @@ const CaseTable = ({ cases }) => {
                                 {item.assignedTo?.UserName}
                             </td>
 
-                            <td>
-                                <Eye className="text-[#94A3B8] cursor-pointer hover:text-gray-300" />
-                            </td>
+                          
                         </tr>
                     ))}
 

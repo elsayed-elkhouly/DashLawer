@@ -146,12 +146,21 @@ const CaseInfo = ({ Case, onSave, isSaving, lawer,id }) => {
                                 </button>
                             </Link>
 
-                            <button
+                            {/* <button
                                 type="button"
                                 className="flex h-11 w-11 items-center justify-center rounded-full border border-[#243752] bg-transparent text-[#a7bad2] transition hover:bg-[#12233f] hover:text-white"
                             >
                                 <HiOutlinePrinter size={18} />
-                            </button>
+                            </button> */}
+                            <Link to={`/CaseMangemnt/CaseDetails/${id}/AddNewCaseinvoice`}>
+                                          <button
+                                            type="button"
+                                    className="inline-flex h-11 items-center gap-2 rounded-full outline-0 bg-[#d3a53d] px-5 text-sm font-semibold text-[#0b1830] transition hover:opacity-90"
+                                          >
+                                            <HiOutlinePlusCircle className="text-lg" />
+                                            فاتورة جديدة
+                                          </button>
+                                        </Link>
                         </div>
                     </div>
                 </div>

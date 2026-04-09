@@ -3,7 +3,7 @@ import { FiDownload } from 'react-icons/fi'
 
 const InvoicesTable = ({ invoices, printAll, printSingle }) => {
     return (
-        <div className="bg-[#162132] rounded-xl border border-slate-700">
+        <div className="bg-[#061328] rounded-xl border border-slate-700">
 
             <div className="flex justify-between p-4">
                 <h2>آخر الدفعات والفواتير</h2>
@@ -15,7 +15,7 @@ const InvoicesTable = ({ invoices, printAll, printSingle }) => {
             </div>
             <table className="w-full text-sm">
                 <thead className="text-gray-400 border-t border-slate-700">
-                    <tr className="text-center bg-[#FFFFFF0D]">
+                    <tr className="text-center bg-[#09172b]">
                         <th className="p-3">رقم الفاتورة</th>
                         <th>المبلغ</th>
                         <th>المدفوع</th>

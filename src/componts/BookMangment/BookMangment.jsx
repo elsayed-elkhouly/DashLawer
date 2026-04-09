@@ -14,44 +14,7 @@ import {
 } from "react-icons/hi2";
 
 const BookMangment = () => {
-    const stats = [
-        {
-            id: 1,
-            title: "غير مكتملة",
-            value: "92",
-            subtitle: "الحجوزات الملغية",
-            icon: <HiOutlineXCircle size={18} />,
-            color: "text-red-400",
-            border: "border-red-500/70",
-        },
-        {
-            id: 2,
-            title: "سابقة",
-            value: "856",
-            subtitle: "الحجوزات المؤكدة",
-            icon: <HiOutlineCheckCircle size={18} />,
-            color: "text-emerald-400",
-            border: "border-emerald-500/70",
-        },
-        {
-            id: 3,
-            title: "آخر 24 ساعة",
-            value: "14",
-            subtitle: "حجوزات اليوم",
-            icon: <HiOutlineCalendarDays size={18} />,
-            color: "text-blue-400",
-            border: "border-blue-500/70",
-        },
-        {
-            id: 4,
-            title: "هذا العام",
-            value: "1,248",
-            subtitle: "إجمالي الحجوزات",
-            icon: <HiOutlineCalendar size={18} />,
-            color: "text-amber-400",
-            border: "border-amber-500/70",
-        },
-    ];
+   
     const [search, setSearch] = useState("");
     const [selectedFilter, setSelectedFilter] = useState("كل الحجوزات");
     const [open, setOpen] = useState(false);
@@ -133,7 +96,45 @@ const BookMangment = () => {
         queryKey: ["Slots"],
         queryFn: getAppoint,
     });
-
+   console.log(data?.data?.stats);
+    const stats = [
+        {
+            id: 1,
+            title: "  تم الإلغاء",
+            value: data?.data?.stats?.cancelled,
+            subtitle: "الحجوزات الملغية",
+            icon: <HiOutlineXCircle size={18} />,
+            color: "text-red-400",
+            border: "border-red-500/70",
+        },
+        {
+            id: 2,
+            title: "مؤكده",
+            value: data?.data?.stats?.confirmed,
+            subtitle: "الحجوزات المؤكدة",
+            icon: <HiOutlineCheckCircle size={18} />,
+            color: "text-emerald-400",
+            border: "border-emerald-500/70",
+        },
+        {
+            id: 3,
+            title: "  هذا الشهر",
+            value: data?.data?.stats?.thisMonth,
+            subtitle: "حجوزات اليوم",
+            icon: <HiOutlineCalendarDays size={18} />,
+            color: "text-blue-400",
+            border: "border-blue-500/70",
+        },
+        {
+            id: 4,
+            title: "هذا العام",
+            value: data?.data?.stats?.thisYear,
+            subtitle: "إجمالي الحجوزات",
+            icon: <HiOutlineCalendar size={18} />,
+            color: "text-amber-400",
+            border: "border-amber-500/70",
+        },
+    ];
 
     async function getAppointByid(id) {
         try {
@@ -156,7 +157,7 @@ const BookMangment = () => {
         }
     }
 
-    console.log(data?.data?.appointments);
+    // console.log(data?.data?.appointments);
     function formatDateTimeLocal12(isoString) {
         const date = new Date(isoString);
 
@@ -294,7 +295,7 @@ const BookMangment = () => {
                             ))}
 
                             {/* Footer */}
-                            <div className="flex items-center justify-between border-t border-white/5 px-5 py-4">
+                            {/* <div className="flex items-center justify-between border-t border-white/5 px-5 py-4">
                                 <div className="flex items-center gap-3 text-sm text-[#8EA3BF]">
                                     <button className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 transition hover:bg-white/20">
                                         <HiOutlineChevronRight size={16} />
@@ -308,7 +309,7 @@ const BookMangment = () => {
                                 <p className="text-xs text-[#8EA3BF]">
                                     عرض 4 من إجمالي 124 حجز
                                 </p>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </div>

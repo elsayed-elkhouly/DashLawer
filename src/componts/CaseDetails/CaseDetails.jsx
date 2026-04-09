@@ -200,6 +200,19 @@ const CaseDetails = () => {
         queryFn: getAllSesions
     })
     console.log(Sesions?.data?.sessions);
+    function getAllInvoicelCases() {
+        return api.get(`/LegalCase/${id}/invoices`, {
+            headers: {
+                authorization: `Bearer ${Cookies.get("token")}`,
+
+            }
+        })
+    }
+    const { data: Cases } = useQuery({
+        queryKey: ["CasesInvoice"],
+        queryFn: getAllInvoicelCases
+    })
+console.log(Cases?.data?.invoices);
 
     return (
         <>
@@ -323,6 +336,88 @@ const CaseDetails = () => {
                                 <h2 className="flex items-center gap-2 text-lg font-semibold text-white">
                                     <HiOutlineCalendarDays size={18} className="text-[#d3a53d]" />
                                     جدول الجلسات
+                                </h2>
+
+                                <button
+                                    type="button"
+                                    className="text-sm font-medium text-[#d3a53d] transition hover:opacity-90"
+                                >
+                                    مشاهدة الكل
+                                </button>
+                            </div>
+
+                            <div className="overflow-x-auto border-t border-[#13243b] pt-4">
+                                <table className="min-w-full border-collapse">
+                                    <thead>
+                                        <tr className="border-b border-[#13243b] text-xs text-[#7f93ad]">
+                                            <th className="px-4 py-3 text-right font-medium">التاريخ</th>
+                                            <th className="px-4 py-3 text-right font-medium">الوقت</th>
+                                            <th className="px-4 py-3 text-right font-medium">نوع الجلسة</th>
+                                            <th className="px-4 py-3 text-right font-medium">ملاحظات</th>
+                                            <th className="px-4 py-3 text-right font-medium">الحالة</th>
+                                            <th className="px-4 py-3 text-right font-medium"></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        {Sesions?.data?.sessions.map((session, index) => {
+                                            const dateObj = new Date(session.startAt);
+
+                                            const date = dateObj.toLocaleDateString("en-CA"); // 2026-03-30
+                                            const time = dateObj.toLocaleTimeString([], {
+                                                hour: "2-digit",
+                                                minute: "2-digit",
+                                            });
+
+                                            return (
+                                                <tr
+                                                    key={session._id}
+                                                    className="border-b border-[#13243b] text-sm text-[#dbe7f5]"
+                                                >
+                                                    <td className="px-4 py-4">{date}</td>
+
+                                                    <td className="px-4 py-4">{time}</td>
+
+                                                    <td className="px-4 py-4">{session.type}</td>
+                                                   
+
+                                                    <td className="px-4 py-4 text-[#9fb1c8]">
+                                                        {session.notes || "لا يوجد ملاحظات"}
+                                                    </td>
+
+                                                    <td className="px-4 py-4">
+                                                        <span
+                                                            className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${session.status === "مجدولة"
+                                                                ? "bg-yellow-900 text-yellow-300"
+                                                                : session.status === "تمت"
+                                                                    ? "bg-green-900 text-green-300"
+                                                                    : session.status === "مؤجلة"
+                                                                        ? "bg-blue-900 text-blue-300"
+                                                                        : session.status === "ملغية"
+                                                                            ? "bg-red-900 text-red-300"
+                                                                            : "bg-gray-700 text-white"
+                                                                }`}
+                                                        >
+                                                            {session.status}
+                                                        </span>
+                                                    </td>
+                                                     <td className="px-4 py-4"><Link to={`/CaseMangemnt/CaseDetails/${session?._id}/SessionDetails`}>
+                                                        <button className="p-1.5 cursor-pointer rounded-full border border-gray-700 text-gray-400 hover:text-[#C59D4A] hover:border-[#C59D4A] transition-colors">
+                                                            <Eye size={16} />
+                                                        </button>
+                                                    </Link></td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div className="rounded-2xl border border-[#1a2d47] bg-[#09172b] p-5 text-white shadow-[0_10px_30px_rgba(0,0,0,0.18)]">
+                            <div className="mb-5 flex items-center justify-between">
+                                <h2 className="flex items-center gap-2 text-lg font-semibold text-white">
+                                    <HiOutlineCalendarDays size={18} className="text-[#d3a53d]" />
+فواتير القضية
                                 </h2>
 
                                 <button

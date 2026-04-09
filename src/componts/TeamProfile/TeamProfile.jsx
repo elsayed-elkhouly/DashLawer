@@ -450,7 +450,7 @@ const TeamProfile = () => {
                                                 </p>
 
                                                 <p className="text-sm text-[#8EA3BF]">
-                                                    رقم التسجيل: 83742939847
+                                                    رقم التسجيل: {UserData?.lawyerRegistrationNo}
                                                 </p>
 
                                                 <p className="mt-2 text-xs text-[#8EA3BF]">

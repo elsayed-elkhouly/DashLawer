@@ -2,8 +2,9 @@ import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import api from "../../api/axios";
 import Cookies from "js-cookie";
+import toast from "react-hot-toast";
 
-export default function UploadLawPdf() {
+export default function UploadLawPdf({data}) {
     const [open, setOpen] = useState(false);
     const [dragActive, setDragActive] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
@@ -75,14 +76,14 @@ export default function UploadLawPdf() {
 
     console.log("Upload success:", response.data);
 
-    alert("تم رفع الملف بنجاح");
+    toast.success("تم رفع الملف بنجاح");
     reset();
     setSelectedFile(null);
     setOpen(false);
   } catch (error) {
     console.error(error);
     console.log(error.response);
-    alert(error?.response?.data?.message || "حصل خطأ أثناء الرفع");
+    toast.error(error?.response?.data?.message || "حصل خطأ أثناء الرفع");
   } finally {
     setLoading(false);
   }

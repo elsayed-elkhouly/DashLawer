@@ -111,70 +111,69 @@ const CaseMange = () => {
   return (
     <>
       <div className="w-full  px-4 sm:px-6 lg:px-8 py-5 sm:py-6 lg:py-8 font-sans" dir="rtl">
-  <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
-    {/* Title and Subtitle */}
-    <div className="text-right order-1">
-      <h1 className="text-white text-2xl sm:text-3xl font-bold mb-2">
-        إدارة القضايا
-      </h1>
-      <p className="text-gray-400 text-sm sm:text-base leading-6">
-        نظرة عامة على جميع القضايا القانونية النشطة والمؤجلة والمغلقة
-      </p>
-    </div>
+        <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
+          {/* Title and Subtitle */}
+          <div className="text-right order-1">
+            <h1 className="text-white text-2xl sm:text-3xl font-bold mb-2">
+              إدارة القضايا
+            </h1>
+            <p className="text-gray-400 text-sm sm:text-base leading-6">
+              نظرة عامة على جميع القضايا القانونية النشطة والمؤجلة والمغلقة
+            </p>
+          </div>
 
-    {/* Buttons */}
-    <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3 sm:gap-4 order-2 xl:order-1">
-      <button className="w-full sm:w-auto flex items-center justify-center gap-2 border border-gray-700 text-gray-300 px-4 py-2.5 rounded-lg hover:bg-gray-800 transition-colors">
-        <BiDownload size={18} />
-        <span className="text-sm">تصدير PDF / Excel</span>
-      </button>
+          {/* Buttons */}
+          <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3 sm:gap-4 order-2 xl:order-1">
+           
 
-      <Link to={"/CaseMangemnt/AddNewCase"} className="w-full sm:w-auto">
-        <button className="w-full sm:w-auto flex items-center justify-center cursor-pointer gap-2 bg-[#c5a059] hover:bg-[#b38f4d] text-[#0f172a] px-6 py-2.5 rounded-lg font-bold transition-colors shadow-lg">
-          <BiPlus size={20} />
-          <span>إضافة قضية جديدة</span>
-        </button>
-      </Link>
-    </div>
-  </div>
-</div>
+            <Link to={"/CaseMangemnt/AddNewCase"} className="w-full sm:w-auto">
+              <button
+                              className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-[#c79a3b] px-5 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-[#c79a3b]/20 transition hover:brightness-110"
 
-<div className="w-full  px-4 sm:px-6 lg:px-8 pb-4 sm:pb-6" dir="rtl">
-  <div className="bg-[#061224]/50 p-4 rounded-xl border border-gray-800">
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-3">
-      {/* Search Input */}
-      <div className="relative md:col-span-2 xl:col-span-5">
-        <span className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-          <BiSearch size={18} className="text-gray-500" />
-        </span>
-        <input
-          type="text"
-          className="w-full bg-[#0b0f1a] border border-gray-700 text-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 pr-10 placeholder-gray-500"
-          placeholder="البحث برقم القضية، اسم العميل، أو موضوع النزاع..."
-        />
-      </div>
-
-      {/* Dropdown Filters */}
-      {filterOptions.map((filter, index) => (
-        <div key={index} className="xl:col-span-2">
-          <button className="w-full flex items-center justify-between bg-[#0b0f1a] border border-gray-700 text-gray-400 text-sm px-4 py-2.5 rounded-lg hover:bg-gray-800 transition-colors">
-            <BiChevronDown size={16} className="text-gray-500 shrink-0" />
-            <span className="truncate">{filter.label}</span>
-          </button>
+              >
+                <BiPlus size={20} />
+                <span>إضافة قضية جديدة</span>
+              </button>
+            </Link>
+          </div>
         </div>
-      ))}
-
-      {/* Reset Button */}
-      <div className="xl:col-span-1 flex items-center">
-        <button className="w-full xl:w-auto flex items-center justify-center gap-2 text-gray-400 hover:text-white text-sm px-4 py-2.5 transition-colors">
-          <FiRotateCcw size={16} />
-          <span>إعادة ضبط</span>
-        </button>
       </div>
-    </div>
-  </div>
-</div>
-      {/* name of each tab group should be unique */}
+
+      <div className="w-full  px-4 sm:px-6 lg:px-8 pb-4 sm:pb-6" dir="rtl">
+        <div className="bg-[#061224]/50 p-4 rounded-xl border border-gray-800">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-3">
+            {/* Search Input */}
+            <div className="relative md:col-span-2 xl:col-span-5">
+              <span className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+                <BiSearch size={18} className="text-gray-500" />
+              </span>
+              <input
+                type="text"
+                className="w-full bg-[#0b0f1a] border border-gray-700 text-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 pr-10 placeholder-gray-500"
+                placeholder="البحث برقم القضية، اسم العميل، أو موضوع النزاع..."
+              />
+            </div>
+
+            {/* Dropdown Filters */}
+            {filterOptions.map((filter, index) => (
+              <div key={index} className="xl:col-span-2">
+                <button className="w-full flex items-center justify-between bg-[#0b0f1a] border border-gray-700 text-gray-400 text-sm px-4 py-2.5 rounded-lg hover:bg-gray-800 transition-colors">
+                  <BiChevronDown size={16} className="text-gray-500 shrink-0" />
+                  <span className="truncate">{filter.label}</span>
+                </button>
+              </div>
+            ))}
+
+            {/* Reset Button */}
+            <div className="xl:col-span-1 flex items-center">
+              <button className="w-full xl:w-auto flex items-center justify-center gap-2 text-gray-400 hover:text-white text-sm px-4 py-2.5 transition-colors">
+                <FiRotateCcw size={16} />
+                <span>إعادة ضبط</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div className="min-h-screen bg-[#061224] p-6 text-white" dir="rtl">
         <div className="mx-auto max-w-7xl">
@@ -205,11 +204,7 @@ const CaseMange = () => {
               })}
             </div>
 
-            <div className="flex items-center gap-2 text-sm text-[#7f93ad]">
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#3a1820] text-[10px] text-[#ff6b81]">
-                3
-              </span>
-            </div>
+        
           </div>
 
           <div className="overflow-hidden rounded-2xl border border-[#1a2d47] bg-[#09172b] shadow-[0_10px_30px_rgba(0,0,0,0.25)]">
@@ -312,59 +307,7 @@ const CaseMange = () => {
               </table>
             </div>
 
-            <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[#1a2d47] px-6 py-4">
-              <p className="text-xs text-[#6f86a6]">
-                عرض 1 إلى {filteredCases.length} من أصل {cases.length} قضية
-              </p>
-
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                  className="flex h-8 w-8 items-center justify-center rounded-md border border-[#1f3552] bg-[#0a1830] text-[#7f93ad] transition hover:text-white"
-                >
-                  <HiOutlineChevronRight size={16} />
-                </button>
-
-                <button
-                  type="button"
-                  className="flex h-8 min-w-[32px] items-center justify-center rounded-md bg-[#d7b14a] px-3 text-xs font-bold text-[#0a1322]"
-                >
-                  1
-                </button>
-
-                <button
-                  type="button"
-                  className="flex h-8 min-w-[32px] items-center justify-center rounded-md border border-[#1f3552] bg-[#0a1830] px-3 text-xs text-[#7f93ad] transition hover:text-white"
-                >
-                  2
-                </button>
-
-                <button
-                  type="button"
-                  className="flex h-8 min-w-[32px] items-center justify-center rounded-md border border-[#1f3552] bg-[#0a1830] px-3 text-xs text-[#7f93ad] transition hover:text-white"
-                >
-                  3
-                </button>
-
-                <span className="px-1 text-[#7f93ad]">...</span>
-
-                <button
-                  type="button"
-                  className="flex h-8 min-w-[32px] items-center justify-center rounded-md border border-[#1f3552] bg-[#0a1830] px-3 text-xs text-[#7f93ad] transition hover:text-white"
-                >
-                  44
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setCurrentPage((prev) => prev + 1)}
-                  className="flex h-8 w-8 items-center justify-center rounded-md border border-[#1f3552] bg-[#0a1830] text-[#7f93ad] transition hover:text-white"
-                >
-                  <HiOutlineChevronLeft size={16} />
-                </button>
-              </div>
-            </div>
+        
           </div>
         </div>
       </div>

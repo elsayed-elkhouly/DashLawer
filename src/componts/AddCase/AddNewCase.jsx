@@ -137,7 +137,7 @@ const AddNewCase = () => {
     <>
       {/* header */}
       <div dir="rtl" className=" p-6 text-white">
-        <div className="mx-auto w-full max-w-7xl rounded-3xl bg-[#071a33] px-8 py-7 shadow-2xl ring-1 ring-white/10">
+        <div className="mx-auto w-full max-w-7xl rounded-3xl bg-[#061328] px-8 py-7 shadow-2xl ring-1 ring-white/10">
           <div className="flex items-start justify-between gap-6">
             <div className="text-right">
               <h1 className="text-4xl font-semibold tracking-tight text-white">

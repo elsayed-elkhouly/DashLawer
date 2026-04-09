@@ -211,7 +211,7 @@ const Bills = () => {
   }
   console.log(data?.data);
 
-  if (isLoading) return <div className="text-white">Loading...</div>;
+  if (isLoading) return <div className="text-[#C9A14A] flex items-center justify-center min-h-screen "> <span className="loading loading-infinity loading-xl w-[50%]  "></span></div>;
   if (isError) return <div className="text-red-500">حصل خطأ</div>;
 
   return (
@@ -321,8 +321,7 @@ const Bills = () => {
 
               {isLoading ? (
                 <div className="px-6 py-8 text-center text-sm text-[#8EA3BF]">
-                  جاري تحميل الفواتير...
-                </div>
+                  <span className="loading loading-infinity loading-xl  "></span>                </div>
               ) : tabFilteredInvoices.length > 0 ? (
                 tabFilteredInvoices.map((invoice) => (
                   <div
@@ -423,7 +422,6 @@ const Bills = () => {
                       <HiOutlineXMark size={22} />
                     </button>
 
-                    {/* هنا تستخدم selectedInvoice بدل invoice */}
                     <h2 className="text-xl font-bold mb-4">
                       تفاصيل الفاتورة #{selectedInvoice.invoiceNumber}
                     </h2>
@@ -431,7 +429,6 @@ const Bills = () => {
                     <p>{selectedInvoice.client.fullName}</p>
                     <p>{selectedInvoice.total}</p>
 
-                    {/* كمل باقي التصميم بنفس الطريقة */}
                   </div>
                 </div>
               )}

@@ -180,7 +180,7 @@ function filterPreview(preview = [], activeType, searchTerm) {
 
 function StatCard({ label, value, icon: Icon, iconWrap }) {
   return (
-    <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-4 shadow-[0_24px_80px_-48px_rgba(59,130,246,0.65)] backdrop-blur-sm">
+    <div className="rounded-3xl border border-white/10 bg-white/3 p-4 shadow-[0_24px_80px_-48px_rgba(59,130,246,0.65)] backdrop-blur-sm">
       <div className="flex items-center justify-between gap-3">
         <div>
           <p className="text-sm text-slate-400">{label}</p>
@@ -396,7 +396,7 @@ const selectedDayPreview = filterPreview(
           </div>
         </div>
 
-        <div className="mb-6 rounded-3xl border border-white/10 bg-white/[0.03] p-4 shadow-[0_24px_80px_-48px_rgba(59,130,246,0.65)] backdrop-blur-sm">
+        <div className="mb-6 rounded-3xl border border-white/10 bg-[#061328] p-4 shadow-[0_24px_80px_-48px_rgba(59,130,246,0.65)] backdrop-blur-sm">
           <div className="grid grid-cols-1 gap-3 xl:grid-cols-[minmax(0,1fr)_170px_170px_130px]">
             <div className="relative">
               <FiSearch className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -467,7 +467,7 @@ const selectedDayPreview = filterPreview(
         )}
 
         <div className="grid grid-cols-1 gap-6 xl:grid-cols-[340px_minmax(0,1fr)]">
-          <aside className="rounded-[28px] border border-white/10 bg-white/[0.03] p-5 shadow-[0_24px_80px_-48px_rgba(59,130,246,0.65)] backdrop-blur-sm">
+          <aside className="rounded-[28px] border border-white/10 bg-[#061328] p-5 shadow-[0_24px_80px_-48px_rgba(59,130,246,0.65)] backdrop-blur-sm">
             <div className="mb-5 flex items-start justify-between gap-3">
               <div>
                 <p className="text-sm text-slate-400">تفاصيل اليوم</p>
@@ -541,7 +541,7 @@ const selectedDayPreview = filterPreview(
             </div>
           </aside>
 
-          <section className="rounded-[28px] border border-white/10 bg-white/[0.03] p-4 shadow-[0_24px_80px_-48px_rgba(59,130,246,0.65)] backdrop-blur-sm md:p-5">
+          <section className="rounded-[28px] border border-white/10 bg-[#061328] p-4 shadow-[0_24px_80px_-48px_rgba(59,130,246,0.65)] backdrop-blur-sm md:p-5">
             <div className="mb-5 flex flex-col gap-4 border-b border-white/10 pb-5 md:flex-row md:items-center md:justify-between">
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-2">
@@ -567,20 +567,15 @@ const selectedDayPreview = filterPreview(
                 </div>
               </div>
 
-              <div className="inline-flex rounded-2xl border border-white/10 bg-[#0b1a30] p-1 text-sm">
-                <button type="button" className="rounded-xl px-4 py-2 text-slate-400">
-                  يومي
-                </button>
-                <button type="button" className="rounded-xl px-4 py-2 text-slate-400">
-                  أسبوعي
-                </button>
+              <div className="inline-flex rounded-2xl   p-1 text-sm">
+               
                 <button type="button" className="rounded-xl bg-amber-400 px-4 py-2 font-semibold text-slate-950">
                   شهري
                 </button>
               </div>
             </div>
 
-            <div className="overflow-hidden rounded-[24px] border border-white/10 bg-[#0b1a30]">
+            <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#09172b]">
               <div className="grid grid-cols-7 border-b border-white/10 bg-white/[0.02]">
                 {WEEK_DAYS.map((day) => (
                   <div key={day} className="px-3 py-4 text-center text-sm font-medium text-slate-400">

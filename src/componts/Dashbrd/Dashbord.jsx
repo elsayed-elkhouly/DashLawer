@@ -73,28 +73,7 @@ const Dashbord = () => {
 
 
   const navigate = useNavigate()
-  const hearingsData = [
-    {
-      id: 1,
-      day: "24",
-      month: "أكتوبر",
-      title: "قضية شركة العقارات الكبرى تشييد",
-      court: "محكمة الاستئناف - القاعة 4",
-      time: "10:00 صباحاً",
-      tag: "جلسة أولى",
-      tagStyle: "text-amber-500 border-amber-500/30 bg-amber-500/5",
-    },
-    {
-      id: 2,
-      day: "26",
-      month: "أكتوبر",
-      title: "نزاع عمالي - مجموعة رايه",
-      court: "المحكمة العمالية - القاعة 12",
-      time: "11:30 صباحاً",
-      tag: "مرافعة ختامية",
-      tagStyle: "text-blue-400 border-blue-400/30 bg-blue-400/5",
-    },
-  ]
+
   function getData() {
     return api.get("/Dashboard/", {
       headers: {
@@ -116,10 +95,10 @@ const Dashbord = () => {
   ]
 
   const actions = [
-    { label: "إضافة عميل", icon: <BiUserPlus size={24} />, key: 1, path: "" },
+    // { label: "إضافة عميل", icon: <BiUserPlus size={24} />, key: 1, path: "" },
     { label: "قضية جديدة", icon: <BsPlusSquare size={24} />, key: 2, path: "/CaseMangemnt/AddNewCase" },
-    { label: "الرسائل", icon: <RiMvAiLine size={24} />, key: 3, path: "" },
-    { label: "جدولة جلسة", icon: <CgLock size={24} />, key: 4, path: "" },
+    // { label: "الرسائل", icon: <RiMvAiLine size={24} />, key: 3, onClick: () => setOpen(true)},
+    // { label: "جدولة جلسة", icon: <CgLock size={24} />, key: 4, path: "" },
   ]
 
   const formatDateISO = (dateString) => {
@@ -199,20 +178,20 @@ const Dashbord = () => {
     });
   };
   function formatDateArabic(dateString) {
-  const date = new Date(dateString);
+    const date = new Date(dateString);
 
-  const day = date.getDate();
+    const day = date.getDate();
 
-  const months = [
-    "يناير", "فبراير", "مارس", "أبريل",
-    "مايو", "يونيو", "يوليو", "أغسطس",
-    "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"
-  ];
+    const months = [
+      "يناير", "فبراير", "مارس", "أبريل",
+      "مايو", "يونيو", "يوليو", "أغسطس",
+      "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"
+    ];
 
-  const month = months[date.getMonth()];
+    const month = months[date.getMonth()];
 
-  return `${day} ${month}`;
-}
+    return `${day} ${month}`;
+  }
   useEffect(() => {
     const hasUnread = taskLawer?.data?.notifications?.some((item) => !item.isRead);
 
@@ -221,9 +200,9 @@ const Dashbord = () => {
     }
   }, [open, taskLawer?.data?.notifications]);
   return (
-    <div className="min-h-screen  text-white">
+    <div className="min-h-screen  text-white relative">
       {/* Header */}
-      <nav className="w-full px-4 sm:px-6 lg:px-8 py-4  text-white border-b border-gray-800">
+      <nav className="w-full px-4 sm:px-6 lg:px-8 py-4  text-white border-b border-gray-800 ">
         <div className="flex gap-4 xl:flex-row xl:items-center xl:justify-between">
 
 
@@ -252,7 +231,6 @@ const Dashbord = () => {
                     <li><Link to={'/MyProfile'} className=' flex flex-row-reverse items-center hover:bg-[#2e3b59] text-white'>
                       <CgProfile />        profile
                     </Link></li>
-                    <li><a>Item 2</a></li>
                   </ul>
                 </div>
               </button>
@@ -366,11 +344,11 @@ const Dashbord = () => {
           {statsCards.map((card, index) => (
             <div
               key={index}
-              className="bg-[#101c2e] rounded-xl p-5 sm:p-6 min-h-37.5 flex flex-col justify-between shadow-lg relative border border-[#C9A14A1A]"
+              className="bg-[#061328] rounded-xl p-5 sm:p-6 min-h-37.5 flex flex-col justify-between shadow-lg relative border border-[#C9A14A1A]"
             >
 
 
-              <div className="absolute top-5 right-5 bg-[#2A2A3D] p-3 rounded-full mb-3">
+              <div className="absolute top-5 right-5 bg-[#1f1f28] p-3 rounded-full mb-3">
                 {card.icon}
               </div>
 
@@ -387,61 +365,70 @@ const Dashbord = () => {
 
       {/* Hearings */}
       <section className="px-4 sm:px-6 lg:px-8 mt-6">
-        <div className="w-full p-4 sm:p-6 bg-[#101c2e] text-white font-sans rounded-2xl border border-gray-800">
+        <div className="w-full p-4 sm:p-6 bg-[#061328] text-white font-sans rounded-2xl border border-gray-800">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
             <div className="flex items-center gap-2">
               <BiCalendar className="w-5 h-5 text-[#C9A14A]" />
               <h2 className="text-lg sm:text-xl font-bold">جلسات الاستماع القادمة</h2>
             </div>
 
-            <button className="text-[#C9A14A] text-sm hover:underline hover:text-amber-400 transition self-start sm:self-auto">
-              عرض الكل
-            </button>
+            <Link to={"/AllSesions"}>
+              <button className="text-[#C9A14A]  cursor-pointer text-sm hover:underline hover:text-amber-400 transition self-start sm:self-auto">
+                عرض الكل
+              </button>
+            </Link>
           </div>
 
           <div className="space-y-4">
-            {Session?.data?.sessions.map((hearing) => (
-              <div
-                key={hearing.id}
-                className="p-4 bg-[#101c2e] border border-gray-800 rounded-2xl hover:border-gray-700 transition-colors cursor-pointer group"
-              >
-                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                  <div className="flex items-start sm:items-center gap-4">
-                    <div className="bg-[#0b1220] border border-amber-500/20 rounded-xl px-4 py-2 text-center min-w-17.5 shrink-0">
-                      <span className="block text-xl font-bold text-[#C9A14A]">{formatDateArabic(hearing.startAt)}</span>
-                    </div>
+            {Session?.data?.sessions
+              ?.slice(0, 3)
+              .map((hearing) => (
+                <div
+                  key={hearing.id}
+                  className="p-4 bg-[#09172b] border border-gray-800 rounded-2xl hover:border-gray-700 transition-colors cursor-pointer group"
+                >
+                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                    <div className="flex items-start sm:items-center gap-4">
+                      <div className="bg-[#0b1220] border border-amber-500/20 rounded-xl px-4 py-2 text-center min-w-17.5 shrink-0">
+                        <span className="block text-xl font-bold text-[#C9A14A]">
+                          {formatDateArabic(hearing.startAt)}
+                        </span>
+                      </div>
 
-                    <div className="text-right min-w-0">
-                      <h3 className="font-semibold text-sm sm:text-base mb-1 wrap-break-word">
-                        {hearing.legalCase.description}
-                      </h3>
-                      <div className="flex items-center gap-1 text-xs sm:text-sm text-gray-500">
-                        <BiMapPin className="w-3 h-3 shrink-0" />
-                        <span className="wrap-break-word">{hearing.courtName} - {hearing.city
-                        }</span>
+                      <div className="text-right min-w-0">
+                        <h3 className="font-semibold text-sm sm:text-base mb-1 wrap-break-word">
+                          {hearing.legalCase.description}
+                        </h3>
+                        <div className="flex items-center gap-1 text-xs sm:text-sm text-gray-500">
+                          <BiMapPin className="w-3 h-3 shrink-0" />
+                          <span className="wrap-break-word">
+                            {hearing.courtName} - {hearing.city}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="flex items-center justify-between lg:justify-end gap-4 lg:gap-6">
-                    <div className="text-right lg:text-left">
-                      <p className="text-sm font-bold mb-1">{formatDate(hearing.startAt)}</p>
-                      <span className={`inline-block text-[10px] sm:text-xs px-3 py-1 rounded-full border  bg-[#101c2e]`}>
-                        {hearing.type}
-                      </span>
+                    <div className="flex items-center justify-between lg:justify-end gap-4 lg:gap-6">
+                      <div className="text-right lg:text-left">
+                        <p className="text-sm font-bold mb-1">
+                          {formatDate(hearing.startAt)}
+                        </p>
+                        <span className="inline-block text-[10px] sm:text-xs px-3 py-1 rounded-full border bg-[#101c2e]">
+                          {hearing.type}
+                        </span>
+                      </div>
+                      <BiChevronLeft className="w-5 h-5 text-gray-600 group-hover:text-white transition-colors shrink-0" />
                     </div>
-                    <BiChevronLeft className="w-5 h-5 text-gray-600 group-hover:text-white transition-colors shrink-0" />
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
       </section>
 
       {/* Actions + Priorities */}
       <section className="px-4 sm:px-6 lg:px-8 mt-6">
-        <div className="bg-[#101c2e] p-4 sm:p-6 lg:p-8 text-white font-sans rounded-2xl border border-gray-800">
+        <div className="bg-[#061328] p-4 sm:p-6 lg:p-8 text-white font-sans rounded-2xl border border-gray-800">
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-8">
             {/* Quick Actions */}
             <div>
@@ -452,7 +439,7 @@ const Dashbord = () => {
                 <h2>الإجراءات السريعة</h2>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-2 gap-4 p-4 sm:p-6 bg-[#111c30]/50 rounded-2xl border border-gray-800">
+              <div className="grid grid-cols-2 sm:grid-cols-1 gap-4 p-4 sm:p-6 bg-[#09172b]/50 rounded-2xl border border-gray-800">
                 {actions.map((action) => (
                   <button
                     onClick={() => action.path && navigate(action.path)}
@@ -481,7 +468,7 @@ const Dashbord = () => {
                 {priorities.map((p, i) => (
                   <div
                     key={i}
-                    className="flex items-center justify-between gap-4 bg-[#111c30] p-4 rounded-lg border border-gray-800/50"
+                    className="flex items-center justify-between gap-4 bg-[#09172b] p-4 rounded-lg border border-gray-800/50"
                   >
                     <span className="text-gray-300 text-sm sm:text-base">{p.label}</span>
                     <span className="text-[#C9A14A] font-medium text-sm sm:text-base whitespace-nowrap">
@@ -497,23 +484,18 @@ const Dashbord = () => {
 
       {/* Latest Cases */}
       <section className="px-4 sm:px-6 lg:px-8 mt-6 pb-6">
-        <div className="bg-[#101c2e] rounded-2xl border border-gray-800/50 overflow-hidden">
+        <div className="bg-[#061328] rounded-2xl border border-gray-800/50 overflow-hidden">
           <div className="p-4 sm:p-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 border-b border-gray-800/50">
             <div className="flex items-center gap-2">
               <FiFileText className="text-[#C9A14A]" size={20} />
               <h2 className="text-base sm:text-lg font-bold">آخر القضايا المضافة</h2>
             </div>
 
-            <div className="flex gap-3">
-              <button className="flex items-center gap-2 bg-[#162235] px-4 py-2 rounded-lg text-sm border border-gray-700 hover:bg-gray-700 transition">
-                <BiDownload size={16} />
-                تصدير
-              </button>
-            </div>
+            
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[760px] text-right">
+            <table className="w-full min-w-190 text-right">
               <thead className="text-[#C9A14A] text-sm bg-[#0d1525]">
                 <tr>
                   <th className="p-4 font-medium">رقم القضية</th>
@@ -521,7 +503,6 @@ const Dashbord = () => {
                   <th className="p-4 font-medium">نوع القضية</th>
                   <th className="p-4 font-medium">الحالة</th>
                   <th className="p-4 font-medium">التاريخ</th>
-                  <th className="p-4 font-medium">الإجراءات</th>
                 </tr>
               </thead>
 
@@ -537,28 +518,13 @@ const Dashbord = () => {
                       </span>
                     </td>
                     <td className="p-4 whitespace-nowrap">{formatDateISO(item.openedAt)}</td>
-                    <td className="p-4">
-                      <button className="text-[#C9A14A] hover:text-amber-400">
-                        <BsEye size={18} />
-                      </button>
-                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
 
-          <div className="p-4 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-gray-500 border-t border-gray-800/50">
-            <div className="flex gap-2">
-              <button className="p-1 bg-[#162235] border border-gray-700 rounded">
-                <BiChevronRight size={16} />
-              </button>
-              <button className="p-1 bg-[#162235] border border-gray-700 rounded">
-                <BiChevronLeftCircle size={16} />
-              </button>
-            </div>
-            <span>عرض 3 من أصل 124 قضية</span>
-          </div>
+          
         </div>
       </section>
     </div>

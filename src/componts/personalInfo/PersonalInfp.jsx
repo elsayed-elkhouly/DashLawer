@@ -35,7 +35,7 @@ const PersonalInfp = ({ client, onSave, isSaving }) => {
         setIsEditing(false);
     };
     return (
-        <div className="bg-[#162132] rounded-xl border border-slate-700 p-6">
+        <div className="bg-[#061328] rounded-xl border border-slate-700 p-6">
             <div className="flex justify-between mb-6">
                 <h2 className="text-lg font-semibold flex items-center gap-2">
                     <MdOutlinePerson className="text-[#C9A24A] text-2xl" />
@@ -146,7 +146,7 @@ const PersonalInfp = ({ client, onSave, isSaving }) => {
                         className="w-full bg-[#1d2a3b] p-2 rounded"
                     />
                 ) : (
-                    <div className="bg-[#1d2a3b] p-4 mt-6 rounded-lg text-sm text-gray-300">
+                    <div className="bg-[#061328] p-4 mt-6 rounded-lg text-sm text-gray-300">
                         {client?.notes}
                     </div>
                 )}
