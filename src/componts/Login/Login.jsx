@@ -29,8 +29,8 @@ const Login = () => {
   })
   const { handleSubmit, register, formState: { errors } } = useForm({
     defaultValues: {
-      email: "",
-      password: ""
+      email: "admin@test.com",
+      password: "Abc123@@"
     },
     resolver: zodResolver(schame)
 
@@ -84,6 +84,7 @@ const Login = () => {
                 <div className="relative">
                   <input
                     type="email"
+                    
                     placeholder="example@email.com"
                     className="w-full bg-slate-950 border border-[#C9A24A33] rounded-lg py-3 px-10 text-white focus:ring-2 focus:ring-[#C9A14A] outline-none transition-all"
                     {...register("email")}
