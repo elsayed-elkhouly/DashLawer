@@ -35,58 +35,55 @@ import BookOfLaw from './componts/BookofLaw/BookOfLaw'
 import AllSesions from './componts/AllSesions/AllSesions'
 import AddNewCaseinvoice from './componts/AddNewCaseinvoice/AddNewCaseinvoice'
 function App() {
-  const router = createBrowserRouter([{
-    path: "", element: <Layout />, children: [
-      { index: true, element: <ProtectedRoute><Dashbord /></ProtectedRoute> },
-      { path: "/CaseMangemnt", element: <ProtectedRoute><CaseMange /></ProtectedRoute> },
-      { path: "/CaseMangemnt/AddNewCase", element: <ProtectedRoute><AddNewCase /></ProtectedRoute> },
-      { path: "/CaseMangemnt/CaseDetails/:id", element: <ProtectedRoute><CaseDetails /></ProtectedRoute> },
-      { path: "/CaseMangemnt/CaseDetails/:id/SessionDetails", element: <ProtectedRoute><SessionDetails /></ProtectedRoute> },
-      { path: "/CaseMangemnt/CaseDetails/:id/AddSession", element: <ProtectedRoute><AddSession /></ProtectedRoute> },
-      { path: "/CaseMangemnt/CaseDetails/:id/AddNewCaseinvoice", element: <ProtectedRoute><AddNewCaseinvoice /></ProtectedRoute> },
-      { path: "/TeamMember", element: <ProtectedRoute><Team /></ProtectedRoute> },
-      { path: "/TeamMember/TeamProfile/:id", element: <ProtectedRoute><TeamProfile /></ProtectedRoute> },
-      { path: "/BookMangment", element: <ProtectedRoute><BookMangment /></ProtectedRoute> },
-      { path: "/Bills", element: <ProtectedRoute><Bills /></ProtectedRoute> },
-      { path: "/Bills/AddNewFees", element: <ProtectedRoute><AddNewFees /></ProtectedRoute> },
-      { path: "/Calender", element: <ProtectedRoute><Calendar /></ProtectedRoute> },
-      { path: "/DigitalArchive", element: <ProtectedRoute><DigitalArchive /></ProtectedRoute> },
-      { path: "/Clients", element: <ProtectedRoute><Clients /></ProtectedRoute> },
-      { path: "/TaskMangment", element: <ProtectedRoute><TaskMangment/></ProtectedRoute> },
-      { path: "/PyrollMangment", element: <ProtectedRoute><PyrollMangment/></ProtectedRoute> },
-      { path: "/Setting", element: <ProtectedRoute><Setting /></ProtectedRoute> },
-      { path: "/BookOfLaw", element: <ProtectedRoute>< BookOfLaw /></ProtectedRoute> },
-      { path: "/MyProfile", element: <ProtectedRoute><MyProfile /></ProtectedRoute> },
-      { path: "/AddMember", element: <ProtectedRoute><AddMember /></ProtectedRoute> },
-      { path: "/AllSesions", element: <ProtectedRoute><AllSesions /></ProtectedRoute> },
-      { path: "/Clients/ClientProfile/:id", element: <ProtectedRoute><ClientProfile /></ProtectedRoute> },
-      { path: "/Login", element: <Login /> },
-      { path: "*", element: <Eror /> },
-
-
-    ]
-  }])
   const client = new QueryClient()
-  return (
-    <>
-      <AuthContextProvider>
-        <QueryClientProvider client={client}>
-          <Toaster
-            position="top-center"
-            containerStyle={{
-              zIndex: 99999,
-            }}
-            toastOptions={{
-              style: {
-                zIndex: 99999,
-              },
-            }}
-          />
-          <RouterProvider router={router} />
-        </QueryClientProvider>
-      </AuthContextProvider>
 
-    </>
+  const router = createBrowserRouter([
+    {
+      path: "",
+      element: <Layout />,
+      children: [
+        { index: true, element: <ProtectedRoute><Dashbord /></ProtectedRoute> },
+        { path: "/CaseMangemnt", element: <ProtectedRoute><CaseMange /></ProtectedRoute> },
+        { path: "/CaseMangemnt/AddNewCase", element: <ProtectedRoute><AddNewCase /></ProtectedRoute> },
+        { path: "/CaseMangemnt/CaseDetails/:id", element: <ProtectedRoute><CaseDetails /></ProtectedRoute> },
+        { path: "/CaseMangemnt/CaseDetails/:id/SessionDetails", element: <ProtectedRoute><SessionDetails /></ProtectedRoute> },
+        { path: "/CaseMangemnt/CaseDetails/:id/AddSession", element: <ProtectedRoute><AddSession /></ProtectedRoute> },
+        { path: "/CaseMangemnt/CaseDetails/:id/AddNewCaseinvoice", element: <ProtectedRoute><AddNewCaseinvoice /></ProtectedRoute> },
+        { path: "/TeamMember", element: <ProtectedRoute><Team /></ProtectedRoute> },
+        { path: "/TeamMember/TeamProfile/:id", element: <ProtectedRoute><TeamProfile /></ProtectedRoute> },
+        { path: "/BookMangment", element: <ProtectedRoute><BookMangment /></ProtectedRoute> },
+        { path: "/Bills", element: <ProtectedRoute><Bills /></ProtectedRoute> },
+        { path: "/Bills/AddNewFees", element: <ProtectedRoute><AddNewFees /></ProtectedRoute> },
+        { path: "/Calender", element: <ProtectedRoute><Calendar /></ProtectedRoute> },
+        { path: "/DigitalArchive", element: <ProtectedRoute><DigitalArchive /></ProtectedRoute> },
+        { path: "/Clients", element: <ProtectedRoute><Clients /></ProtectedRoute> },
+        { path: "/TaskMangment", element: <ProtectedRoute><TaskMangment /></ProtectedRoute> },
+        { path: "/PyrollMangment", element: <ProtectedRoute><PyrollMangment /></ProtectedRoute> },
+        { path: "/Setting", element: <ProtectedRoute><Setting /></ProtectedRoute> },
+        { path: "/BookOfLaw", element: <ProtectedRoute><BookOfLaw /></ProtectedRoute> },
+        { path: "/MyProfile", element: <ProtectedRoute><MyProfile /></ProtectedRoute> },
+        { path: "/AddMember", element: <ProtectedRoute><AddMember /></ProtectedRoute> },
+        { path: "/AllSesions", element: <ProtectedRoute><AllSesions /></ProtectedRoute> },
+        { path: "/Clients/ClientProfile/:id", element: <ProtectedRoute><ClientProfile /></ProtectedRoute> },
+      ]
+    },
+
+    { path: "/Login", element: <Login /> },
+
+    { path: "*", element: <Eror /> },
+  ])
+
+  return (
+    <QueryClientProvider client={client}>
+      <AuthContextProvider>
+        <Toaster
+          position="top-center"
+          containerStyle={{ zIndex: 99999 }}
+          toastOptions={{ style: { zIndex: 99999 } }}
+        />
+        <RouterProvider router={router} />
+      </AuthContextProvider>
+    </QueryClientProvider>
   )
 }
 

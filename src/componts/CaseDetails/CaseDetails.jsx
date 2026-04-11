@@ -212,7 +212,7 @@ const CaseDetails = () => {
         queryKey: ["CasesInvoice"],
         queryFn: getAllInvoicelCases
     })
-console.log(Cases?.data?.invoices);
+    console.log(Cases?.data?.invoices);
 
     return (
         <>
@@ -379,7 +379,7 @@ console.log(Cases?.data?.invoices);
                                                     <td className="px-4 py-4">{time}</td>
 
                                                     <td className="px-4 py-4">{session.type}</td>
-                                                   
+
 
                                                     <td className="px-4 py-4 text-[#9fb1c8]">
                                                         {session.notes || "لا يوجد ملاحظات"}
@@ -401,7 +401,7 @@ console.log(Cases?.data?.invoices);
                                                             {session.status}
                                                         </span>
                                                     </td>
-                                                     <td className="px-4 py-4"><Link to={`/CaseMangemnt/CaseDetails/${session?._id}/SessionDetails`}>
+                                                    <td className="px-4 py-4"><Link to={`/CaseMangemnt/CaseDetails/${session?._id}/SessionDetails`}>
                                                         <button className="p-1.5 cursor-pointer rounded-full border border-gray-700 text-gray-400 hover:text-[#C59D4A] hover:border-[#C59D4A] transition-colors">
                                                             <Eye size={16} />
                                                         </button>
@@ -417,7 +417,7 @@ console.log(Cases?.data?.invoices);
                             <div className="mb-5 flex items-center justify-between">
                                 <h2 className="flex items-center gap-2 text-lg font-semibold text-white">
                                     <HiOutlineCalendarDays size={18} className="text-[#d3a53d]" />
-فواتير القضية
+                                    فواتير القضية
                                 </h2>
 
                                 <button
@@ -461,7 +461,7 @@ console.log(Cases?.data?.invoices);
                                                     <td className="px-4 py-4">{time}</td>
 
                                                     <td className="px-4 py-4">{session.type}</td>
-                                                   
+
 
                                                     <td className="px-4 py-4 text-[#9fb1c8]">
                                                         {session.notes || "لا يوجد ملاحظات"}
@@ -483,7 +483,7 @@ console.log(Cases?.data?.invoices);
                                                             {session.status}
                                                         </span>
                                                     </td>
-                                                     <td className="px-4 py-4"><Link to={`/CaseMangemnt/CaseDetails/${session?._id}/SessionDetails`}>
+                                                    <td className="px-4 py-4"><Link to={`/CaseMangemnt/CaseDetails/${session?._id}/SessionDetails`}>
                                                         <button className="p-1.5 cursor-pointer rounded-full border border-gray-700 text-gray-400 hover:text-[#C59D4A] hover:border-[#C59D4A] transition-colors">
                                                             <Eye size={16} />
                                                         </button>

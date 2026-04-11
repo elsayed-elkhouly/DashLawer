@@ -198,6 +198,10 @@ const TeamProfile = () => {
             toast.success("تم تعديل البيانات بنجاح");
         } catch (error) {
             console.log(error);
+            console.log("Full error:", error);
+            console.log("Error response:", error.response);
+            console.log("Error data:", error.response?.data);
+            console.log("Error status:", error.response?.status);
             toast.error(
                 error?.response?.data?.message || "حصل خطأ أثناء تعديل البيانات"
             );
@@ -353,7 +357,6 @@ const TeamProfile = () => {
                                         {isEditing ? (
                                             <input
                                                 {...register("jobTitle", {
-                                                    required: "المسمى الوظيفي مطلوب",
                                                 })}
                                                 className="rounded-full bg-amber-400/20 px-2 py-1 text-xs text-amber-300 outline-none border border-white/10"
                                             />
@@ -368,7 +371,6 @@ const TeamProfile = () => {
                                         <div className="mt-2">
                                             <input
                                                 {...register("UserName", {
-                                                    required: "الاسم مطلوب",
                                                 })}
                                                 className="text-2xl font-bold bg-transparent border-b border-white/20 outline-none text-right"
                                             />
@@ -392,7 +394,6 @@ const TeamProfile = () => {
                                                 <div>
                                                     <input
                                                         {...register("department", {
-                                                            required: "القسم مطلوب",
                                                         })}
                                                         placeholder="القسم"
                                                         className="block w-full text-sm bg-transparent border border-white/10 rounded-lg px-3 py-2 outline-none"
@@ -407,7 +408,6 @@ const TeamProfile = () => {
                                                 <div>
                                                     <input
                                                         {...register("email", {
-                                                            required: "الإيميل مطلوب",
                                                             pattern: {
                                                                 value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                                                                 message: "صيغة الإيميل غير صحيحة",
@@ -427,7 +427,6 @@ const TeamProfile = () => {
                                                     <input
                                                         type="text"
                                                         {...register("phone", {
-                                                            required: "رقم الهاتف مطلوب",
                                                             pattern: {
                                                                 value: /^01[0125][0-9]{8}$/,
                                                                 message: "رقم الهاتف يجب أن يكون 11 رقم ويبدأ بـ 010 أو 011 أو 012 أو 015",

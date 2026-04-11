@@ -3,15 +3,17 @@ import { useForm } from "react-hook-form";
 import api from "../../api/axios";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
+import { useQueryClient } from "@tanstack/react-query";
 
-export default function UploadLawPdf({data}) {
+export default function UploadLawPdf() {
+    const queryClient = useQueryClient();
     const [open, setOpen] = useState(false);
     const [dragActive, setDragActive] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const [loading, setLoading] = useState(false);
     const fileInputRef = useRef(null);
- 
- 
+
+
     const {
         register,
         handleSubmit,
@@ -55,61 +57,61 @@ export default function UploadLawPdf({data}) {
         }
     };
 
-   const onSubmit = async (data) => {
-  try {
-    setLoading(true);
+    const onSubmit = async (data) => {
+        try {
+            setLoading(true);
 
-    const formData = new FormData();
-    formData.append("file", data.file);
-    formData.append("title", data.title);
-    formData.append("category", data.category);
+            const formData = new FormData();
+            formData.append("file", data.file);
+            formData.append("title", data.title);
+            formData.append("category", data.category);
 
-    const response = await api.post(
-      "/lawReminder/upload",
-      formData,
-      {
-        headers: {
-          Authorization: `Bearer ${Cookies.get("token")}`,
-        },
-      }
-    );
+            const response = await api.post(
+                "/lawReminder/upload",
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${Cookies.get("token")}`,
+                    },
+                }
+            );
+           queryClient.invalidateQueries(["AllBooks"])
+            console.log("Upload success:", response.data);
 
-    console.log("Upload success:", response.data);
-
-    toast.success("تم رفع الملف بنجاح");
-    reset();
-    setSelectedFile(null);
-    setOpen(false);
-  } catch (error) {
-    console.error(error);
-    console.log(error.response);
-    toast.error(error?.response?.data?.message || "حصل خطأ أثناء الرفع");
-  } finally {
-    setLoading(false);
-  }
-};
+            toast.success("تم رفع الملف بنجاح");
+            reset();
+            setSelectedFile(null);
+            setOpen(false);
+        } catch (error) {
+            console.error(error);
+            console.log(error.response);
+            toast.error(error?.response?.data?.message || "حصل خطأ أثناء الرفع");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <div className="p-6">
             <button
                 onClick={() => setOpen(true)}
-                className="rounded-xl bg-blue-600 px-5 py-3 text-white font-medium shadow hover:bg-blue-700 transition"
+                className="rounded-xl bg-[#c9a24a] px-5 py-3 text-white font-medium shadow hover:bg-[#ddb75e] transition"
             >
                 Upload Law PDF
             </button>
 
             {open && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-                    <div className="w-full max-w-xl rounded-2xl bg-white p-6 shadow-2xl">
-                        <div className="mb-5 flex items-center justify-between">
-                            <h2 className="text-xl font-bold text-gray-800">رفع ملف قانون</h2>
+                    <div className="w-full max-w-xl rounded-2xl p-6 shadow-2xl bg-[#081b31]">
+                        <div className="mb-5 flex items-center justify-between ">
+                            <h2 className="text-xl font-bold text-white">رفع ملف قانون</h2>
                             <button
                                 onClick={() => {
                                     setOpen(false);
                                     reset();
                                     setSelectedFile(null);
                                 }}
-                                className="rounded-lg px-3 py-1 text-gray-500 hover:bg-gray-100"
+                                className="rounded-lg px-3 py-1 text-gray-500 hover:bg-[#1a395a]"
                             >
                                 ✕
                             </button>
@@ -117,13 +119,13 @@ export default function UploadLawPdf({data}) {
 
                         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                             <div>
-                                <label className="mb-2 block text-sm font-medium text-gray-700">
+                                <label className="mb-2 block text-sm font-medium text-white bg-[#081b31]">
                                     Title
                                 </label>
                                 <input
                                     type="text"
                                     placeholder="اكتب عنوان الملف"
-                                    className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-blue-500"
+                                    className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-blue-500 bg-[#1a395a] text-white"
                                     {...register("title", {
                                         required: "العنوان مطلوب",
                                     })}
@@ -134,17 +136,17 @@ export default function UploadLawPdf({data}) {
                             </div>
 
                             <div>
-                                <label className="mb-2 block text-sm font-medium text-gray-700">
+                                <label className="mb-2 block text-sm font-medium text-white">
                                     Category
                                 </label>
                                 <select
-                                    className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-blue-500"
+                                    className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-blue-500 bg-[#1a395a] text-white"
                                     {...register("category", {
                                         required: "القسم مطلوب",
                                     })}
                                 >
                                     <option value="EGYPTIAN_LAW">EGYPTIAN_LAW</option>
-                                    <option value="CONSTITUTIONF">CONSTITUTION</option>
+                                    <option value="CONSTITUTION">CONSTITUTION</option>
 
                                 </select>
                                 {errors.category && (
@@ -155,7 +157,7 @@ export default function UploadLawPdf({data}) {
                             </div>
 
                             <div>
-                                <label className="mb-2 block text-sm font-medium text-gray-700">
+                                <label className="mb-2 block text-sm font-medium text-white ">
                                     PDF File
                                 </label>
 
@@ -164,20 +166,20 @@ export default function UploadLawPdf({data}) {
                                     onDragLeave={onDragLeave}
                                     onDrop={onDrop}
                                     onClick={() => fileInputRef.current?.click()}
-                                    className={`cursor-pointer rounded-2xl border-2 border-dashed p-6 text-center transition ${dragActive
-                                            ? "border-blue-500 bg-blue-50"
-                                            : "border-gray-300 bg-gray-50 hover:bg-gray-100"
+                                    className={`cursor-pointer rounded-2xl border-2  p-6 text-center bg-[#1a395a] transition ${dragActive
+                                        ? "border-blue-500 "
+                                        : "border-gray-300 hover:bg-gray-100"
                                         }`}
                                 >
                                     <input
                                         ref={fileInputRef}
                                         type="file"
                                         accept=".pdf"
-                                        className="hidden"
+                                        className="hidden "
                                         onChange={(e) => handleFileChange(e.target.files?.[0])}
                                     />
 
-                                    <p className="text-sm text-gray-600">
+                                    <p className="text-sm text-gray-600 ">
                                         اسحب ملف الـ PDF هنا أو اضغط للاختيار
                                     </p>
 
@@ -210,7 +212,7 @@ export default function UploadLawPdf({data}) {
                                         reset();
                                         setSelectedFile(null);
                                     }}
-                                    className="rounded-xl border border-gray-300 px-4 py-2.5 text-gray-700 hover:bg-gray-50"
+                                    className="rounded-xl border border-gray-300 px-4 py-2.5 text-white hover:bg-[#1a395a]"
                                 >
                                     إلغاء
                                 </button>
@@ -218,7 +220,7 @@ export default function UploadLawPdf({data}) {
                                 <button
                                     type="submit"
                                     disabled={loading}
-                                    className="rounded-xl bg-blue-600 px-5 py-2.5 font-medium text-white hover:bg-blue-700 disabled:opacity-60"
+                                    className="rounded-xl bg-[#c9a24a] px-5 py-2.5 font-medium text-white hover:bg-[#ddb75e] cursor-pointer disabled:opacity-60"
                                 >
                                     {loading ? "جاري الرفع..." : "رفع الملف"}
                                 </button>

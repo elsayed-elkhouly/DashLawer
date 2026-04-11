@@ -24,7 +24,7 @@ const AddMember = () => {
     .object({
       UserName: z.string().trim().min(3, "الاسم لازم يكون 3 حروف على الأقل"),
       email: z.string().email("بريد إلكتروني غير صالح"),
-      phone: z.string().length(11, "رقم الهاتف لازم يكون 11 رقم بالظبط").regex(/^01[0125][0-9]{8}$/),
+      phone: z.string().regex(/^01[0125][0-9]{8}$/, "رقم الهاتف غير صحيح"),
       jobTitle: z.string().min(2, "المسمى الوظيفي مطلوب"),
       department: z.string().min(1, "اختار القسم"),
       role: z.string().min(1, "اختار نوع الحساب"),

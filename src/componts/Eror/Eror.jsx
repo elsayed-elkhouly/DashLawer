@@ -29,24 +29,7 @@ const Eror = () => {
             عذرًا، الصفحة التي تحاول الوصول إليها غير متوفرة أو ربما تم حذفها.
           </p>
 
-          {/* actions */}
-          <div className="mt-8 flex flex-col-reverse items-center justify-center gap-4 sm:flex-row">
-            <button
-              type="button"
-              className="inline-flex h-14 min-w-[170px] items-center justify-center gap-3 rounded-2xl border border-[#c79d38] bg-transparent px-6 text-sm font-bold text-[#d4aa45] transition hover:bg-[#0a1d37]"
-            >
-              <HiOutlineArrowRight className="text-lg" />
-              العودة إلى الصفحة السابقة
-            </button>
-
-            <button
-              type="button"
-              className="inline-flex h-14 min-w-[170px] items-center justify-center gap-3 rounded-2xl bg-[#d4aa45] px-6 text-sm font-extrabold text-[#08162b] shadow-[0_12px_30px_rgba(212,170,69,0.24)] transition hover:opacity-95"
-            >
-              <HiOutlineSquares2X2 className="text-lg" />
-              العودة إلى لوحة التحكم
-            </button>
-          </div>
+ 
 
           {/* help box */}
           <div className="mx-auto mt-8 flex h-12 max-w-[460px] items-center justify-center gap-2 rounded-full border border-[#13294a] bg-[#091b35] px-5 text-xs text-[#7f93ad]">

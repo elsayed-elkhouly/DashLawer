@@ -68,7 +68,12 @@ const Setting = () => {
   } = useForm();
 
   function getSetting() {
-    return api.get("/SettingsService/").then((res) => res.data);
+    return api.get("/SettingsService/", {
+      headers: {
+        authorization: `Bearer ${Cookies.get("token")}`,
+
+      }
+    }).then((res) => res.data);
   }
 
   function getCases() {
@@ -1044,17 +1049,16 @@ const Setting = () => {
                         disabled={
                           toggleCaseMutation.isPending && activeToggleId === issue._id
                         }
-                        className={`inline-flex items-center rounded-full px-2 md:px-3 py-1 text-xs font-bold cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed ${
-                          issue.isActive
+                        className={`inline-flex items-center rounded-full px-2 md:px-3 py-1 text-xs font-bold cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed ${issue.isActive
                             ? "bg-emerald-500/15 text-emerald-400 ring-1 ring-emerald-500/25"
                             : "bg-slate-500/10 text-slate-400 ring-1 ring-slate-500/20"
-                        }`}
+                          }`}
                       >
                         {toggleCaseMutation.isPending && activeToggleId === issue._id
                           ? "جاري التحديث..."
                           : issue.isActive
-                          ? "مفعل"
-                          : "غير مفعل"}
+                            ? "مفعل"
+                            : "غير مفعل"}
                       </button>
                     </div>
                   </div>

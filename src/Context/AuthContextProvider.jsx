@@ -1,51 +1,65 @@
-import React, { createContext, useEffect, useState } from 'react'
-import Cookies from 'js-cookie';
-import axios from 'axios';
+import { createContext, useContext, useEffect, useState } from "react"
 import api from '../api/axios';
+
+
+import Cookies from "js-cookie"
+import { useQuery } from "@tanstack/react-query";
 
 export const Authcontext = createContext()
 
 const AuthContextProvider = ({ children }) => {
-  const [token, settoken] = useState(null)
+  const [token, settoken] = useState(Cookies.get("token") || null)
   const [setting, setSetting] = useState([])
+
   function insertToken(tkn) {
     settoken(tkn)
   }
 
   function Logout() {
     try {
-      const res = api.post("/auth/logout", null, {
+      api.post("/auth/logout", null, {
         headers: {
           authorization: `Bearer ${token}`,
         }
       })
-      settoken(null)
-      Cookies.remove("token");
-    } catch (error) {
+    } catch (error) { }
 
-    }
+    settoken(null)
+    Cookies.remove("token")
   }
+
   async function getSetting() {
-    const res = await api.get("/SettingsService/")
+    const res = await api.get("/SettingsService/", {
+      headers: {
+        authorization: `Bearer ${token}`
+      }
+    })
     setSetting(res?.data)
   }
+  function getAllBooks() {
+    return api.get("/lawReminder/dropdown", {
+      headers: {
+        authorization: `Bearer ${token}`,
+
+      }
+    })
+  }
+  const { data: AllBooks } = useQuery({
+  queryKey: ["AllBooks", token],
+  queryFn: getAllBooks,
+  enabled: !!token
+})
+
   useEffect(function () {
     getSetting()
-    if (Cookies.get("token") != null) {
-      settoken(Cookies.get("token"))
-    }
   }, [])
 
   return (
-    <Authcontext.Provider value={{
-
-      token,
-      insertToken,
-      Logout,
-      setting
-
-    }}>{children}</Authcontext.Provider >
+    <Authcontext.Provider value={{ token, insertToken, Logout, setting, AllBooks }}>
+      {children}
+    </Authcontext.Provider>
   )
 }
+
 
 export default AuthContextProvider

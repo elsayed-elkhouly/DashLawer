@@ -166,150 +166,154 @@ const CaseInfo = ({ Case, onSave, isSaving, lawer,id }) => {
                 </div>
             </section>
 
-            <section>
-                <div
-                    className="w-285 mx-auto rounded-2xl border border-[#1a2d47] bg-[#09172b] px-6 py-10 mb-10 text-white shadow-[0_10px_30px_rgba(0,0,0,0.18)]"
-                    dir="rtl"
-                >
-                    <div className="grid grid-cols-4 gap-y-6 md:grid-cols-5 md:gap-7">
-                        <div className="text-right">
-                            <p className="mb-2 text-xs font-medium text-[#7f93ad]">
-                                نوع القضية
-                            </p>
-                            <h3 className="text-sm font-semibold text-white">
-                                {Case?.caseType?.name}
-                            </h3>
-                        </div>
+           <section>
+  <div
+    className="w-full max-w-7xl mx-auto rounded-2xl border border-[#1a2d47] bg-[#09172b] px-4 sm:px-6 lg:px-8 py-8 lg:py-10 mb-10 text-white shadow-[0_10px_30px_rgba(0,0,0,0.18)]"
+    dir="rtl"
+  >
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 xl:gap-10 items-center text-center xl:text-right">
 
-                        <div className="text-right">
-                            <p className="mb-2 text-xs font-medium text-[#7f93ad]">الحالة</p>
-                            {isEditing ? (
-                                <select
-                                    name="status"
-                                    value={formData.status}
-                                    onChange={handleChange}
-                                    className="w-full rounded-lg bg-[#1d2a3b] p-2 text-sm text-white outline-none"
+      {/* نوع القضية */}
+      <div className="w-full">
+        <p className="mb-2 text-xs font-medium text-[#7f93ad]">
+          نوع القضية
+        </p>
+        <h3 className="text-sm font-semibold text-white">
+          {Case?.caseType?.name}
+        </h3>
+      </div>
 
-                                >
-                                    <option value="قيد التحضير">قيد التحضير</option>
-                                    <option value="قيد التنفيذ">قيد التنفيذ</option>
-                                    <option value="منتهية">منتهية</option>
-                                    <option value="موقوفة">موقوفة</option>
-                                    <option value="مؤرشفة">مؤرشفة</option>
-                                </select>
+      {/* الحالة */}
+      <div className="w-full">
+        <p className="mb-2 text-xs font-medium text-[#7f93ad]">الحالة</p>
+        {isEditing ? (
+          <select
+            name="status"
+            value={formData.status}
+            onChange={handleChange}
+            className="w-full rounded-lg bg-[#1d2a3b] p-2 text-sm text-white outline-none"
+          >
+            <option value="قيد التحضير">قيد التحضير</option>
+            <option value="قيد التنفيذ">قيد التنفيذ</option>
+            <option value="منتهية">منتهية</option>
+            <option value="موقوفة">موقوفة</option>
+            <option value="مؤرشفة">مؤرشفة</option>
+          </select>
+        ) : (
+          <span className="inline-flex items-center justify-center xl:justify-start rounded-full border border-[#244a7a] bg-[#0f2542] px-3 py-1 text-xs font-medium text-[#6aa8ff]">
+            {Case?.status}
+          </span>
+        )}
+      </div>
 
-                            ) : (
-                                <span className="inline-flex items-center rounded-full border border-[#244a7a] bg-[#0f2542] px-3 py-1 text-xs font-medium text-[#6aa8ff]">
-                                    {Case?.status}
-                                </span>
-                            )}
-                        </div>
+      {/* المحامي المسؤول */}
+      <div className="w-full">
+        <p className="mb-2 text-xs font-medium text-[#7f93ad]">
+          المحامي المسؤول
+        </p>
 
-                        <div className="text-right">
-                            <p className="mb-2 text-xs font-medium text-[#7f93ad]">
-                                المحامي المسؤول
-                            </p>
+        {isEditing ? (
+          <select
+            name="assignedTo"
+            value={formData.assignedTo}
+            onChange={handleChange}
+            className="w-full rounded-lg bg-[#1d2a3b] p-2 text-sm text-white outline-none"
+          >
+            <option value="">اختر محامي</option>
+            {lawer?.users?.map((user) => (
+              <option key={user._id} value={user._id}>
+                {user.UserName}
+              </option>
+            ))}
+          </select>
+        ) : (
+          <h3 className="text-sm font-semibold text-[#d3a53d] leading-6">
+            أ. {Case?.assignedTo?.UserName}
+          </h3>
+        )}
+      </div>
 
-                            {isEditing ? (
-                                <select
-                                    name="assignedTo"
-                                    value={formData.assignedTo}
-                                    onChange={handleChange}
-                                    className="w-full rounded-lg bg-[#1d2a3b] p-2 text-sm text-white outline-none"
-                                >
-                                    <option value="">اختر محامي</option>
+      {/* المحكمة */}
+      <div className="w-full">
+        <p className="mb-2 text-xs font-medium text-[#7f93ad]">المحكمة</p>
+        {isEditing ? (
+          <input
+            name="court"
+            value={formData.court}
+            onChange={handleChange}
+            className="w-full rounded-lg bg-[#1d2a3b] p-2 text-sm text-white outline-none"
+          />
+        ) : (
+          <h3 className="text-sm font-semibold text-white">
+            {Case?.court}
+          </h3>
+        )}
+      </div>
 
-                                    {lawer?.users?.map((user) => (
-                                        <option key={user._id} value={user._id}>
-                                            {user.UserName}
-                                        </option>
-                                    ))}
-                                </select>
-                            ) : (
-                                <h3 className="text-sm font-semibold text-[#d3a53d]">
-                                    أ. {Case?.assignedTo?.UserName}
-                                </h3>
-                            )}
-                        </div>
+      {/* المدينة */}
+      <div className="w-full">
+        <p className="mb-2 text-xs font-medium text-[#7f93ad]">المدينة</p>
+        {isEditing ? (
+          <input
+            name="city"
+            value={formData.city}
+            onChange={handleChange}
+            className="w-full rounded-lg bg-[#1d2a3b] p-2 text-sm text-white outline-none"
+          />
+        ) : (
+          <h3 className="text-sm font-semibold text-white">
+            {Case?.city}
+          </h3>
+        )}
+      </div>
 
-                        <div className="text-right">
-                            <p className="mb-2 text-xs font-medium text-[#7f93ad]">المحكمة</p>
-                            {isEditing ? (
-                                <input
-                                    name="court"
-                                    value={formData.court}
-                                    onChange={handleChange}
-                                    className="w-full rounded-lg bg-[#1d2a3b] p-2 text-sm text-white outline-none"
-                                />
-                            ) : (
-                                <h3 className="text-sm font-semibold text-white">
-                                    {Case?.court}
-                                </h3>
-                            )}
-                        </div>
+      {/* تاريخ الفتح */}
+      <div className="w-full">
+        <p className="mb-2 text-xs font-medium text-[#7f93ad]">
+          تاريخ الفتح
+        </p>
+        <h3 className="text-sm font-semibold text-white">
+          {formatDateISO(Case?.openedAt)}
+        </h3>
+      </div>
 
-                        <div className="text-right">
-                            <p className="mb-2 text-xs font-medium text-[#7f93ad]">المدينة</p>
-                            {isEditing ? (
-                                <input
-                                    name="city"
-                                    value={formData.city}
-                                    onChange={handleChange}
-                                    className="w-full rounded-lg bg-[#1d2a3b] p-2 text-sm text-white outline-none"
-                                />
-                            ) : (
-                                <h3 className="text-sm font-semibold text-white">
-                                    {Case?.city}
-                                </h3>
-                            )}
-                        </div>
+      {/* اسم العميل */}
+      <div className="w-full">
+        <p className="mb-2 text-xs font-medium text-[#7f93ad]">
+          اسم العميل
+        </p>
+        <h3 className="text-sm font-semibold text-white">
+          {Case?.client?.fullName}
+        </h3>
+      </div>
 
-                        <div className="text-right">
-                            <p className="mb-2 text-xs font-medium text-[#7f93ad]">
-                                تاريخ الفتح
-                            </p>
-                            <h3 className="text-sm font-semibold text-white">
-                                {formatDateISO(Case?.openedAt)}
-                            </h3>
-                        </div>
+      {/* الأولوية */}
+      <div className="w-full">
+        <p className="mb-2 text-xs font-medium text-[#7f93ad]">
+          درجة الأولوية
+        </p>
+        {isEditing ? (
+          <select
+            name="priority"
+            value={formData.priority}
+            onChange={handleChange}
+            className="w-full rounded-lg bg-[#1d2a3b] p-2 text-sm text-white outline-none"
+          >
+            <option value="عاجلة">عاجلة</option>
+            <option value="عالية">عالية</option>
+            <option value="متوسطة">متوسطة</option>
+            <option value="منخفضة">منخفضة</option>
+          </select>
+        ) : (
+          <span className="inline-flex items-center justify-center xl:justify-start rounded-full border border-[#5b2431] bg-[#24131a] px-3 py-1 text-xs font-medium text-[#ff6b88]">
+            {Case?.priority}
+          </span>
+        )}
+      </div>
 
-                        <div className="text-right">
-                            <p className="mb-2 text-xs font-medium text-[#7f93ad]">
-                                اسم العميل
-                            </p>
-                            <h3 className="text-sm font-semibold text-white">
-                                {Case?.client?.fullName}
-                            </h3>
-                        </div>
-
-                        <div className="text-right">
-                            <p className="mb-2 text-xs font-medium text-[#7f93ad]">
-                                درجة الأولوية
-                            </p>
-                            {isEditing ? (
-                                <select
-                                    name="priority"
-                                    value={formData.priority}
-                                    onChange={handleChange}
-                                    className="w-full rounded-lg bg-[#1d2a3b] p-2 text-sm text-white outline-none"
-
-
-                                >
-                                    <option value="قيد التحضير"> عاجلة</option>
-                                    <option value="قيد التنفيذ">عالية </option>
-                                    <option value="منتهية">متوسطة</option>
-                                    <option value="موقوفة">منخفضة</option>
-                                </select>
-
-                            ) : (
-                                <span className="inline-flex items-center rounded-full border border-[#5b2431] bg-[#24131a] px-3 py-1 text-xs font-medium text-[#ff6b88]">
-                                    {Case?.priority}
-                                </span>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            </section>
+    </div>
+  </div>
+</section>
         </>
     )
 }

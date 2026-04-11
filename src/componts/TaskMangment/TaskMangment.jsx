@@ -86,7 +86,10 @@ const TaskMangment = () => {
     },
     onError: (err) => {
       toast.error("حصل خطأ أثناء الإرسال ❌");
-
+      console.log("Full error:", err);
+      console.log("Error response:", err.response);
+      console.log("Error data:", err.response?.data);
+      console.log("Error status:", err.response?.status);
       console.error(err);
       console.error(err.response);
 
@@ -307,7 +310,7 @@ const TaskMangment = () => {
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
-                    {/* <div>
+                    <div>
                       <label className="text-sm text-slate-400">العميل</label>
                       <select {...register("client")}
                         className="mt-2 w-full h-11 rounded-xl bg-[#0a2038] border border-white/10 px-4">
@@ -321,7 +324,7 @@ const TaskMangment = () => {
                       {errors.client && (
                         <p className="text-red-400 text-xs mt-1">{errors.client.message}</p>
                       )}
-                    </div> */}
+                    </div>
 
                     <div>
                       <label className="text-sm text-slate-400">إسناد إلى</label>
@@ -448,11 +451,11 @@ const TaskMangment = () => {
         <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#081b31]">
           {/* Header */}
           <div className="hidden lg:grid grid-cols-10 bg-white/3 px-4 py-3 text-sm text-[#8EA3BF]">
-            <div className="col-span-2">عنوان المهمة</div>
-            <div className="col-span-1">الموكل</div>
-            <div className="col-span-2">المسؤول</div>
+            <div className="col-span-1">عنوان المهمة</div>
+            <div className="col-span-2">الموكل</div>
+            <div className="col-span-3">المسؤول</div>
             <div className="col-span-1">الأولوية</div>
-            <div className="col-span-2">الموعد النهائي</div>
+            <div className="col-span-1">الموعد النهائي</div>
             <div className="col-span-1">الحالة</div>
             <div className="col-span-1 ">الإجراءات</div>
           </div>
@@ -583,19 +586,19 @@ const TaskMangment = () => {
                     key={task.id || task._id || index}
                     className="grid grid-cols-10 items-center border-t border-white/5 px-4 py-4 text-sm"
                   >
-                    <div className="col-span-2 text-white">
+                    <div className="col-span-1 text-white text-right">
                       {task.title || "-"}
                     </div>
 
-                    <div className="col-span-1 text-[#8EA3BF]">
+                    <div className="col-span-2 text-[#8EA3BF] text-right">
                       {task.client?.fullName || "-"}
                     </div>
 
-                    <div className="col-span-2 flex items-center gap-2">
+                    <div className="col-span-3 flex items-center gap-2">
+
                       <div className="flex h-7 w-7 items-center justify-center rounded-full bg-amber-400/20 text-xs text-amber-300">
                         {task.assignedTo?.UserName?.charAt(0) || "-"}
                       </div>
-
                       <p className="text-white">
                         {task.assignedTo?.UserName || "-"}
                       </p>
@@ -611,7 +614,7 @@ const TaskMangment = () => {
                       </span>
                     </div>
 
-                    <div className="col-span-2 text-[#8EA3BF]">
+                    <div className="col-span-1 text-[#8EA3BF]">
                       {task.dueDate
                         ? new Date(task.dueDate).toLocaleDateString("en-GB")
                         : "-"}

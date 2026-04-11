@@ -67,73 +67,73 @@ const DigitalArchive = () => {
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 px-3 md:px-6">
-  {isLoading ? (
-    <div className="text-white text-center col-span-full">
-      جاري تحميل الملفات...
-    </div>
-  ) : error ? (
-    <div className="text-red-400 text-center col-span-full">
-      حدث خطأ أثناء تحميل البيانات
-    </div>
-  ) : data?.data?.documents?.length > 0 ? (
-    data?.data?.documents?.map((doc, index) => {
-      return (
-        <a
-          key={doc?._id || doc?.id || index}
-          href={doc.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block"
-        >
-          <div
-            className="cursor-pointer w-full rounded-2xl md:rounded-3xl border border-[#FFFFFF14] bg-[#061328] p-4 md:p-6 text-white shadow-xl transition-all hover:border-[#C9A34A]"
-            dir="rtl"
-          >
-            {/* Top Section */}
-            <div className="mb-4 flex items-start justify-between">
-              <div className="flex items-center justify-center rounded-2xl md:rounded-3xl bg-[#EF44441A] p-2 md:p-3">
-                <MdOutlinePictureAsPdf className="h-6 w-6 md:h-8 md:w-8 text-red-500" />
-              </div>
-              <div className="h-2 w-2 md:h-3 md:w-3 rounded-full bg-[#C9A34A]" />
-            </div>
-
-            {/* Content */}
-            <div className="mb-4 md:mb-6 text-right">
-              <h3 className="mb-1 text-base md:text-xl font-bold line-clamp-2">
-                {doc.name}
-              </h3>
-
-              <p className="text-xs md:text-sm font-mono text-gray-500">
-                رقم القضية: #CASE-2024-001
-              </p>
-
-              <p className="text-xs md:text-sm font-mono text-gray-500">
-                {doc.relatedDisplay}
-              </p>
-            </div>
-
-            {/* Divider */}
-            <div className="mb-3 md:mb-4 h-px w-full bg-gray-800" />
-
-            {/* Footer */}
-            <div className="flex items-center justify-between text-xs md:text-sm text-gray-400">
-              <div className="flex items-center gap-2">
-                <User size={14} />
-                <span className="truncate max-w-[120px] md:max-w-full">
-                  {doc.clientName}
-                </span>
-              </div>
-            </div>
+        {isLoading ? (
+          <div className="text-white text-center col-span-full">
+            جاري تحميل الملفات...
           </div>
-        </a>
-      );
-    })
-  ) : (
-    <div className="text-gray-400 text-center col-span-full">
-      لا توجد مستندات حالياً
-    </div>
-  )}
-</div>
+        ) : error ? (
+          <div className="text-red-400 text-center col-span-full">
+            حدث خطأ أثناء تحميل البيانات
+          </div>
+        ) : data?.data?.documents?.length > 0 ? (
+          data?.data?.documents?.map((doc, index) => {
+            return (
+              <a
+                key={doc?._id || doc?.id || index}
+                href={doc.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block"
+              >
+                <div
+                  className="cursor-pointer w-full rounded-2xl md:rounded-3xl border border-[#FFFFFF14] bg-[#061328] p-4 md:p-6 text-white shadow-xl transition-all hover:border-[#C9A34A]"
+                  dir="rtl"
+                >
+                  {/* Top Section */}
+                  <div className="mb-4 flex items-start justify-between">
+                    <div className="flex items-center justify-center rounded-2xl md:rounded-3xl bg-[#EF44441A] p-2 md:p-3">
+                      <MdOutlinePictureAsPdf className="h-6 w-6 md:h-8 md:w-8 text-red-500" />
+                    </div>
+                    <div className="h-2 w-2 md:h-3 md:w-3 rounded-full bg-[#C9A34A]" />
+                  </div>
+
+                  {/* Content */}
+                  <div className="mb-4 md:mb-6 text-right">
+                    <h3 className="mb-1 text-base md:text-xl font-bold line-clamp-2">
+                      {doc.name}
+                    </h3>
+
+                    <p className="text-xs md:text-sm font-mono text-gray-500">
+                      رقم القضية: #CASE-2024-001
+                    </p>
+
+                    <p className="text-xs md:text-sm font-mono text-gray-500">
+                      {doc.relatedDisplay}
+                    </p>
+                  </div>
+
+                  {/* Divider */}
+                  <div className="mb-3 md:mb-4 h-px w-full bg-gray-800" />
+
+                  {/* Footer */}
+                  <div className="flex items-center justify-between text-xs md:text-sm text-gray-400">
+                    <div className="flex items-center gap-2">
+                      <User size={14} />
+                      <span className="truncate max-w-[120px] md:max-w-full">
+                        {doc.clientName}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            );
+          })
+        ) : (
+          <div className="text-gray-400 text-center col-span-full">
+            لا توجد مستندات حالياً
+          </div>
+        )}
+      </div>
     </>
   );
 };

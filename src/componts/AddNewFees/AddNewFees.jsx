@@ -122,7 +122,11 @@ const AddNewFees = () => {
       
     } catch (error) {
       console.error("create invoice error:", error);
-      toast.error("حصل خطأ أثناء إنشاء الفاتورة");
+      console.log("Full error:", error);
+            console.log("Error response:", error.response);
+            console.log("Error data:", error.response?.data.message);
+            console.log("Error status:", error.response?.status);
+      toast.error( error.response?.data.message ||"حصل خطأ أثناء إنشاء الفاتورة");
     }
   };
 

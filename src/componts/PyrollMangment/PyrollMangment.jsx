@@ -7,7 +7,7 @@ import {
 } from "react-icons/hi2";
 import api from '../../api/axios'
 import Cookies from 'js-cookie';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { Trash2 } from 'lucide-react';
@@ -16,6 +16,8 @@ function PyrollMangment() {
 
   const [openSalaryModal, setOpenSalaryModal] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+    const queryClient = useQueryClient();
+  
   function getUsers() {
     return api.get("/users/", {
       headers: {
@@ -134,6 +136,7 @@ function PyrollMangment() {
       },
       params: { month, year },
     });
+      queryClient.invalidateQueries({ queryKey: ["MonthPayrol"] });
 
     return data;
   };
@@ -141,7 +144,6 @@ function PyrollMangment() {
     queryKey: ["MonthPayrol", selectedMonth, selectedYear],
     queryFn: () => getMonthlyPayroll(selectedMonth, selectedYear),
   });
-  // console.log(MonthPay);
 
   const getuserMonthlyPayroll = async (month, year, id) => {
     const { data } = await api.get(`/payroll/employee/${id}`, {

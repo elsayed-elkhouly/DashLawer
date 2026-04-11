@@ -40,7 +40,7 @@ const Login = () => {
     setisLoding(true)
     try {
       const data =await api.post("/auth/authSignin", values)
-      // console.log(data.data);
+      console.log(data.data);
       toast.success(data.data.message)
       insertToken(data.data.access_token)
       Cookies.set("token", data.data.access_token , { expires: 1 });

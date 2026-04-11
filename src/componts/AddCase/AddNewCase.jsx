@@ -95,6 +95,8 @@ const AddNewCase = () => {
     queryKey: ["cases"],
     queryFn: getCases
   })
+  console.log(Cases);
+
 
   function getUSers() {
     return api.get("/users", {
@@ -136,18 +138,24 @@ const AddNewCase = () => {
   return (
     <>
       {/* header */}
-      <div dir="rtl" className=" p-6 text-white">
-        <div className="mx-auto w-full max-w-7xl rounded-3xl bg-[#061328] px-8 py-7 shadow-2xl ring-1 ring-white/10">
-          <div className="flex items-start justify-between gap-6">
+      <div dir="rtl" className="p-4 sm:p-6 text-white">
+        <div className="mx-auto w-full max-w-7xl rounded-3xl bg-[#061328] px-4 sm:px-6 lg:px-8 py-6 sm:py-7 shadow-2xl ring-1 ring-white/10">
+
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+
+            {/* العنوان */}
             <div className="text-right">
-              <h1 className="text-4xl font-semibold tracking-tight text-white">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight text-white">
                 إضافة قضية جديدة
               </h1>
               <p className="mt-2 text-sm text-slate-400">
                 قم بتعبئة بيانات القضية والمحامي المسؤول والتفاصيل المالية.
               </p>
             </div>
-            <div className="flex items-center gap-4 pt-1">
+
+            {/* الأزرار */}
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-1 justify-start lg:justify-end">
+
               <button
                 type="button"
                 onClick={() => {
@@ -158,26 +166,33 @@ const AddNewCase = () => {
               >
                 إلغاء
               </button>
+
               <button
                 type="button"
                 onClick={handleSubmit(onSubmit)}
-                className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-[#c79a3b] px-5 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-[#c79a3b]/20 transition hover:brightness-110"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#c79a3b] px-4 sm:px-5 py-2.5 sm:py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-[#c79a3b]/20 transition hover:brightness-110"
               >
                 <FiSave className="text-base" />
-                {loding ? <span className="loading loading-infinity loading-xl"></span> : <span>حفظ القضية</span>}
+                {loding ? (
+                  <span className="loading loading-infinity loading-md"></span>
+                ) : (
+                  <span>حفظ القضية</span>
+                )}
               </button>
 
               <Link to="/CaseMangemnt">
                 <button
                   type="button"
-                  className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-[#c79a3b] px-5 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-[#c79a3b]/20 transition hover:brightness-110"
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#c79a3b] px-4 sm:px-5 py-2.5 sm:py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-[#c79a3b]/20 transition hover:brightness-110"
                 >
                   <ArrowLeft className="text-base" />
                   <span>رجوع</span>
                 </button>
               </Link>
+
             </div>
           </div>
+
         </div>
       </div>
       <div
@@ -446,7 +461,9 @@ const AddNewCase = () => {
                     </label>
 
                     <div className="max-h-40 space-y-2 overflow-y-auto rounded-xl border border-[#132949] bg-[#07162d] p-3">
-                      {Lawer?.data?.users.map((user) => (
+                      {Lawer?.data?.users
+                        ?.filter((user) => user.role === "LAWYER")
+                        .map((user) =>  (
                         <label
                           key={user._id}
                           className="flex cursor-pointer items-center gap-2 text-sm text-white"
@@ -555,7 +572,7 @@ const AddNewCase = () => {
                   </div>
                 </div>
 
-               
+
 
                 <div>
                   <label className="mb-2 block text-sm font-medium text-[#d8e3f0]">

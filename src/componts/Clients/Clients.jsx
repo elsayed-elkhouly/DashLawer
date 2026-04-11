@@ -163,10 +163,10 @@ const Clients = () => {
             reset();
         },
         onError: (error) => {
-            // console.log("Full error:", error);
-            // console.log("Error response:", error.response);
-            // console.log("Error data:", error.response?.data);
-            // console.log("Error status:", error.response?.status);
+            console.log("Full error:", error);
+            console.log("Error response:", error.response);
+            console.log("Error data:", error.response?.data);
+            console.log("Error status:", error.response?.status);
             toast.error(error.response?.data?.message);
         },
     });
@@ -232,268 +232,267 @@ const Clients = () => {
         <>
             {/* header */}
             <section>
-  <div className="w-full p-6 flex flex-col-reverse lg:flex-row items-start lg:items-center justify-between gap-4">
+                <div className="w-full p-6 flex flex-col-reverse lg:flex-row items-start lg:items-center justify-between gap-4">
 
-    {/* Left Side: Buttons */}
-    <div className="flex flex-wrap gap-3 sm:gap-4 items-center">
+                    
 
-      {/* Add New Customer Button */}
-      <button
-        className="flex items-center gap-2 bg-[#c49a4d] hover:bg-[#b08940] text-[#0f172a] px-6 py-2.5 rounded-xl font-bold transition-all shadow-lg shadow-amber-900/20 whitespace-nowrap"
-        onClick={() => document.getElementById('my_modal_5').showModal()}
-      >
-        <UserPlus size={20} />
-        <span>إضافة عميل جديد</span>
-      </button>
+                    {/* Right Side: Title */}
+                    <h1 className="text-white text-[28px] sm:text-[32px] lg:text-[37px] font-bold">
+                        إدارة العملاء
+                    </h1>
+                    {/* Left Side: Buttons */}
+                    <div className="flex flex-wrap gap-3 sm:gap-4 items-center">
 
-      <dialog id="my_modal_5" className="modal modal-middle">
-        <div className="modal-box w-[92%] max-w-155 rounded-none border-0 bg-transparent p-0 shadow-none">
-          <div
-            dir="rtl"
-            className="overflow-hidden rounded-md border border-white/10 bg-[#081a2f] text-white shadow-[0_20px_60px_rgba(0,0,0,0.45)]"
-          >
-            <div className="border-b border-[#22344a] px-4 py-4 sm:px-8">
-              <div className="flex items-start justify-between">
+                        {/* Add New Customer Button */}
+                        <button
+                            className="flex items-center gap-2 bg-[#c49a4d] hover:bg-[#b08940] text-[#0f172a] px-6 py-2.5 rounded-xl font-bold transition-all shadow-lg shadow-amber-900/20 whitespace-nowrap"
+                            onClick={() => document.getElementById('my_modal_5').showModal()}
+                        >
+                            <UserPlus size={20} />
+                            <span>إضافة عميل جديد</span>
+                        </button>
 
-                <div className="text-right">
-                  <h2 className="text-[20px] font-extrabold leading-none text-[#d5a93f] sm:text-[22px]">
-                    إضافة عميل جديد
-                  </h2>
-                  <p className="mt-2 text-sm text-slate-400">
-                    أدخل البيانات الأساسية لإنشاء ملف العميل في النظام
-                  </p>
+                        <dialog id="my_modal_5" className="modal modal-middle">
+                            <div className="modal-box w-[92%] max-w-155 rounded-none border-0 bg-transparent p-0 shadow-none">
+                                <div
+                                    dir="rtl"
+                                    className="overflow-hidden rounded-md border border-white/10 bg-[#081a2f] text-white shadow-[0_20px_60px_rgba(0,0,0,0.45)]"
+                                >
+                                    <div className="border-b border-[#22344a] px-4 py-4 sm:px-8">
+                                        <div className="flex items-start justify-between">
+
+                                            <div className="text-right">
+                                                <h2 className="text-[20px] font-extrabold leading-none text-[#d5a93f] sm:text-[22px]">
+                                                    إضافة عميل جديد
+                                                </h2>
+                                                <p className="mt-2 text-sm text-slate-400">
+                                                    أدخل البيانات الأساسية لإنشاء ملف العميل في النظام
+                                                </p>
+                                            </div>
+
+                                            <button
+                                                type="button"
+                                                onClick={() => document.getElementById("my_modal_5")?.close()}
+                                                className="text-2xl text-slate-400 transition hover:text-white cursor-pointer hover:bg-slate-400 rounded-full flex items-center justify-center h-10 w-10"
+                                            >
+                                                ×
+                                            </button>
+
+                                        </div>
+                                    </div>
+
+                                    <form onSubmit={handleSubmit(onSubmit)} className="px-4 py-4 sm:px-5">
+                                        <div className="grid grid-cols-1 gap-x-3 gap-y-3 md:grid-cols-2">
+                                            <div>
+                                                <label className="mb-2 block text-sm font-medium text-slate-200">
+                                                    الاسم بالكامل (أو اسم المنشأة){" "}
+                                                    <span className="text-[#d3a63f]">*</span>
+                                                </label>
+                                                <input
+                                                    className={inputClass}
+                                                    placeholder="مثال: شركة النجم الساطع"
+                                                    {...register("fullName", {
+                                                        required: "الاسم مطلوب",
+                                                        minLength: {
+                                                            value: 3,
+                                                            message: "الاسم يجب أن يكون 3 أحرف على الأقل",
+                                                        },
+                                                    })}
+                                                />
+                                                {errors.fullName && (
+                                                    <p className={errorClass}>{errors.fullName.message}</p>
+                                                )}
+                                            </div>
+
+                                            <div>
+                                                <label className="mb-2 block text-sm font-medium text-slate-200">
+                                                    رقم الهوية / السجل التجاري{" "}
+                                                    <span className="text-[#d3a63f]">*</span>
+                                                </label>
+                                                <input
+                                                    className={inputClass}
+                                                    placeholder="10xxxxxxxx"
+                                                    {...register("crNumber", {
+                                                        required: "رقم الهوية أو السجل التجاري مطلوب",
+                                                        pattern: {
+                                                            value: /^\d{14}$/,
+                                                            message: "يجب إدخال 14 رقمًا",
+                                                        },
+                                                    })}
+                                                />
+                                                {errors.crNumber && (
+                                                    <p className={errorClass}>{errors.crNumber.message}</p>
+                                                )}
+                                            </div>
+
+                                            <div>
+                                                <label className="mb-2 block text-sm font-medium text-slate-200">
+                                                    البريد الإلكتروني
+                                                </label>
+                                                <input
+                                                    className={inputClass}
+                                                    placeholder="example@email.com"
+                                                    {...register("email", {
+                                                        pattern: {
+                                                            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                                            message: "صيغة البريد الإلكتروني غير صحيحة",
+                                                        },
+                                                    })}
+                                                />
+                                                {errors.email && (
+                                                    <p className={errorClass}>{errors.email.message}</p>
+                                                )}
+                                            </div>
+
+                                            <div>
+                                                <label className="mb-2 block text-sm font-medium text-slate-200">
+                                                    رقم الجوال
+                                                </label>
+                                                <div className="flex rounded-full border border-white/5 bg-[#11243a] focus-within:border-[#d3a63f] focus-within:ring-2 focus-within:ring-[#d3a63f]/20">
+                                                    <span className="flex items-center rounded-r-full border-l border-white/10 px-4 text-sm text-slate-400">
+                                                        +01
+                                                    </span>
+                                                    <input
+                                                        className="h-9.5 w-full rounded-l-full bg-transparent px-4 text-sm text-white outline-none placeholder:text-slate-400"
+                                                        placeholder="5xxxxxxxx"
+                                                        {...register("phone", {
+                                                            required: "رقم الهاتف مطلوب",
+                                                            pattern: {
+                                                                value: /^[0-9]{8,15}$/,
+                                                                message: "رقم الجوال يجب أن يكون من 8 إلى 15 رقمًا",
+                                                            },
+                                                        })}
+                                                    />
+                                                </div>
+                                                {errors.phone && (
+                                                    <p className={errorClass}>{errors.phone.message}</p>
+                                                )}
+                                            </div>
+
+                                            <div className="md:col-span-2">
+                                                <label className="mb-2 block text-sm font-medium text-slate-200">
+                                                    العنوان
+                                                </label>
+                                                <input
+                                                    className={inputClass}
+                                                    {...register("address", {
+                                                        minLength: {
+                                                            value: 5,
+                                                            message: "العنوان قصير جدًا",
+                                                        },
+                                                    })}
+                                                />
+                                                {errors.address && (
+                                                    <p className={errorClass}>{errors.address.message}</p>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        <div className="mt-4">
+                                            <label className="mb-3 block text-sm font-medium text-slate-200">
+                                                نوع العميل
+                                            </label>
+
+                                            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setValue("type", "شركة", { shouldValidate: true })}
+                                                    className={`flex h-12 items-center justify-center gap-2 rounded-full border px-4 text-sm font-semibold transition ${clientType === "شركة"
+                                                            ? "border-[#d3a63f] bg-[#d3a63f]/10 text-[#f1c55e]"
+                                                            : "border-white/10 bg-[#11243a] text-white hover:border-white/20"
+                                                        }`}
+                                                >
+                                                    <Building2 size={18} />
+                                                    شركة / مؤسسة
+                                                </button>
+
+                                                <button
+                                                    type="button"
+                                                    onClick={() =>
+                                                        setValue("type", "فرد", { shouldValidate: true })
+                                                    }
+                                                    className={`flex h-12 items-center justify-center gap-2 rounded-full border px-4 text-sm font-semibold transition ${clientType === "فرد"
+                                                            ? "border-[#d3a63f] bg-[#d3a63f]/10 text-[#f1c55e]"
+                                                            : "border-white/10 bg-[#11243a] text-white hover:border-white/20"
+                                                        }`}
+                                                >
+                                                    <UserRound size={18} />
+                                                    فرد
+                                                </button>
+                                            </div>
+
+                                            <input
+                                                type="hidden"
+                                                {...register("type", {
+                                                    required: "نوع العميل مطلوب",
+                                                })}
+                                            />
+                                            {errors.type && <p className={errorClass}>{errors.type.message}</p>}
+                                        </div>
+
+                                        <div className="mt-4">
+                                            <label className="mb-2 block text-sm font-medium text-slate-200">
+                                                ملاحظات إضافية
+                                            </label>
+                                            <textarea
+                                                rows={3}
+                                                className="w-full rounded-3xl border border-white/5 bg-[#11243a] px-4 py-3 text-sm text-white outline-none placeholder:text-slate-400 transition focus:border-[#d3a63f] focus:ring-2 focus:ring-[#d3a63f]/20"
+                                                placeholder="أي تفاصيل مهمة تخص العميل..."
+                                                {...register("notes", {
+                                                    maxLength: {
+                                                        value: 500,
+                                                        message: "الحد الأقصى للملاحظات هو 500 حرف",
+                                                    },
+                                                })}
+                                            />
+                                            {errors.notes && (
+                                                <p className={errorClass}>{errors.notes.message}</p>
+                                            )}
+                                        </div>
+
+                                        <div className="mt-5 border-t border-[#22344a] pt-4">
+                                            <div className="flex items-center gap-4">
+                                                <button
+                                                    type="submit"
+                                                    disabled={addClientMutation.isPending}
+                                                    className="rounded-full bg-[#d3a63f] px-8 py-2.5 text-sm font-extrabold text-[#0b1b2d] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60 flex items-center gap-2"
+                                                >
+                                                    {addClientMutation.isPending ? (
+                                                        <>
+                                                            <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#0b1b2d] border-t-transparent"></span>
+                                                            جارٍ الحفظ...
+                                                        </>
+                                                    ) : (
+                                                        "حفظ البيانات"
+                                                    )}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <form method="dialog" className="modal-backdrop bg-[#06111f]/70 backdrop-blur-[6px]">
+                                <button>close</button>
+                            </form>
+                        </dialog>
+
+                        {/* Export Excel Button */}
+                        <button
+                            onClick={exportClient}
+                            className="cursor-pointer flex items-center gap-2 bg-[#1e293b] border border-slate-700 text-slate-300 px-6 py-2.5 rounded-xl font-medium hover:bg-slate-800 transition-all whitespace-nowrap"
+                        >
+                            <Download size={18} />
+                            <div className="flex gap-1 items-center">
+                                <span>تصدير</span>
+                                <span className="text-xs opacity-70">Excel</span>
+                            </div>
+                        </button>
+
+                    </div>
+
                 </div>
-
-                <button
-                  type="button"
-                  onClick={() => document.getElementById("my_modal_5")?.close()}
-                  className="text-2xl text-slate-400 transition hover:text-white cursor-pointer hover:bg-slate-400 rounded-full flex items-center justify-center h-10 w-10"
-                >
-                  ×
-                </button>
-
-              </div>
-            </div>
-
-            <form onSubmit={handleSubmit(onSubmit)} className="px-4 py-4 sm:px-5">
-              <div className="grid grid-cols-1 gap-x-3 gap-y-3 md:grid-cols-2">
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-200">
-                    الاسم بالكامل (أو اسم المنشأة){" "}
-                    <span className="text-[#d3a63f]">*</span>
-                  </label>
-                  <input
-                    className={inputClass}
-                    placeholder="مثال: شركة النجم الساطع"
-                    {...register("fullName", {
-                      required: "الاسم مطلوب",
-                      minLength: {
-                        value: 3,
-                        message: "الاسم يجب أن يكون 3 أحرف على الأقل",
-                      },
-                    })}
-                  />
-                  {errors.fullName && (
-                    <p className={errorClass}>{errors.fullName.message}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-200">
-                    رقم الهوية / السجل التجاري{" "}
-                    <span className="text-[#d3a63f]">*</span>
-                  </label>
-                  <input
-                    className={inputClass}
-                    placeholder="10xxxxxxxx"
-                    {...register("crNumber", {
-                      required: "رقم الهوية أو السجل التجاري مطلوب",
-                      pattern: {
-                        value: /^\d{14}$/,
-                        message: "يجب إدخال 14 رقمًا",
-                      },
-                    })}
-                  />
-                  {errors.crNumber && (
-                    <p className={errorClass}>{errors.crNumber.message}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-200">
-                    البريد الإلكتروني
-                  </label>
-                  <input
-                    className={inputClass}
-                    placeholder="example@email.com"
-                    {...register("email", {
-                      pattern: {
-                        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                        message: "صيغة البريد الإلكتروني غير صحيحة",
-                      },
-                    })}
-                  />
-                  {errors.email && (
-                    <p className={errorClass}>{errors.email.message}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-200">
-                    رقم الجوال
-                  </label>
-                  <div className="flex rounded-full border border-white/5 bg-[#11243a] focus-within:border-[#d3a63f] focus-within:ring-2 focus-within:ring-[#d3a63f]/20">
-                    <span className="flex items-center rounded-r-full border-l border-white/10 px-4 text-sm text-slate-400">
-                      +01
-                    </span>
-                    <input
-                      className="h-9.5 w-full rounded-l-full bg-transparent px-4 text-sm text-white outline-none placeholder:text-slate-400"
-                      placeholder="5xxxxxxxx"
-                      {...register("phone", {
-                        required: "رقم الهاتف مطلوب",
-                        pattern: {
-                          value: /^[0-9]{8,15}$/,
-                          message: "رقم الجوال يجب أن يكون من 8 إلى 15 رقمًا",
-                        },
-                      })}
-                    />
-                  </div>
-                  {errors.phone && (
-                    <p className={errorClass}>{errors.phone.message}</p>
-                  )}
-                </div>
-
-                <div className="md:col-span-2">
-                  <label className="mb-2 block text-sm font-medium text-slate-200">
-                    العنوان
-                  </label>
-                  <input
-                    className={inputClass}
-                    {...register("address", {
-                      minLength: {
-                        value: 5,
-                        message: "العنوان قصير جدًا",
-                      },
-                    })}
-                  />
-                  {errors.address && (
-                    <p className={errorClass}>{errors.address.message}</p>
-                  )}
-                </div>
-              </div>
-
-              <div className="mt-4">
-                <label className="mb-3 block text-sm font-medium text-slate-200">
-                  نوع العميل
-                </label>
-
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  <button
-                    type="button"
-                    onClick={() => setValue("type", "شركة", { shouldValidate: true })}
-                    className={`flex h-12 items-center justify-center gap-2 rounded-full border px-4 text-sm font-semibold transition ${
-                      clientType === "شركة"
-                        ? "border-[#d3a63f] bg-[#d3a63f]/10 text-[#f1c55e]"
-                        : "border-white/10 bg-[#11243a] text-white hover:border-white/20"
-                    }`}
-                  >
-                    <Building2 size={18} />
-                    شركة / مؤسسة
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setValue("type", "فرد", { shouldValidate: true })
-                    }
-                    className={`flex h-12 items-center justify-center gap-2 rounded-full border px-4 text-sm font-semibold transition ${
-                      clientType === "فرد"
-                        ? "border-[#d3a63f] bg-[#d3a63f]/10 text-[#f1c55e]"
-                        : "border-white/10 bg-[#11243a] text-white hover:border-white/20"
-                    }`}
-                  >
-                    <UserRound size={18} />
-                    فرد
-                  </button>
-                </div>
-
-                <input
-                  type="hidden"
-                  {...register("type", {
-                    required: "نوع العميل مطلوب",
-                  })}
-                />
-                {errors.type && <p className={errorClass}>{errors.type.message}</p>}
-              </div>
-
-              <div className="mt-4">
-                <label className="mb-2 block text-sm font-medium text-slate-200">
-                  ملاحظات إضافية
-                </label>
-                <textarea
-                  rows={3}
-                  className="w-full rounded-3xl border border-white/5 bg-[#11243a] px-4 py-3 text-sm text-white outline-none placeholder:text-slate-400 transition focus:border-[#d3a63f] focus:ring-2 focus:ring-[#d3a63f]/20"
-                  placeholder="أي تفاصيل مهمة تخص العميل..."
-                  {...register("notes", {
-                    maxLength: {
-                      value: 500,
-                      message: "الحد الأقصى للملاحظات هو 500 حرف",
-                    },
-                  })}
-                />
-                {errors.notes && (
-                  <p className={errorClass}>{errors.notes.message}</p>
-                )}
-              </div>
-
-              <div className="mt-5 border-t border-[#22344a] pt-4">
-                <div className="flex items-center gap-4">
-                  <button
-                    type="submit"
-                    disabled={addClientMutation.isPending}
-                    className="rounded-full bg-[#d3a63f] px-8 py-2.5 text-sm font-extrabold text-[#0b1b2d] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60 flex items-center gap-2"
-                  >
-                    {addClientMutation.isPending ? (
-                      <>
-                        <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#0b1b2d] border-t-transparent"></span>
-                        جارٍ الحفظ...
-                      </>
-                    ) : (
-                      "حفظ البيانات"
-                    )}
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-
-        <form method="dialog" className="modal-backdrop bg-[#06111f]/70 backdrop-blur-[6px]">
-          <button>close</button>
-        </form>
-      </dialog>
-
-      {/* Export Excel Button */}
-      <button
-        onClick={exportClient}
-        className="cursor-pointer flex items-center gap-2 bg-[#1e293b] border border-slate-700 text-slate-300 px-6 py-2.5 rounded-xl font-medium hover:bg-slate-800 transition-all whitespace-nowrap"
-      >
-        <Download size={18} />
-        <div className="flex gap-1 items-center">
-          <span>تصدير</span>
-          <span className="text-xs opacity-70">Excel</span>
-        </div>
-      </button>
-
-    </div>
-
-    {/* Right Side: Title */}
-    <h1 className="text-white text-[28px] sm:text-[32px] lg:text-[37px] font-bold">
-      إدارة العملاء
-    </h1>
-
-  </div>
-</section>
+            </section>
             <section>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 lg:grid-cols-4  place-items-center">
                     <div className="w-full max-w-70 p-6 bg-[#081226] border border-[#EF444433] rounded-3xl shadow-xl flex flex-col justify-between h-49.25 hover:border-[#EF4444] duration-300">
