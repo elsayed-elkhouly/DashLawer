@@ -465,7 +465,7 @@ const SessionDetails = () => {
                 <HiOutlineFolderOpen size={18} className="text-[#d3a53d]" />
                 المستندات
               </h2>
-
+                                                  
               <div className="space-y-4">
                 {session?.team?.length > 0 ? (
                   session.team.map((member) => (
