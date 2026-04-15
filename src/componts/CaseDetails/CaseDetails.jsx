@@ -199,7 +199,7 @@ const CaseDetails = () => {
         queryKey: ["Sesions"],
         queryFn: getAllSesions
     })
-    console.log(Sesions?.data?.sessions);
+    // console.log(Sesions?.data?.sessions);
     function getAllInvoicelCases() {
         return api.get(`/LegalCase/${id}/invoices`, {
             headers: {
@@ -212,7 +212,7 @@ const CaseDetails = () => {
         queryKey: ["CasesInvoice"],
         queryFn: getAllInvoicelCases
     })
-    console.log(Cases?.data?.invoices);
+    // console.log(Cases?.data?.invoices);
 
     return (
         <>
@@ -269,7 +269,7 @@ const CaseDetails = () => {
                             </label>
                         </div>
 
-                        <div className="max-h-[420px] space-y-3 overflow-y-auto pr-1">
+                    <div className="max-h-105 space-y-3 overflow-y-auto pr-1">
                             {Case?.attachments?.length > 0 ? (
                                 Case.attachments.map((file, index) => (
                                     <div

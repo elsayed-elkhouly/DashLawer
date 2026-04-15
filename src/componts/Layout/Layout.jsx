@@ -47,7 +47,6 @@ const Layout = () => {
               <HiOutlineMenuAlt3 size={24} />
             </button>
 
-            {/* <h2 className="text-white font-bold text-sm">لوحة التحكم</h2> */}
           </div>
         )}
 

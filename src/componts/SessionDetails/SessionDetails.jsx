@@ -1,6 +1,5 @@
 import Cookies from "js-cookie";
 import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
 import api from '../../api/axios';
 
 import {
@@ -19,9 +18,25 @@ import {
   FaUsers,
 } from "react-icons/fa";
 
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { HiOutlinePencil, HiCheck, HiXMark, HiOutlineFolderOpen } from "react-icons/hi2";
+import { useEffect, useState } from "react";
 const SessionDetails = () => {
   const { id } = useParams();
+  const queryClient = useQueryClient();
 
+  const [isEditing, setIsEditing] = useState(false);
+
+  const [formData, setFormData] = useState({
+    type: "",
+    startAt: "",
+    courtName: "",
+    city: "",
+    circuit: "",
+    notes: "",
+    assignedTo: "",
+    team: [],
+  });
   const getAllSesions = () => {
     return api.get(`/session/${id}`, {
       headers: {
@@ -39,11 +54,74 @@ const SessionDetails = () => {
     queryKey: ["session", id],
     queryFn: getAllSesions,
   });
+  console.log(sessionResponse);
 
+  const updateSession = (updatedData) => {
+    return api.patch(`/session/${id}`, updatedData, {
+      headers: {
+        authorization: `Bearer ${Cookies.get("token")}`,
+      },
+    });
+  };
+
+  const { mutate: updateSessionMutate, isPending: isUpdating } = useMutation({
+    mutationFn: updateSession,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["session", id] });
+      setIsEditing(false);
+    },
+    onError: (error) => {
+      console.error("Update error:", error);
+    },
+  });
   const session = sessionResponse?.data?.session;
-  console.log(session);
 
+  useEffect(() => {
+    if (session) {
+      setFormData({
+        type: session?.type || "",
+        startAt: session?.startAt
+          ? new Date(session.startAt).toISOString().slice(0, 16)
+          : "",
+        courtName: session?.courtName || "",
+        city: session?.city || "",
+        circuit: session?.circuit || "",
+        notes: session?.notes || "",
+        assignedTo: session?.assignedTo?.id || session?.assignedTo?._id || "",
+        team: Array.isArray(session?.team)
+          ? session.team.map((member) => member?.id || member?._id).filter(Boolean)
+          : [],
+      });
+    }
+  }, [session]);
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const payload = {
+      type: formData.type,
+      startAt: formData.startAt ? new Date(formData.startAt).toISOString() : null,
+      courtName: formData.courtName,
+      city: formData.city,
+      circuit: formData.circuit,
+      notes: formData.notes,
+      assignedTo: formData.assignedTo,
+      team: Array.isArray(formData.team)
+        ? formData.team.flat().filter(Boolean)
+        : formData.team
+          ? [formData.team]
+          : [],
+    };
+
+    updateSessionMutate(payload);
+  };
   const formatDate = (date) => {
     if (!date) return "غير متوفر";
 
@@ -153,58 +231,168 @@ const SessionDetails = () => {
                 label="رقم القضية"
                 value={session?.legalCase?.caseNumber || "-"}
               />
-              <QuickInfoCard label="معرف الجلسة" value={session?.id || "-"} breakAll />
+              <button
+                type="button"
+                onClick={() => setIsEditing(true)}
+                className="inline-flex h-11 items-center gap-2 rounded-full outline-0 bg-[#d3a53d] px-5 text-sm font-semibold text-[#0b1830] transition hover:opacity-90"
+              >
+                <HiOutlinePencil size={16} />
+                تعديل الجلسه
+              </button>
             </div>
           </div>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-3">
           <div className="space-y-6 lg:col-span-2">
-            <section className="rounded-3xl bg-[#071a31] p-5 shadow-sm  border border-[#FFFFFF14]">
-              <h2 className="mb-4 text-lg font-bold text-white">تفاصيل الجلسة</h2>
+            <section className="rounded-3xl bg-[#071a31] p-5 shadow-sm border border-[#FFFFFF14]">
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="text-lg font-bold text-white">تفاصيل الجلسة</h2>
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <DetailCard
-                  icon={<FaCalendarAlt />}
-                  label="تاريخ البداية"
-                  value={formatDate(session?.startAt)}
-                />
+                {isEditing && (
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsEditing(false);
+                        setFormData({
+                          type: session?.type || "",
+                          startAt: session?.startAt
+                            ? new Date(session.startAt).toISOString().slice(0, 16)
+                            : "",
+                          courtName: session?.courtName || "",
+                          city: session?.city || "",
+                          circuit: session?.circuit || "",
+                          notes: session?.notes || "",
+                          assignedTo:
+                            session?.assignedTo?.id || session?.assignedTo?._id || "",
+                          team: Array.isArray(session?.team)
+                            ? session.team
+                              .map((member) => member?.id || member?._id)
+                              .filter(Boolean)
+                            : [],
+                        });
+                      }}
+                      className="inline-flex items-center gap-2 rounded-full border border-red-600 px-4 py-2 text-sm cursor-pointer text-red-400 hover:border-red-400"
+                    >
+                      <HiXMark size={16} />
+                      إلغاء
+                    </button>
 
-                <DetailCard
-                  icon={<FaClock />}
-                  label="تاريخ النهاية"
-                  value={formatDate(session?.endAt)}
-                />
-
-                <DetailCard
-                  icon={<FaUniversity />}
-                  label="اسم المحكمة"
-                  value={session?.courtName || "-"}
-                />
-
-                <DetailCard
-                  icon={<FaGavel />}
-                  label="الدائرة"
-                  value={session?.circuit || "-"}
-                />
-
-                <DetailCard
-                  icon={<FaMapMarkerAlt />}
-                  label="المدينة"
-                  value={session?.city || "-"}
-                />
-
-                <DetailCard
-                  icon={<FaInfoCircle />}
-                  label="حالة الجلسة"
-                  value={session?.status || "-"}
-                />
+                    <button
+                      type="button"
+                      onClick={handleSubmit}
+                      disabled={isUpdating}
+                      className="inline-flex items-center gap-2 rounded-full bg-[#d3a53d] hover:bg-[#e6b84c] cursor-pointer px-4 py-2 text-sm font-semibold text-[#0b1830] disabled:opacity-60"
+                    >
+                      <HiCheck size={16} />
+                      {isUpdating ? "جارٍ الحفظ..." : "حفظ"}
+                    </button>
+                  </div>
+                )}
               </div>
+
+              {!isEditing ? (
+                <div className="grid gap-4 md:grid-cols-2">
+                  <DetailCard
+                    icon={<FaCalendarAlt />}
+                    label="تاريخ البداية"
+                    value={formatDate(session?.startAt)}
+                  />
+                  <DetailCard
+                    icon={<FaUniversity />}
+                    label="اسم المحكمة"
+                    value={session?.courtName || "-"}
+                  />
+                  <DetailCard
+                    icon={<FaGavel />}
+                    label="الدائرة"
+                    value={session?.circuit || "-"}
+                  />
+                  <DetailCard
+                    icon={<FaMapMarkerAlt />}
+                    label="المدينة"
+                    value={session?.city || "-"}
+                  />
+                  <DetailCard
+                    icon={<FaInfoCircle />}
+                    label="حالة الجلسة"
+                    value={session?.status || "-"}
+                  />
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-2">
+                  <div>
+                    <label className="mb-2 block text-sm text-white">نوع الجلسة</label>
+                    <input
+                      type="text"
+                      name="type"
+                      value={formData.type}
+                      onChange={handleChange}
+                      className="w-full rounded-2xl border border-[#FFFFFF14] bg-[#0d2139] px-4 py-3 text-white outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm text-white">تاريخ البداية</label>
+                    <input
+                      type="datetime-local"
+                      name="startAt"
+                      value={formData.startAt}
+                      onChange={handleChange}
+                      className="w-full rounded-2xl border border-[#FFFFFF14] bg-[#0d2139] px-4 py-3 text-white outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm text-white">اسم المحكمة</label>
+                    <input
+                      type="text"
+                      name="courtName"
+                      value={formData.courtName}
+                      onChange={handleChange}
+                      className="w-full rounded-2xl border border-[#FFFFFF14] bg-[#0d2139] px-4 py-3 text-white outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm text-white">المدينة</label>
+                    <input
+                      type="text"
+                      name="city"
+                      value={formData.city}
+                      onChange={handleChange}
+                      className="w-full rounded-2xl border border-[#FFFFFF14] bg-[#0d2139] px-4 py-3 text-white outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm text-white">الدائرة</label>
+                    <input
+                      type="text"
+                      name="circuit"
+                      value={formData.circuit}
+                      onChange={handleChange}
+                      className="w-full rounded-2xl border border-[#FFFFFF14] bg-[#0d2139] px-4 py-3 text-white outline-none"
+                    />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label className="mb-2 block text-sm text-white">الملاحظات</label>
+                    <textarea
+                      name="notes"
+                      value={formData.notes}
+                      onChange={handleChange}
+                      rows={4}
+                      className="w-full rounded-2xl border border-[#FFFFFF14] bg-[#0d2139] px-4 py-3 text-white outline-none"
+                    />
+                  </div>
+                </form>
+              )}
             </section>
 
             <section className="rounded-3xl bg-[#071a31] p-5 shadow-sm  border border-[#FFFFFF14]">
               <h2 className="mb-4 text-lg font-bold text-white">بيانات القضية</h2>
-
               <div className="grid gap-4 md:grid-cols-2">
                 <DetailCard
                   icon={<FaFolderOpen />}
@@ -234,12 +422,11 @@ const SessionDetails = () => {
 
             <section className="rounded-3xl bg-[#071a31] p-5 shadow-sm  border border-[#FFFFFF14]">
               <h2 className="mb-4 text-lg font-bold text-white">ملاحظات الجلسة</h2>
-
               <div className="flex items-start gap-3 rounded-2xl bg-[#071a31] p-4  border border-[#FFFFFF14]">
-                <div className="mt-1 text-xl text-blue-600">
+                <div className="mt-1 text-xl text-[#d4aa45]">
                   <FaStickyNote />
                 </div>
-                <p className="leading-8 text-slate-700">
+                <p className="leading-8 text-white">
                   {session?.notes || "لا توجد ملاحظات"}
                 </p>
               </div>
@@ -261,6 +448,22 @@ const SessionDetails = () => {
               <h2 className="mb-4 flex items-center gap-2 text-lg font-bold text-white">
                 <FaUsers />
                 <span>فريق العمل</span>
+              </h2>
+
+              <div className="space-y-4">
+                {session?.team?.length > 0 ? (
+                  session.team.map((member) => (
+                    <PersonCard key={member?.id || member?._id} person={member} />
+                  ))
+                ) : (
+                  <EmptyState text="لا يوجد أعضاء في فريق العمل" />
+                )}
+              </div>
+            </section>
+            <section className="rounded-3xl bg-[#071a31] p-5 shadow-sm  border border-[#FFFFFF14]">
+              <h2 className="flex items-center gap-2 text-lg font-semibold text-white">
+                <HiOutlineFolderOpen size={18} className="text-[#d3a53d]" />
+                المستندات
               </h2>
 
               <div className="space-y-4">
@@ -308,7 +511,6 @@ const SessionDetails = () => {
                   value={session?.attachments?.length || 0}
                 />
                 <InfoRow label="تاريخ الإنشاء" value={formatDate(session?.createdAt)} />
-                <InfoRow label="آخر تحديث" value={formatDate(session?.updatedAt)} />
                 <InfoRow
                   label="محذوف؟"
                   value={session?.isDeleted ? "نعم" : "لا"}
@@ -326,7 +528,7 @@ export default SessionDetails;
 
 const QuickInfoCard = ({ label, value, breakAll = false }) => {
   return (
-    <div className="rounded-2xl bg-[#0d2139] p-4  border border-[#FFFFFF14]">
+    <div className="rounded-2xl bg-[#0d2139] flex flex-col justify-center p-2  border border-[#FFFFFF14]">
       <p className="text-sm  text-white ">{label}</p>
       <p
         className={`mt-1 font-bold text-slate-500 ${breakAll ? "break-all text-sm" : ""

@@ -63,6 +63,10 @@ const TaskMangment = () => {
         if (data.file?.[0]) {
           formData.append("file", data.file[0]);
         }
+      } else if (key === "client") {
+        if (data.client) {
+          formData.append("client", data.client);
+        }
       } else {
         formData.append(key, data[key]);
       }
@@ -312,8 +316,12 @@ const TaskMangment = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
                     <div>
                       <label className="text-sm text-slate-400">العميل</label>
-                      <select {...register("client")}
-                        className="mt-2 w-full h-11 rounded-xl bg-[#0a2038] border border-white/10 px-4">
+                      <select
+                        {...register("client", {
+                          setValueAs: (value) => (value === "" ? undefined : value),
+                        })}
+                        className="mt-2 w-full h-11 rounded-xl bg-[#0a2038] border border-white/10 px-4"
+                      >
                         <option value="">اختر عميل</option>
                         {Clients?.clients.map((c) => (
                           <option key={c._id} value={c._id}>
