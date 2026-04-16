@@ -67,7 +67,7 @@ const ClientProfile = () => {
     );
   }
 
-  
+
 
 
 
@@ -285,103 +285,103 @@ const ClientProfile = () => {
         </div>
       </div>
       {/* all about client  */}
-     <section>
-  <div dir="rtl" className="min-h-screen p-4 sm:p-6 text-white">
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <section>
+        <div dir="rtl" className="min-h-screen p-4 sm:p-6 text-white">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-      {/* Content */}
-      <div className="lg:col-span-9 space-y-6">
-        <PersonalInfp
-          client={data?.data?.client}
-          onSave={(formData) => updateMutation.mutate(formData)}
-          isSaving={updateMutation.isPending}
-        />
+            {/* Content */}
+            <div className="lg:col-span-9 space-y-6">
+              <PersonalInfp
+                client={data?.data?.client}
+                onSave={(formData) => updateMutation.mutate(formData)}
+                isSaving={updateMutation.isPending}
+              />
 
-        <CaseTable cases={data?.data?.cases} />
+              <CaseTable cases={data?.data?.cases} />
 
-        <InvoicesTable
-          invoices={data?.data?.invoices}
-          printAll={PrintAllInvoic}
-          printSingle={PrintSingleInvoic}
-        />
-      </div>
+              <InvoicesTable
+                invoices={data?.data?.invoices}
+                printAll={PrintAllInvoic}
+                printSingle={PrintSingleInvoic}
+              />
+            </div>
 
-      {/* Sidebar */}
-      <div className="lg:col-span-3">
-        <div className="bg-[#061328] p-4 rounded-xl border border-slate-700">
+            {/* Sidebar */}
+            <div className="lg:col-span-3">
+              <div className="bg-[#061328] p-4 rounded-xl border border-slate-700">
 
-          <div className="flex justify-between mb-4">
-            <h2 className="text-yellow-400 font-semibold">
-              أرشيف المستندات
-            </h2>
-          </div>
-
-          <div className="space-y-3">
-            {documents?.map((doc, index) => (
-              <div
-                key={doc.publicId || index}
-                className="bg-[#1d2a3b] p-3 rounded-lg mt-3 hover:bg-[#24364d] flex justify-between items-center cursor-pointer"
-                onClick={() => downloadFile(doc)}
-              >
-                <div>
-                  <p className="text-white text-sm sm:text-base">
-                    {doc.name}
-                  </p>
+                <div className="flex justify-between mb-4">
+                  <h2 className="text-yellow-400 font-semibold">
+                    أرشيف المستندات
+                  </h2>
                 </div>
+
+                <div className="space-y-3">
+                  {documents?.map((doc, index) => (
+                    <div
+                      key={doc.publicId || index}
+                      className="bg-[#1d2a3b] p-3 rounded-lg mt-3 hover:bg-[#24364d] flex justify-between items-center cursor-pointer"
+                      onClick={() => downloadFile(doc)}
+                    >
+                      <div>
+                        <p className="text-white text-sm sm:text-base">
+                          {doc.name}
+                        </p>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          DeleteDoc(doc.publicId);
+                        }}
+                        className="text-red-400 hover:text-red-600 text-lg cursor-pointer"
+                      >
+                        <RiDeleteBin6Line />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  className="hidden"
+                  onChange={(e) => setFile(e.target.files[0])}
+                />
 
                 <button
                   type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    DeleteDoc(doc.publicId);
-                  }}
-                  className="text-red-400 hover:text-red-600 text-lg cursor-pointer"
+                  onClick={() => fileInputRef.current.click()}
+                  className="border border-dashed border-yellow-400 mt-4 w-full py-2 rounded-lg text-yellow-400 hover:bg-amber-200 hover:text-black transition cursor-pointer disabled:opacity-50 text-sm sm:text-base"
                 >
-                  <RiDeleteBin6Line />
+                  {file ? file.name : "+ رفع ملف جديد"}
                 </button>
+
+                {file && (
+                  <button
+                    type="button"
+                    disabled={loding}
+                    onClick={AddDocument}
+                    className="mt-3 w-full py-2 rounded-lg bg-yellow-400 text-black font-semibold cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2 text-sm sm:text-base"
+                  >
+                    {loding ? (
+                      <>
+                        <span className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin"></span>
+                        جاري رفع الملف...
+                      </>
+                    ) : (
+                      "رفع الملف"
+                    )}
+                  </button>
+                )}
+
               </div>
-            ))}
+            </div>
+
           </div>
-
-          <input
-            ref={fileInputRef}
-            type="file"
-            className="hidden"
-            onChange={(e) => setFile(e.target.files[0])}
-          />
-
-          <button
-            type="button"
-            onClick={() => fileInputRef.current.click()}
-            className="border border-dashed border-yellow-400 mt-4 w-full py-2 rounded-lg text-yellow-400 hover:bg-amber-200 hover:text-black transition cursor-pointer disabled:opacity-50 text-sm sm:text-base"
-          >
-            {file ? file.name : "+ رفع ملف جديد"}
-          </button>
-
-          {file && (
-            <button
-              type="button"
-              disabled={loding}
-              onClick={AddDocument}
-              className="mt-3 w-full py-2 rounded-lg bg-yellow-400 text-black font-semibold cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2 text-sm sm:text-base"
-            >
-              {loding ? (
-                <>
-                  <span className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin"></span>
-                  جاري رفع الملف...
-                </>
-              ) : (
-                "رفع الملف"
-              )}
-            </button>
-          )}
-
         </div>
-      </div>
-
-    </div>
-  </div>
-</section>
+      </section>
 
 
     </>

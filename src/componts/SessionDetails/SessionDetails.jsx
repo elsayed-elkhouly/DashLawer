@@ -16,14 +16,18 @@ import {
   FaClock,
   FaUserTie,
   FaUsers,
+  FaRegFilePdf,
 } from "react-icons/fa";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { HiOutlinePencil, HiCheck, HiXMark, HiOutlineFolderOpen } from "react-icons/hi2";
+import { HiOutlinePencil, HiCheck, HiXMark, HiOutlineFolderOpen, HiOutlineDocument } from "react-icons/hi2";
 import { useEffect, useState } from "react";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import toast from "react-hot-toast";
 const SessionDetails = () => {
   const { id } = useParams();
   const queryClient = useQueryClient();
+  const [loading, setLoading] = useState(false);
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -54,7 +58,6 @@ const SessionDetails = () => {
     queryKey: ["session", id],
     queryFn: getAllSesions,
   });
-  console.log(sessionResponse);
 
   const updateSession = (updatedData) => {
     return api.patch(`/session/${id}`, updatedData, {
@@ -75,6 +78,7 @@ const SessionDetails = () => {
     },
   });
   const session = sessionResponse?.data?.session;
+  console.log(session);
 
   useEffect(() => {
     if (session) {
@@ -94,7 +98,61 @@ const SessionDetails = () => {
       });
     }
   }, [session]);
+  async function AddDocument(selectedFile) {
 
+
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+
+    try {
+      setLoading(true);
+
+      const res = await api.post(
+        `/session/${id}/attachments`,
+        formData,
+        {
+          headers: {
+            authorization: `Bearer ${Cookies.get("token")}`,
+          },
+        }
+      );
+
+      console.log(res.data);
+      toast.success("تم رفع الملف بنجاح");
+      queryClient.invalidateQueries({ queryKey: ["session", id] });
+    } catch (error) {
+      console.error(error);
+      toast.error(error?.response?.data?.message || "حصل خطأ أثناء رفع الملف");
+    } finally {
+      setLoading(false);
+    }
+  }
+  async function deleteDoc(publicId) {
+        try {
+            setLoading(true);
+
+            const res = await api.delete(
+                `/session/${id}/attachments`,
+                {
+                    headers: {
+                        authorization: `Bearer ${Cookies.get("token")}`,
+                    },
+                    data: {
+                        publicId,
+                    },
+                }
+            );
+
+            console.log(res.data);
+            toast.success("تم حذف الملف بنجاح");
+            queryClient.invalidateQueries({ queryKey: ["session", id]  });
+        } catch (error) {
+            console.error(error);
+            toast.error(error?.response?.data?.message || "حصل خطأ أثناء حذف الملف");
+        } finally {
+            setLoading(false);
+        }
+    }
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -461,18 +519,75 @@ const SessionDetails = () => {
               </div>
             </section>
             <section className="rounded-3xl bg-[#071a31] p-5 shadow-sm  border border-[#FFFFFF14]">
-              <h2 className="flex items-center gap-2 text-lg font-semibold text-white">
-                <HiOutlineFolderOpen size={18} className="text-[#d3a53d]" />
-                المستندات
-              </h2>
-                                                  
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <h2 className="flex items-center gap-2 text-lg font-semibold text-white">
+                  <HiOutlineFolderOpen size={18} className="text-[#d3a53d]" />
+                  المستندات
+                </h2>
+
+                <label
+                  className={`cursor-pointer rounded-lg bg-[#d3a53d] px-4 py-2 text-sm text-black hover:opacity-90 ${loading ? "pointer-events-none opacity-50" : ""
+                    }`}
+                >
+                  {loading ? "جاري الرفع..." : "رفع مستند"}
+
+                  <input
+                    type="file"
+                    className="hidden"
+                    disabled={loading}
+                    onChange={(e) => {
+                      const selectedFile = e.target.files?.[0];
+                      if (!selectedFile) return;
+                      AddDocument(selectedFile);
+                    }}
+                  />
+                </label>
+              </div>
+
               <div className="space-y-4">
-                {session?.team?.length > 0 ? (
-                  session.team.map((member) => (
-                    <PersonCard key={member?.id || member?._id} person={member} />
+                {session?.attachments?.length > 0 ? (
+                  session.attachments.map((file, index) => (
+                    <div
+                      key={file.publicId || index}
+                      className="flex items-center justify-between rounded-2xl border border-[#13243b] bg-[#0d1c33] px-4 py-4 transition hover:bg-[#10203a]"
+                    >
+                      <div className="flex min-w-0 items-center gap-3">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#3d2b2f] bg-[#1b1620] text-[#ff5f7a]">
+                          <FaRegFilePdf size={16} />
+                        </div>
+
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-medium text-white">
+                            {file.name || `مستند ${index + 1}`}
+                          </p>
+                          <p className="mt-1 text-xs text-[#7f93ad]">
+                            {file.uploadedAt}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex shrink-0 items-center gap-3">
+                        <a
+                          href={file.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#243752] bg-[#0a1830] text-[#a7bad2] transition hover:bg-[#12233f] hover:text-white"
+                        >
+                          <HiOutlineDocument size={16} />
+                        </a>
+
+                        <button
+                          type="button"
+                          onClick={() => deleteDoc(file.publicId)}
+                          className="cursor-pointer text-lg text-red-400 hover:text-red-600"
+                        >
+                          <RiDeleteBin6Line />
+                        </button>
+                      </div>
+                    </div>
                   ))
                 ) : (
-                  <EmptyState text="لا يوجد أعضاء في فريق العمل" />
+                  <p className="text-sm text-[#7f93ad]">لا توجد مستندات</p>
                 )}
               </div>
             </section>

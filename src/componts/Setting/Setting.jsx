@@ -144,7 +144,7 @@ const Setting = () => {
       toast.success("تم تحديث الإعدادات");
     },
     onError: (error) => {
-      console.error("Submit Error:", error.response?.data?.message);
+      console.error("Submit Error:", error.response);
       toast.error(error.response?.data?.message || "حدث خطأ أثناء التحديث");
     },
   });
@@ -417,14 +417,14 @@ const Setting = () => {
 
   return (
     <>
-      {/* ===== الهيدر ===== */}
+      {/*  الهيدر  */}
       <div className="text-right px-4 md:px-8">
         <h2 className="text-2xl md:text-[37px] mt-6 md:mt-10 text-white font-bold">
           إعدادات المكتب
         </h2>
       </div>
 
-      {/* ===== المعلومات الشخصية ===== */}
+      {/*  المعلومات الشخصية  */}
       <section>
         <div
           dir="rtl"
@@ -475,7 +475,6 @@ const Setting = () => {
               onSubmit={handleSubmit(AddSetting)}
             >
               {!isEditing ? (
-                /* ===== View Mode ===== */
                 <>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
                     <div className="space-y-6 md:space-y-12">
@@ -538,13 +537,13 @@ const Setting = () => {
                     <label className="block text-sm md:text-[18px] text-[#7f93b0] mb-2 md:mb-3">
                       الموقع
                     </label>
-                    <div className="w-full min-h-[56px] bg-[#1A2638] rounded-xl px-4 py-4 text-white break-all text-sm md:text-base">
+                    <div className="w-full min-h-14 bg-[#1A2638] rounded-xl px-4 py-4 text-white break-all text-sm md:text-base">
                       {watchedValues.mapEmbedUrl || ""}
                     </div>
                   </div>
                 </>
               ) : (
-                /* ===== Edit Mode ===== */
+                /*  Edit Mode  */
                 <>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                     <div>
@@ -670,12 +669,12 @@ const Setting = () => {
         </div>
       </section>
 
-      {/* ===== الهوية البصرية ===== */}
+      {/*  الهوية البصرية  */}
       <section className="flex items-center justify-center py-5 px-4">
         <div className="bg-[#081226] w-full max-w-4xl p-4 md:p-8 rounded-xl text-white border border-gray-700">
           <div dir="rtl">
             <h2 className="text-lg md:text-[20px] font-semibold text-white mb-4 flex items-center gap-2">
-              <span className="w-2.5 h-2.5 bg-[#C6A24F] rounded-full flex-shrink-0"></span>
+              <span className="w-2.5 h-2.5 bg-[#C6A24F] rounded-full shrink-0"></span>
               الهوية البصرية
             </h2>
           </div>
@@ -697,7 +696,7 @@ const Setting = () => {
               )}
             </div>
 
-            <div className="w-32 h-32 md:w-40 md:h-40 flex-shrink-0 bg-[#222c3c] border-2 border-dashed border-gray-600 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-blue-500 transition-colors relative overflow-hidden">
+            <div className="w-32 h-32 md:w-40 md:h-40 shrink-0 bg-[#222c3c] border-2 border-dashed border-gray-600 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-blue-500 transition-colors relative overflow-hidden">
               <input
                 type="file"
                 accept="image/png, image/jpeg"
@@ -733,7 +732,7 @@ const Setting = () => {
         </div>
       </section>
 
-      {/* ===== مواعيد العمل ===== */}
+      {/*  مواعيد العمل  */}
       <section>
         <div className="w-full max-w-4xl px-4 mx-auto text-white" dir="rtl">
           <div className="bg-[#081226] p-4 md:p-6 rounded-xl mb-8">
@@ -745,17 +744,24 @@ const Setting = () => {
             <form onSubmit={handleSubmitWork(AddDate)}>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">
                 <div className="flex flex-col gap-1">
-                  <select
-                    multiple
-                    {...registerWork("days", { required: "اختار يوم واحد على الأقل" })}
-                    className="bg-slate-800 p-3 rounded-lg border border-slate-700 w-full h-40"
-                  >
+                  <div className="bg-slate-800 p-3 rounded-lg border border-slate-700 w-full space-y-2">
                     {validDays.map((day, index) => (
-                      <option key={index} value={day}>
+                      <label
+                        key={index}
+                        className="flex items-center gap-2 cursor-pointer text-white"
+                      >
+                        <input
+                          type="checkbox"
+                          value={day}
+                          {...registerWork("days", {
+                            required: "اختار يوم واحد على الأقل",
+                          })}
+                          className="accent-blue-500 w-4 h-4"
+                        />
                         {day}
-                      </option>
+                      </label>
                     ))}
-                  </select>
+                  </div>
                   {errorsWork.days && (
                     <p className="text-red-500 text-sm">{errorsWork.days.message}</p>
                   )}
@@ -842,7 +848,7 @@ const Setting = () => {
         </div>
       </section>
 
-      {/* ===== مواعيد الحجز ===== */}
+      {/*  مواعيد الحجز  */}
       <section>
         <div dir="rtl" className="bg-[#081226] text-white mx-auto p-4 md:p-8 rounded-xl w-full max-w-4xl mt-6 md:mt-10">
           <h2 className="text-lg md:text-xl font-bold mb-2">إضافة مواعيد الحجز</h2>
@@ -908,7 +914,7 @@ const Setting = () => {
           {/* جدول مواعيد الحجز */}
           <div dir="rtl" className="mt-6 flex items-start justify-center">
             <div className="w-full overflow-hidden rounded-2xl border border-white/10 bg-[#151b2b] shadow-2xl shadow-black/40">
-              <div className="px-4 md:px-6 py-5 border-b bg-[#081226] border-white/5">
+              <div className="px-4 md:px-6 py-5 border-b bg-[#232e3d] border-white/5">
                 <h2 className="text-lg md:text-xl font-semibold text-[#f0b44b]">
                   مواعيد العمل
                 </h2>
@@ -950,7 +956,7 @@ const Setting = () => {
                       return (
                         <tr
                           key={row._id}
-                          className="border-t bg-[#19202e] border-white/5 hover:bg-white/2 transition-colors"
+                          className="border-t bg-[#081226] border-white/5 hover:bg-white/2 transition-colors"
                         >
                           <td className="px-3 md:px-6 py-4 md:py-6 font-medium">{day}</td>
                           <td className="px-3 md:px-6 py-4 md:py-6 text-white/85">{from}</td>
@@ -975,7 +981,7 @@ const Setting = () => {
         </div>
       </section>
 
-      {/* ===== إعدادات القضايا ===== */}
+      {/*  إعدادات القضايا  */}
       <section>
         <div className="min-h-screen text-white p-4 md:p-8" dir="rtl">
           <div className="mx-auto max-w-4xl">
@@ -1050,8 +1056,8 @@ const Setting = () => {
                           toggleCaseMutation.isPending && activeToggleId === issue._id
                         }
                         className={`inline-flex items-center rounded-full px-2 md:px-3 py-1 text-xs font-bold cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed ${issue.isActive
-                            ? "bg-emerald-500/15 text-emerald-400 ring-1 ring-emerald-500/25"
-                            : "bg-slate-500/10 text-slate-400 ring-1 ring-slate-500/20"
+                          ? "bg-emerald-500/15 text-emerald-400 ring-1 ring-emerald-500/25"
+                          : "bg-slate-500/10 text-slate-400 ring-1 ring-slate-500/20"
                           }`}
                       >
                         {toggleCaseMutation.isPending && activeToggleId === issue._id

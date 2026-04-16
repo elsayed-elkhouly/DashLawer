@@ -1,12 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { FileText, Search, User } from 'lucide-react'
-import React from 'react'
+import React, { useState } from 'react'
 import { MdOutlinePictureAsPdf } from "react-icons/md";
 import Cookies from 'js-cookie';
 import api from '../../api/axios';
 
 const DigitalArchive = () => {
+  const [searchTerm, setSearchTerm] = useState("");
   function getData() {
     return api.get("/Archive/?page=1", {
       headers: {
@@ -20,8 +21,21 @@ const DigitalArchive = () => {
     queryFn: getData,
   });
 
-  console.log(data?.data?.documents);
+const documents = data?.data?.documents || [];
 
+const filteredDocuments = useMemo(() => {
+  if (!searchTerm.trim()) return documents;
+
+  const term = searchTerm.toLowerCase();
+
+  return documents.filter((doc) => {
+    return (
+      doc.name?.toLowerCase().includes(term) ||
+      doc.clientName?.toLowerCase().includes(term) ||
+      doc.relatedDisplay?.toLowerCase().includes(term)
+    );
+  });
+}, [documents, searchTerm]);
   return (
     <>
       <div className=" w-full p-4 md:p-8 font-sans" dir="rtl">
@@ -43,26 +57,14 @@ const DigitalArchive = () => {
             <div className="relative w-full md:grow order-1 md:order-2">
               <input
                 type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="البحث عن اسم ملف، رقم قضية، أو موكل..."
-                className="w-full rounded-xl border border-gray-700 bg-[#1a2634] py-2 md:py-3 pr-4 pl-10 text-sm md:text-base text-right text-white placeholder-gray-500 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="h-12 w-full rounded-2xl border border-[#132949] bg-[#091b35] pr-11 pl-4 text-sm text-white outline-none transition placeholder:text-[#59708f] focus:border-[#d4aa45]/70 focus:ring-2 focus:ring-[#d4aa45]/20"
               />
               <Search className="absolute left-3 top-1/2 h-4 w-4 md:h-5 md:w-5 -translate-y-1/2 text-gray-500" />
             </div>
 
-            {/* Filter Pills */}
-            <div className="flex flex-wrap gap-2 order-2 md:order-1">
-              <button className="text-xs md:text-sm rounded-full border border-gray-700 bg-[#1a2634] px-4 md:px-6 py-2 text-gray-300 hover:bg-gray-700 transition-colors">
-                نوع الوثيقة
-              </button>
-
-              <button className="text-xs md:text-sm rounded-full border border-gray-700 bg-[#1a2634] px-4 md:px-6 py-2 text-gray-300 hover:bg-gray-700 transition-colors">
-                تاريخ الرفع
-              </button>
-
-              <button className="text-xs md:text-sm rounded-full border border-gray-700 bg-[#1a2634] px-4 md:px-6 py-2 text-gray-300 hover:bg-gray-700 transition-colors">
-                الحالة
-              </button>
-            </div>
           </div>
         </div>
       </div>
@@ -75,8 +77,8 @@ const DigitalArchive = () => {
           <div className="text-red-400 text-center col-span-full">
             حدث خطأ أثناء تحميل البيانات
           </div>
-        ) : data?.data?.documents?.length > 0 ? (
-          data?.data?.documents?.map((doc, index) => {
+        ) : filteredDocuments.length > 0 ? (
+          filteredDocuments.map((doc, index) => {
             return (
               <a
                 key={doc?._id || doc?.id || index}
@@ -86,40 +88,52 @@ const DigitalArchive = () => {
                 className="block"
               >
                 <div
-                  className="cursor-pointer w-full rounded-2xl md:rounded-3xl border border-[#FFFFFF14] bg-[#061328] p-4 md:p-6 text-white shadow-xl transition-all hover:border-[#C9A34A]"
+                  className="cursor-pointer w-full rounded-2xl md:rounded-3xl border border-[#C9A34A]/30 bg-[#061328] p-4 md:p-6 text-white shadow-xl transition-all hover:border-[#C9A34A]"
                   dir="rtl"
                 >
                   {/* Top Section */}
                   <div className="mb-4 flex items-start justify-between">
-                    <div className="flex items-center justify-center rounded-2xl md:rounded-3xl bg-[#EF44441A] p-2 md:p-3">
-                      <MdOutlinePictureAsPdf className="h-6 w-6 md:h-8 md:w-8 text-red-500" />
+                    {/* Right in RTL */}
+                    <div className="flex h-10 w-10 md:h-14 md:w-14 items-center justify-center rounded-2xl md:rounded-3xl bg-[#EF44441A] shrink-0">
+                      <MdOutlinePictureAsPdf className="h-5 w-5 md:h-7 md:w-7 text-red-500" />
                     </div>
-                    <div className="h-2 w-2 md:h-3 md:w-3 rounded-full bg-[#C9A34A]" />
+
+                    {/* Left in RTL */}
+                    <div className="h-2.5 w-2.5 md:h-3 md:w-3 rounded-full bg-[#C9A34A] shrink-0" />
                   </div>
 
                   {/* Content */}
-                  <div className="mb-4 md:mb-6 text-right">
-                    <h3 className="mb-1 text-base md:text-xl font-bold line-clamp-2">
+                  <div className="mb-4 md:mb-6 text-right min-w-0">
+                    <h3 className="mb-2 text-base md:text-xl font-bold leading-7 line-clamp-2 break-words">
                       {doc.name}
                     </h3>
 
-                    <p className="text-xs md:text-sm font-mono text-gray-500">
-                      رقم القضية: #CASE-2024-001
+                    <p className="text-xs md:text-sm text-gray-400">
+                      <span className="text-gray-500">رقم القضية:</span>{" "}
+                      <span dir="ltr" className="inline-block font-mono">
+                        CASE-2024-001
+                      </span>
                     </p>
 
-                    <p className="text-xs md:text-sm font-mono text-gray-500">
-                      {doc.relatedDisplay}
-                    </p>
+                    {doc.relatedDisplay && (
+                      <p className="mt-1 text-xs md:text-sm text-gray-500 truncate">
+                        {doc.relatedDisplay}
+                      </p>
+                    )}
                   </div>
 
                   {/* Divider */}
-                  <div className="mb-3 md:mb-4 h-px w-full bg-gray-800" />
+                  <div className="mb-3 md:mb-4 h-px w-full bg-white/10" />
 
                   {/* Footer */}
-                  <div className="flex items-center justify-between text-xs md:text-sm text-gray-400">
-                    <div className="flex items-center gap-2">
-                      <User size={14} />
-                      <span className="truncate max-w-[120px] md:max-w-full">
+                  <div className="flex items-center justify-between text-xs md:text-sm text-gray-400 gap-3">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <User size={14} className="shrink-0" />
+
+                      <span
+                        dir="ltr"
+                        className="truncate max-w-37.5"
+                      >
                         {doc.clientName}
                       </span>
                     </div>

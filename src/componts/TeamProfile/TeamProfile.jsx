@@ -46,7 +46,7 @@ const TeamProfile = () => {
 
 
     const UserData = data?.data?.user
-    console.log(UserData);
+    console.log(data?.data?.stats);
 
     const {
         register,
@@ -542,10 +542,10 @@ const TeamProfile = () => {
                     {/* Stats */}
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
                         {[
-                            { title: "مواعيد اليوم", value: 3, icon: <HiOutlineCalendarDays />, color: "text-red-400" },
-                            { title: "القضايا النشطة", value: 12, icon: <HiOutlineBriefcase />, color: "text-purple-400" },
-                            { title: "القضايا المنجزة", value: 18, icon: <HiOutlineFolder />, color: "text-blue-400" },
-                            { title: "إجمالي القضايا", value: 42, icon: <HiOutlineClipboardDocumentList />, color: "text-amber-400" },
+                            { title: " مهام الاسبوع", value: data?.data?.stats.thisWeekSessions, icon: <HiOutlineCalendarDays />, color: "text-red-400" },
+                            { title: "القضايا النشطة", value: data?.data?.stats.activeCases, icon: <HiOutlineBriefcase />, color: "text-purple-400" },
+                            { title: "القضايا المنجزة", value: data?.data?.stats.completedCases, icon: <HiOutlineFolder />, color: "text-blue-400" },
+                            { title: "إجمالي القضايا", value: data?.data?.stats.totalCases, icon: <HiOutlineClipboardDocumentList />, color: "text-amber-400" },
                         ].map((item, i) => (
                             <div
                                 key={i}

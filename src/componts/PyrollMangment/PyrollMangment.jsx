@@ -731,13 +731,13 @@ function PyrollMangment() {
 
                   {/* Footer */}
                   <div className="sticky bottom-0 flex flex-col gap-3 border-t border-white/10 bg-[#081b31] px-4 py-4 sm:flex-row sm:px-5">
-                    <button className="w-full rounded-xl bg-[#D7AE46] py-2.5 font-bold text-[#071a2f] transition hover:opacity-90">
+                    {/* <button className="w-full rounded-xl bg-[#D7AE46] py-2.5 font-bold text-[#071a2f] transition hover:opacity-90">
                       طباعة
                     </button>
 
                     <button className="w-full rounded-xl border border-white/10 py-2.5 text-[#8EA3BF] transition hover:bg-white/5 hover:text-white">
                       تحميل PDF
-                    </button>
+                    </button> */}
                   </div>
                 </div>
               </div>

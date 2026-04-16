@@ -116,7 +116,7 @@ const Dashbord = () => {
     },
     {
       title: "إجمالي الإيرادات",
-      value: `$${data?.data?.stats?.totalRevenue ?? 0}`,
+      value: `EGP ${data?.data?.stats?.totalRevenue ?? 0}`,
       icon: <FaMoneyBills className="text-[#C9A14A] w-5 h-5 sm:w-6 sm:h-6" />,
     },
     {
@@ -346,12 +346,9 @@ const Dashbord = () => {
               key={index}
               className="bg-[#061328] rounded-xl p-5 sm:p-6 min-h-37.5 flex flex-col justify-between shadow-lg relative border border-[#C9A14A1A]"
             >
-
-
               <div className="absolute top-5 right-5 bg-[#1f1f28] p-3 rounded-full mb-3">
                 {card.icon}
-              </div>
-
+            </div>
               <div className="mt-auto text-right pt-8 sm:pt-10">
                 <p className="text-gray-400 text-sm">{card.title}</p>
                 <p className="text-white text-xl sm:text-2xl font-bold mt-1 wrap-break-word">

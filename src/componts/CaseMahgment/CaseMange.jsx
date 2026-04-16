@@ -21,7 +21,7 @@ import api from '../../api/axios';
 const CaseMange = () => {
   const [activeTab, setActiveTab] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
-
+  const [searchTerm, setSearchTerm] = useState("");
   const filterOptions = [
     { label: 'الحالة' },
     { label: 'نوع القضية' },
@@ -104,10 +104,30 @@ const CaseMange = () => {
   };
   console.log(Cases?.data?.cases);
   const cases = Cases?.data?.cases || [];
-  const filteredCases = useMemo(() => {
-    if (activeTab === "all") return cases;
-    return cases.filter((item) => item.tab === activeTab);
-  }, [activeTab, cases]);
+const filteredCases = useMemo(() => {
+  let result = cases;
+
+  // فلترة التاب
+  if (activeTab !== "all") {
+    result = result.filter((item) => item.tab === activeTab);
+  }
+
+  // فلترة السيرش
+  if (searchTerm.trim() !== "") {
+    const term = searchTerm.toLowerCase();
+
+    result = result.filter((item) => {
+      return (
+        item.caseNumber?.toLowerCase().includes(term) ||
+        item.client?.fullName?.toLowerCase().includes(term) ||
+        item.caseType?.name?.toLowerCase().includes(term) ||
+        item.court?.toLowerCase().includes(term)
+      );
+    });
+  }
+
+  return result;
+}, [cases, activeTab, searchTerm]);
   return (
     <>
       <div className="w-full  px-4 sm:px-6 lg:px-8 py-5 sm:py-6 lg:py-8 font-sans" dir="rtl">
@@ -124,11 +144,11 @@ const CaseMange = () => {
 
           {/* Buttons */}
           <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3 sm:gap-4 order-2 xl:order-1">
-           
+
 
             <Link to={"/CaseMangemnt/AddNewCase"} className="w-full sm:w-auto">
               <button
-                              className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-[#c79a3b] px-5 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-[#c79a3b]/20 transition hover:brightness-110"
+                className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-[#c79a3b] px-5 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-[#c79a3b]/20 transition hover:brightness-110"
 
               >
                 <BiPlus size={20} />
@@ -141,7 +161,7 @@ const CaseMange = () => {
 
       <div className="w-full  px-4 sm:px-6 lg:px-8 pb-4 sm:pb-6" dir="rtl">
         <div className="bg-[#061224]/50 p-4 rounded-xl border border-gray-800">
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-3">
+          <div className="grid grid-cols-1  gap-3">
             {/* Search Input */}
             <div className="relative md:col-span-2 xl:col-span-5">
               <span className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
@@ -149,28 +169,16 @@ const CaseMange = () => {
               </span>
               <input
                 type="text"
-                className="w-full bg-[#0b0f1a] border border-gray-700 text-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 pr-10 placeholder-gray-500"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                  className="h-12 w-full rounded-2xl border border-[#132949] bg-[#091b35] pr-11 pl-4 text-sm text-white outline-none transition placeholder:text-[#59708f] focus:border-[#d4aa45]/70 focus:ring-2 focus:ring-[#d4aa45]/20"
                 placeholder="البحث برقم القضية، اسم العميل، أو موضوع النزاع..."
               />
             </div>
 
-            {/* Dropdown Filters */}
-            {filterOptions.map((filter, index) => (
-              <div key={index} className="xl:col-span-2">
-                <button className="w-full flex items-center justify-between bg-[#0b0f1a] border border-gray-700 text-gray-400 text-sm px-4 py-2.5 rounded-lg hover:bg-gray-800 transition-colors">
-                  <BiChevronDown size={16} className="text-gray-500 shrink-0" />
-                  <span className="truncate">{filter.label}</span>
-                </button>
-              </div>
-            ))}
+         
 
-            {/* Reset Button */}
-            <div className="xl:col-span-1 flex items-center">
-              <button className="w-full xl:w-auto flex items-center justify-center gap-2 text-gray-400 hover:text-white text-sm px-4 py-2.5 transition-colors">
-                <FiRotateCcw size={16} />
-                <span>إعادة ضبط</span>
-              </button>
-            </div>
+            
           </div>
         </div>
       </div>
@@ -204,7 +212,7 @@ const CaseMange = () => {
               })}
             </div>
 
-        
+
           </div>
 
           <div className="overflow-hidden rounded-2xl border border-[#1a2d47] bg-[#09172b] shadow-[0_10px_30px_rgba(0,0,0,0.25)]">
@@ -307,7 +315,7 @@ const CaseMange = () => {
               </table>
             </div>
 
-        
+
           </div>
         </div>
       </div>

@@ -302,129 +302,125 @@ const Bills = () => {
               })}
             </div>
 
-         <div
-  dir="rtl"
-  className="overflow-hidden rounded-[22px] border border-white/5 bg-[#081A31]/95 shadow-[0_30px_60px_rgba(0,0,0,0.25)] backdrop-blur-sm"
->
-  {/* 👇 ده المهم */}
-<div className="w-full overflow-x-auto xl:overflow-visible">    
-    {/* 👇 ده بيحافظ على شكل الجدول */}
-<div className="min-w-275 xl:min-w-0">
-      {/* Header */}
-      <div className="grid grid-cols-[1.2fr_1.7fr_1.15fr_1.2fr_0.95fr_0.95fr_0.95fr_1.15fr_1fr_1.15fr] items-center gap-4 bg-white/[0.03] px-6 py-4 text-[12px] text-[#90A4BF]">
-        <div>رقم الفاتورة</div>
-        <div>العميل</div>
-        <div>نوع الخدمة</div>
-        <div>المجموع الكلي</div>
-        <div className="text-center">المجموع بعد الخصم</div>
-        <div className="text-center">المدفوع</div>
-        <div className="text-center">المتبقي</div>
-        <div className="text-center">تاريخ الاستحقاق</div>
-        <div className="text-center">الحالة</div>
-        <div className="text-center">الإجراءات</div>
-      </div>
-
-      {/* Data */}
-      {isLoading ? (
-        <div className="px-6 py-8 text-center text-sm text-[#8EA3BF]">
-          <span className="loading loading-infinity loading-xl"></span>
-        </div>
-      ) : tabFilteredInvoices.length > 0 ? (
-        tabFilteredInvoices.map((invoice) => (
-          <div
-            key={invoice._id}
-            className="grid grid-cols-[1.2fr_1.7fr_1.15fr_1.2fr_0.95fr_0.95fr_0.95fr_1.15fr_1fr_1.15fr] items-center gap-4 border-t border-white/5 px-6 py-4 text-[13px] text-white"
-          >
-            <div className="font-medium text-[#D7AE46]">
-              {invoice.invoiceNumber}
-            </div>
-
-            <div className="flex items-center gap-3 overflow-hidden">
-              <span className="truncate">
-                {invoice.client.fullName}
-              </span>
-            </div>
-
-            <div className="text-[12px] text-[#D1D9E6]">
-              {invoice.service}
-            </div>
-
-            <div>{invoice.subtotal}</div>
-
-            <div className="text-center font-semibold">
-              {invoice.total}
-            </div>
-
-            <div className="text-center">
-              {invoice.paidAmount}
-            </div>
-
-            <div className={`text-center ${getRemainingClass(invoice.status)}`}>
-              {invoice.remaining}
-            </div>
-
             <div
-              className={`text-center text-[12px] ${
-                invoice.status === "متأخرة"
-                  ? "text-[#F05B5B]"
-                  : "text-[#8EA3BF]"
-              }`}
+              dir="rtl"
+              className="overflow-hidden rounded-[22px] border border-white/5 bg-[#081A31]/95 shadow-[0_30px_60px_rgba(0,0,0,0.25)] backdrop-blur-sm"
             >
-              {invoice?.dueDate
-                ? formatDateToArabic(invoice.dueDate)
-                : "لم يتم التحديد"}
-            </div>
+              <div className="w-full overflow-x-auto xl:overflow-visible">
+                <div className="min-w-275 xl:min-w-0">
+                  {/* Header */}
+                  <div className="grid grid-cols-[1.2fr_1.7fr_1.15fr_1.2fr_0.95fr_0.95fr_0.95fr_1.15fr_1fr_1.15fr] items-center gap-4 bg-white/3 px-6 py-4 text-[12px] text-[#90A4BF]">
+                    <div>رقم الفاتورة</div>
+                    <div>العميل</div>
+                    <div>نوع الخدمة</div>
+                    <div>المجموع الكلي</div>
+                    <div className="text-center">المجموع بعد الخصم</div>
+                    <div className="text-center">المدفوع</div>
+                    <div className="text-center">المتبقي</div>
+                    <div className="text-center">تاريخ الاستحقاق</div>
+                    <div className="text-center">الحالة</div>
+                    <div className="text-center">الإجراءات</div>
+                  </div>
 
-            <div className="flex justify-center">
-              <span
-                className={`inline-flex min-w-18 items-center justify-center rounded-full px-3 py-1 text-[11px] font-medium ${getStatusClass(
-                  invoice.status
-                )}`}
-              >
-                {invoice.status}
-              </span>
-            </div>
+                  {/* Data */}
+                  {isLoading ? (
+                    <div className="px-6 py-8 text-center text-sm text-[#8EA3BF]">
+                      <span className="loading loading-infinity loading-xl"></span>
+                    </div>
+                  ) : tabFilteredInvoices.length > 0 ? (
+                    tabFilteredInvoices.map((invoice) => (
+                      <div
+                        key={invoice._id}
+                        className="grid grid-cols-[1.2fr_1.7fr_1.15fr_1.2fr_0.95fr_0.95fr_0.95fr_1.15fr_1fr_1.15fr] items-center gap-4 border-t border-white/5 px-6 py-4 text-[13px] text-white"
+                      >
+                        <div className="font-medium text-[#D7AE46]">
+                          {invoice.invoiceNumber}
+                        </div>
 
-            <div className="flex items-center justify-center gap-2 text-[#8EA3BF]">
-              <button
-                onClick={() => setSelectedInvoice(invoice)}
-                className="rounded-full border border-white/10 bg-white/2 p-2 transition hover:bg-white/10 hover:text-white"
-              >
-                <HiOutlineEye size={14} />
-              </button>
+                        <div className="flex items-center gap-3 overflow-hidden">
+                          <span className="truncate">
+                            {invoice.client.fullName}
+                          </span>
+                        </div>
 
-              <button
-                onClick={() => handleDelete(invoice._id)}
-                className="rounded-full border border-white/10 bg-white/2 p-2 text-red-400 transition hover:bg-white/10 hover:text-red-600"
-              >
-                <HiOutlineTrash size={14} />
-              </button>
+                        <div className="text-[12px] text-[#D1D9E6]">
+                          {invoice.service}
+                        </div>
 
-              <button
-                onClick={() => PrintSingleInvoic(invoice._id)}
-                className="flex h-8 w-8 items-center justify-center rounded-full border border-[#243752] text-[#a7bad2] transition hover:bg-[#12233f] hover:text-white"
-              >
-                <HiOutlinePrinter size={18} />
-              </button>
-            </div>
-          </div>
-        ))
-      ) : (
-        <div className="px-6 py-8 text-center text-sm text-[#8EA3BF]">
-          لا توجد نتائج مطابقة
-        </div>
-      )}
+                        <div>{invoice.subtotal}</div>
 
-    </div>
-  </div>
+                        <div className="text-center font-semibold">
+                          {invoice.total}
+                        </div>
 
-  {/* pagination زي ما هو بدون تعديل */}
-  <div className="flex flex-col gap-4 border-t border-white/5 px-6 py-4 md:flex-row md:items-center md:justify-between">
+                        <div className="text-center">
+                          {invoice.paidAmount}
+                        </div>
+
+                        <div className={`text-center ${getRemainingClass(invoice.status)}`}>
+                          {invoice.remaining}
+                        </div>
+
+                        <div
+                          className={`text-center text-[12px] ${invoice.status === "متأخرة"
+                              ? "text-[#F05B5B]"
+                              : "text-[#8EA3BF]"
+                            }`}
+                        >
+                          {invoice?.dueDate
+                            ? formatDateToArabic(invoice.dueDate)
+                            : "لم يتم التحديد"}
+                        </div>
+
+                        <div className="flex justify-center">
+                          <span
+                            className={`inline-flex min-w-18 items-center justify-center rounded-full px-3 py-1 text-[11px] font-medium ${getStatusClass(
+                              invoice.status
+                            )}`}
+                          >
+                            {invoice.status}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center justify-center gap-2 text-[#8EA3BF]">
+                          <button
+                            onClick={() => setSelectedInvoice(invoice)}
+                            className="rounded-full border border-white/10 bg-white/2 p-2 transition hover:bg-white/10 hover:text-white"
+                          >
+                            <HiOutlineEye size={14} />
+                          </button>
+
+                          <button
+                            onClick={() => handleDelete(invoice._id)}
+                            className="rounded-full border border-white/10 bg-white/2 p-2 text-red-400 transition hover:bg-white/10 hover:text-red-600"
+                          >
+                            <HiOutlineTrash size={14} />
+                          </button>
+
+                          <button
+                            onClick={() => PrintSingleInvoic(invoice._id)}
+                            className="flex h-8 w-8 items-center justify-center rounded-full border border-[#243752] text-[#a7bad2] transition hover:bg-[#12233f] hover:text-white"
+                          >
+                            <HiOutlinePrinter size={18} />
+                          </button>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="px-6 py-8 text-center text-sm text-[#8EA3BF]">
+                      لا توجد نتائج مطابقة
+                    </div>
+                  )}
+
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-4 border-t border-white/5 px-6 py-4 md:flex-row md:items-center md:justify-between">
                 <div className="flex items-center gap-2 text-[#8EA3BF]">
                   <button
                     onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                     disabled={currentPage === 1}
-                    className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/[0.02] hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/2 hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     <HiOutlineChevronRight size={14} />
                   </button>
@@ -438,7 +434,7 @@ const Bills = () => {
                         onClick={() => setCurrentPage(pageNumber)}
                         className={`flex h-8 min-w-8 items-center justify-center rounded-full border text-xs transition ${active
                           ? "border-[#D7AE46] bg-[#D7AE46] text-[#071A2F]"
-                          : "border-white/10 bg-white/[0.02] text-[#8EA3BF] hover:bg-white/10 hover:text-white"
+                          : "border-white/10 bg-white/2 text-[#8EA3BF] hover:bg-white/10 hover:text-white"
                           }`}
                       >
                         {pageNumber}
@@ -451,7 +447,7 @@ const Bills = () => {
                       setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                     }
                     disabled={currentPage === totalPages || totalPages === 0}
-                    className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/[0.02] hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/2 hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     <HiOutlineChevronLeft size={14} />
                   </button>
@@ -462,7 +458,7 @@ const Bills = () => {
                   {Math.min(page * limit, total)} من أصل {total} فاتورة
                 </div>
               </div>
-</div>
+            </div>
 
             <div className="mt-7 grid grid-cols-1 gap-4 md:grid-cols-3">
               <div className="rounded-[22px] border border-white/5 bg-[#081A31]/95 px-6 py-5 shadow-[0_25px_40px_rgba(0,0,0,0.2)]">

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Justice icon">
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F6D36B"/>
+      <stop offset="1" stop-color="#C79A2B"/>
+    </linearGradient>
+    <linearGradient id="wood" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8B5A2B"/>
+      <stop offset="1" stop-color="#5A351A"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="1.2" stdDeviation="1.2" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- base -->
+  <g filter="url(#shadow)">
+    <path d="M16 56c0-2.2 1.8-4 4-4h24c2.2 0 4 1.8 4 4v2H16v-2z" fill="url(#wood)"/>
+    <path d="M12 58h40c1.1 0 2 .9 2 2v2H10v-2c0-1.1.9-2 2-2z" fill="#3E2412"/>
+  </g>
+
+  <!-- pillar -->
+  <g filter="url(#shadow)">
+    <path d="M30 14h4c1.7 0 3 1.3 3 3v33c0 1.7-1.3 3-3 3h-4c-1.7 0-3-1.3-3-3V17c0-1.7 1.3-3 3-3z" fill="url(#wood)"/>
+    <path d="M26 12c0-2.2 1.8-4 4-4h4c2.2 0 4 1.8 4 4v2H26v-2z" fill="#6A3D1E"/>
+  </g>
+
+  <!-- crossbar -->
+  <g filter="url(#shadow)">
+    <rect x="14" y="18" width="36" height="4" rx="2" fill="url(#wood)"/>
+    <circle cx="32" cy="20" r="3.2" fill="url(#gold)"/>
+  </g>
+
+  <!-- chains -->
+  <g stroke="url(#gold)" stroke-width="1.2" stroke-linecap="round" opacity="0.95">
+    <path d="M18 22 L14.5 30" />
+    <path d="M18 22 L21.5 30" />
+    <path d="M46 22 L42.5 30" />
+    <path d="M46 22 L49.5 30" />
+  </g>
+
+  <!-- pans -->
+  <g filter="url(#shadow)">
+    <path d="M9 32c2.5 4.5 15.5 4.5 18 0H9z" fill="url(#gold)"/>
+    <path d="M37 32c2.5 4.5 15.5 4.5 18 0H37z" fill="url(#gold)"/>
+  </g>
+
+  <!-- gavel (tilted) -->
+  <g transform="translate(40 36) rotate(25)" filter="url(#shadow)">
+    <!-- handle -->
+    <rect x="-2" y="10" width="18" height="4" rx="2" fill="url(#wood)"/>
+    <!-- head -->
+    <rect x="-8" y="0" width="14" height="8" rx="2" fill="url(#wood)"/>
+    <rect x="-8" y="3" width="14" height="2" rx="1" fill="url(#gold)"/>
+  </g>
+</svg>
