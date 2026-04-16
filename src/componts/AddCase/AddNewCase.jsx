@@ -95,7 +95,7 @@ const AddNewCase = () => {
     queryKey: ["cases"],
     queryFn: getCases
   })
-  console.log(Cases);
+  // console.log(Cases);
 
 
   function getUSers() {

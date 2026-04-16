@@ -165,7 +165,7 @@ const TaskMangment = () => {
     queryFn: () => getTasks(page),
     keepPreviousData: true,
   });
-  console.log(Tasks);
+  // console.log(Tasks);
 
   const tasks = Tasks?.tasks || [];
   const total = Tasks?.total || 0;

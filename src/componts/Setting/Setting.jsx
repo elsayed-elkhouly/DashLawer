@@ -103,7 +103,7 @@ const Setting = () => {
     staleTime: 1000 * 60 * 10,
     gcTime: 1000 * 60 * 30,
   });
-  console.log(settingData);
+  // console.log(settingData);
 
   const { data: cases } = useQuery({
     queryKey: ["Cases"],

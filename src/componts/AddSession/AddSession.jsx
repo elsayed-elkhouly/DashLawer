@@ -93,8 +93,8 @@ const AddSession = () => {
                         ? [formData.team]
                         : [],
             };
-            console.log(formData.team);
-            console.log(payload);
+            // console.log(formData.team);
+            // console.log(payload);
             await api.post("/session/", payload, {
                 headers: {
                     authorization: `Bearer ${Cookies.get("token")}`,

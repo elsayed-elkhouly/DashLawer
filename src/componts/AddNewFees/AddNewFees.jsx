@@ -14,9 +14,9 @@ import {
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import api from "../../api/axios";
- 
+
 const AddNewFees = () => {
-  
+
   const [search, setSearch] = useState("");
   const [showClients, setShowClients] = useState(false);
 
@@ -115,18 +115,18 @@ const AddNewFees = () => {
         }
       );
 
-      console.log("invoice created:", res.data);
+      // console.log("invoice created:", res.data);
       toast.success("تم إنشاء الفاتورة بنجاح");
       reset();
       setSearch("");
-      
+
     } catch (error) {
       console.error("create invoice error:", error);
       console.log("Full error:", error);
-            console.log("Error response:", error.response);
-            console.log("Error data:", error.response?.data.message);
-            console.log("Error status:", error.response?.status);
-      toast.error( error.response?.data.message ||"حصل خطأ أثناء إنشاء الفاتورة");
+      console.log("Error response:", error.response);
+      console.log("Error data:", error.response?.data.message);
+      console.log("Error status:", error.response?.status);
+      toast.error(error.response?.data.message || "حصل خطأ أثناء إنشاء الفاتورة");
     }
   };
 
@@ -156,18 +156,18 @@ const AddNewFees = () => {
                       {isSubmitting ? "جاري الحفظ..." : "حفظ الفاتورة"}
                     </button>
 
-                   <Link to={"/Bills"}>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        reset();
-                        setSearch("");
-                      }}
-                      className=" cursor-pointer rounded-xl border border-white/10 bg-[#0D223C] px-5 py-3 text-sm text-white"
-                    >
-                      إلغاء
-                    </button>
-                   </Link>
+                    <Link to={"/Bills"}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          reset();
+                          setSearch("");
+                        }}
+                        className=" cursor-pointer rounded-xl border border-white/10 bg-[#0D223C] px-5 py-3 text-sm text-white"
+                      >
+                        إلغاء
+                      </button>
+                    </Link>
                   </div>
                 </div>
 
@@ -359,7 +359,7 @@ const AddNewFees = () => {
                         <option value="كاش">كاش</option>
                         <option value="تحويل">تحويل بنكي</option>
                         <option value="شيك">شيك</option>
-                        <option value= "محفظه الكنرونية">محفظه الكنرونية</option>
+                        <option value="محفظه الكنرونية">محفظه الكنرونية</option>
                       </select>
                     </div>
 
@@ -459,7 +459,7 @@ const AddNewFees = () => {
                     type="button"
                     className="w-full rounded-2xl border border-white/10 bg-[#09182B] px-4 py-3 text-sm text-white"
                   >
-                    {paymentMethod} 
+                    {paymentMethod}
                   </button>
                 </div>
 

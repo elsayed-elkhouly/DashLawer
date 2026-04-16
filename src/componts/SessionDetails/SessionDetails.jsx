@@ -78,7 +78,7 @@ const SessionDetails = () => {
     },
   });
   const session = sessionResponse?.data?.session;
-  console.log(session);
+  // console.log(session);
 
   useEffect(() => {
     if (session) {
@@ -117,7 +117,7 @@ const SessionDetails = () => {
         }
       );
 
-      console.log(res.data);
+      // console.log(res.data);
       toast.success("تم رفع الملف بنجاح");
       queryClient.invalidateQueries({ queryKey: ["session", id] });
     } catch (error) {
@@ -143,7 +143,7 @@ const SessionDetails = () => {
                 }
             );
 
-            console.log(res.data);
+            // console.log(res.data);
             toast.success("تم حذف الملف بنجاح");
             queryClient.invalidateQueries({ queryKey: ["session", id]  });
         } catch (error) {

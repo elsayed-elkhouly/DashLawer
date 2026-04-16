@@ -165,7 +165,7 @@ const Dashbord = () => {
     queryKey: ["Sessions"],
     queryFn: getSessions
   })
-  console.log(Session?.data?.sessions);
+  // console.log(Session?.data?.sessions);
   const formatDate = (date) => {
     if (!date) return "غير متوفر";
 

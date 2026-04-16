@@ -3,7 +3,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 
 export default function LawsList({ data , del }) {
     const laws = data || [];
-    const [selectedLaw, setSelectedLaw] = useState(null); // 👈 هنا الحل
+    const [selectedLaw, setSelectedLaw] = useState(null); 
 
     return (
         <>

@@ -210,7 +210,7 @@ const CaseDetails = () => {
         queryKey: ["CasesInvoice"],
         queryFn: getAllInvoicelCases
     })
-    console.log(Cases?.data?.invoices);
+    // console.log(Cases?.data?.invoices);
     
     async function PrintSingleInvoic(id) {
         try {

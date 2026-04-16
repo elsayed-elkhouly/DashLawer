@@ -117,7 +117,7 @@ const AddNewCaseinvoice = () => {
         }
       );
 
-      console.log("invoice created:", res.data);
+      // console.log("invoice created:", res.data);
       toast.success("تم إنشاء الفاتورة بنجاح");
       reset();
       setSearch("");

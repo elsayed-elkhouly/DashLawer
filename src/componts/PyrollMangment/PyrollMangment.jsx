@@ -159,7 +159,7 @@ function PyrollMangment() {
     mutationFn: ({ month, year, id }) =>
       getuserMonthlyPayroll(month, year, id),
   });
-  console.log(userpayroll?.payroll);
+  // console.log(userpayroll?.payroll);
   const advanceTransactions =
     userpayroll?.payroll?.transactions?.filter(
       (item) => item.type === "ADVANCE"

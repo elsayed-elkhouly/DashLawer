@@ -76,7 +76,7 @@ export default function UploadLawPdf() {
                 }
             );
            queryClient.invalidateQueries(["AllBooks"])
-            console.log("Upload success:", response.data);
+            // console.log("Upload success:", response.data);
 
             toast.success("تم رفع الملف بنجاح");
             reset();

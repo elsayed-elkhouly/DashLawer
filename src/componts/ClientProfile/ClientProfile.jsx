@@ -34,7 +34,7 @@ const ClientProfile = () => {
     queryKey: ["ClientProfile", id],
     queryFn: getClientProfile,
   });
-  console.log(data?.data?.client?.documents);
+  // console.log(data?.data?.client?.documents);
 
   const updateMutation = useMutation({
     mutationFn: updateData,
@@ -92,7 +92,7 @@ const ClientProfile = () => {
       }
       );
 
-      console.log(res.data);
+      // console.log(res.data);
       toast.success("تم رفع الملف بنجاح");
       queryClient.invalidateQueries({ queryKey: ["ClientProfile", id] });
       setFile(null);
@@ -143,7 +143,7 @@ const ClientProfile = () => {
         }
       );
 
-      console.log(res.data);
+      // console.log(res.data);
       toast.success("تم المسح");
 
       queryClient.invalidateQueries({ queryKey: ["ClientProfile", id] });

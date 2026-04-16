@@ -46,7 +46,7 @@ const TeamProfile = () => {
 
 
     const UserData = data?.data?.user
-    console.log(data?.data?.stats);
+    // console.log(data?.data?.stats);
 
     const {
         register,
@@ -282,7 +282,7 @@ const TeamProfile = () => {
         queryKey: ["LawerCases"],
         queryFn: getLawerCase
     })
-    console.log(LawerCases?.data?.cases);
+    // console.log(LawerCases?.data?.cases);
 
 
     if (isLoading) {

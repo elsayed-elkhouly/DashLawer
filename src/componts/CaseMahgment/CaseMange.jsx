@@ -102,7 +102,7 @@ const CaseMange = () => {
   const handleDelete = (id) => {
     deleteMutation.mutate(id);
   };
-  console.log(Cases?.data?.cases);
+  // console.log(Cases?.data?.cases);
   const cases = Cases?.data?.cases || [];
 const filteredCases = useMemo(() => {
   let result = cases;

@@ -40,7 +40,7 @@ const Team = () => {
     queryFn: getUSers
   })
 
-  console.log(data?.data);
+  // console.log(data?.data);
 
   const deleteMutation = useMutation({
     mutationFn: (id) =>
