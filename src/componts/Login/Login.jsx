@@ -36,26 +36,24 @@ const Login = () => {
 
   }) 
  
-  async function Signin(values) {
-    setisLoding(true)
-    try {
-      const data =await api.post("/auth/authSignin", values)
-      // console.log(data.data);
-      toast.success(data.data.message)
-      insertToken(data.data.access_token)
-      Cookies.set("token", data.data.access_token , { expires: 1 });
-      setisLoding(false)
-      navigate("/")
-    } catch (error) {
-      console.log("Message:", error.response?.data.message);
-      toast.error(error.response?.data.message)
-      setisLoding(false)
+async function Signin(values) {
+  setisLoding(true);
 
-    }
+  try {
+    const { data } = await api.post("/auth/authSignin", values);
 
+    toast.success(data.message);
+    insertToken(data.access_token);
+    Cookies.set("token", data.access_token, { expires: 1 });
 
-
+    navigate("/");
+  } catch (error) {
+    console.log("Message:", error.response?.data?.message);
+    toast.error(error.response?.data?.message);
+  } finally {
+    setisLoding(false);
   }
+}
   return (
     <>
       <div className="bg1  min-h-screen flex items-center justify-center  relative  "

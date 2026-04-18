@@ -19,12 +19,7 @@ import toast from 'react-hot-toast';
 const MyProfile = () => {
 
     function getProfile() {
-        return api.get("/users/profile/me", {
-            headers: {
-                authorization: `Bearer ${Cookies.get("token")}`,
-
-            }
-        })
+        return api.get("/users/profile/me")
 
     }
     const { data, isLoading } = useQuery({
@@ -35,12 +30,7 @@ const MyProfile = () => {
 
 
     function getTask() {
-        return api.get('/task/', {
-            headers: {
-                authorization: `Bearer ${Cookies.get("token")}`,
-
-            }
-        })
+        return api.get('/task/')
     }
     const { data: Task } = useQuery({
         queryKey: ["Task"],
@@ -49,12 +39,7 @@ const MyProfile = () => {
     // console.log(Task?.data?.tasks);
 
     function getCase() {
-        return api.get('/LegalCase/', {
-            headers: {
-                authorization: `Bearer ${Cookies.get("token")}`,
-
-            }
-        })
+        return api.get('/LegalCase/')
     }
     const { data: Case } = useQuery({
         queryKey: ["case"],
@@ -74,7 +59,7 @@ const MyProfile = () => {
     const Stats = data?.data?.stats
 
     // console.log(UserData);
-    // console.log(Stats);
+    console.log(Stats);
 
 
     const {
@@ -271,10 +256,10 @@ const MyProfile = () => {
                     {/* Stats */}
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
                         {[
-                            { title: " مهام الاسبوع", value: Stats.thisWeekSessions, icon: <HiOutlineCalendarDays />, color: "text-red-400" },
-                            { title: "القضايا النشطة", value: Stats.activeCases, icon: <HiOutlineBriefcase />, color: "text-purple-400" },
-                            { title: "القضايا المنجزة", value: Stats.completedCases, icon: <HiOutlineFolder />, color: "text-blue-400" },
-                            { title: "إجمالي القضايا", value: Stats.totalCases, icon: <HiOutlineClipboardDocumentList />, color: "text-amber-400" },
+                            { title: " مهام الاسبوع", value: Stats?.thisWeekSessions, icon: <HiOutlineCalendarDays />, color: "text-red-400" },
+                            { title: "القضايا النشطة", value: Stats?.activeCases, icon: <HiOutlineBriefcase />, color: "text-purple-400" },
+                            { title: "القضايا المنجزة", value: Stats?.completedCases, icon: <HiOutlineFolder />, color: "text-blue-400" },
+                            { title: "إجمالي القضايا", value: Stats?.totalCases, icon: <HiOutlineClipboardDocumentList />, color: "text-amber-400" },
                         ].map((item, i) => (
                             <div
                                 key={i}
@@ -297,7 +282,7 @@ const MyProfile = () => {
                         </div>
 
                         <div className="space-y-3 text-sm">
-                            {Case?.data.cases.map((c, i) => (
+                            {Case?.data?.cases?.map((c, i) => (
                                 <div
                                     key={i}
                                     className="grid grid-cols-5 items-center rounded-xl bg-[#081b31] px-4 py-3"

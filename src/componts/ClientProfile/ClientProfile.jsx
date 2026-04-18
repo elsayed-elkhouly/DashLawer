@@ -98,8 +98,8 @@ const ClientProfile = () => {
       setFile(null);
     } catch (error) {
       setLoding(false)
-      console.error(error);
-      toast.error("حصل خطأ أثناء رفع الملف");
+      console.error(error.response?.data?.message);
+      toast.error(error.response?.data?.message);
       ;
     } finally {
       setLoding(false);
@@ -137,9 +137,7 @@ const ClientProfile = () => {
           data: {
             publicId: publicId,
           },
-          headers: {
-            authorization: `Bearer ${Cookies.get("token")}`,
-          },
+        
         }
       );
 
@@ -160,9 +158,7 @@ const ClientProfile = () => {
         `/invoices/client/${id}/print-all`,
         {
           responseType: "blob",
-          headers: {
-            authorization: `Bearer ${Cookies.get("token")}`,
-          },
+        
         }
       );
 
@@ -190,9 +186,7 @@ const ClientProfile = () => {
         `/invoices/${id}/print`,
         {
           responseType: "blob",
-          headers: {
-            authorization: `Bearer ${Cookies.get("token")}`,
-          },
+        
         }
       );
 
@@ -211,6 +205,8 @@ const ClientProfile = () => {
       toast.success("Download Done");
     } catch (error) {
       console.log(error);
+      console.log("Message:", error.response?.data?.message);
+
       toast.error("حصل خطأ أثناء تنزيل الملف");
     }
   }

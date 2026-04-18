@@ -59,11 +59,7 @@ const AddNewCase = () => {
   const onSubmit = async (data) => {
     setloding(true)
     try {
-      const res = await api.post("/LegalCase/", data, {
-        headers: {
-          authorization: `Bearer ${Cookies.get("token")}`
-        }
-      })
+      const res = await api.post("/LegalCase/", data)
 
       toast.success(res?.data?.message)
       setSearch("");
@@ -85,11 +81,7 @@ const AddNewCase = () => {
   };
   const selectedPriority = watch("priority");
   function getCases() {
-    return api.get("/CaseType/", {
-      headers: {
-        authorization: `Bearer ${Cookies.get("token")}`
-      }
-    })
+    return api.get("/CaseType/")
   }
   const { data: Cases } = useQuery({
     queryKey: ["cases"],
@@ -99,12 +91,7 @@ const AddNewCase = () => {
 
 
   function getUSers() {
-    return api.get("/users", {
-      headers: {
-        authorization: `Bearer ${Cookies.get("token")}`,
-
-      }
-    })
+    return api.get("/users")
   }
   const { data: Lawer } = useQuery({
     queryKey: ["Users"],
@@ -120,9 +107,7 @@ const AddNewCase = () => {
           page: 1,
           limit: 10,
         },
-        headers: {
-          authorization: `Bearer ${Cookies.get("token")}`,
-        },
+        
       }
     );
 

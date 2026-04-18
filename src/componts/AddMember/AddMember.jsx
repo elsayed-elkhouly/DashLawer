@@ -126,11 +126,7 @@ const AddMember = () => {
     try {
       setLoding(true);
 
-      const response = await api.post("/users/addUsers", formData, {
-        headers: {
-          authorization: `Bearer ${Cookies.get("token")}`,
-        },
-      });
+      const response = await api.post("/users/addUsers", formData);
 
       toast.success(response?.data?.message);
       reset();

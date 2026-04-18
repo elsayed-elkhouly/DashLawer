@@ -1,16 +1,15 @@
-import { h2 } from 'framer-motion/client'
-import React from 'react'
-import { Navigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
+import React, { useContext } from "react";
+import { Navigate } from "react-router-dom";
+import { Authcontext } from "../../Context/AuthContextProvider";
 
-const ProtectedRoute = ({children}) => {
-    if (Cookies.get("token") == null) {
-     return <Navigate to={"/Login"}/> ;
-        
-    }
-  return (
-    <>{children}</>
-  )
-}
+const ProtectedRoute = ({ children }) => {
+  const auth = useContext(Authcontext);
 
-export default ProtectedRoute
+  if (!auth?.token) {
+    return <Navigate to="/Login" replace />;
+  }
+
+  return children;
+};
+
+export default ProtectedRoute;
