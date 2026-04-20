@@ -43,11 +43,7 @@ const AddSession = () => {
     });
 
     function getCaseDetails() {
-        return api.get(`/LegalCase/${id}`, {
-            headers: {
-                authorization: `Bearer ${Cookies.get("token")}`,
-            },
-        });
+        return api.get(`/LegalCase/${id}`);
     }
 
     const { data } = useQuery({
@@ -58,11 +54,7 @@ const AddSession = () => {
     const Case = data?.data?.case || {};
 
     function getUSers() {
-        return api.get("/users", {
-            headers: {
-                authorization: `Bearer ${Cookies.get("token")}`,
-            },
-        });
+        return api.get("/users");
     }
 
     const { data: Lawer } = useQuery({
@@ -95,11 +87,7 @@ const AddSession = () => {
             };
             // console.log(formData.team);
             // console.log(payload);
-            await api.post("/session/", payload, {
-                headers: {
-                    authorization: `Bearer ${Cookies.get("token")}`,
-                },
-            });
+            await api.post("/session/", payload);
 
             toast.success("تم إنشاء الجلسة بنجاح");
             reset();

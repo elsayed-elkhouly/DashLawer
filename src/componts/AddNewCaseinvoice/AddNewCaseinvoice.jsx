@@ -30,10 +30,7 @@ const AddNewCaseinvoice = () => {
           search,
           page: 1,
           limit: 10,
-        },
-        headers: {
-          authorization: `Bearer ${Cookies.get("token")}`,
-        },
+        }
       }
     );
 
@@ -110,11 +107,7 @@ const AddNewCaseinvoice = () => {
       const res = await api.post(
         `/LegalCase/${id}/invoices`,
         payload,
-        {
-          headers: {
-            authorization: `Bearer ${Cookies.get("token")}`,
-          },
-        }
+       
       );
 
       // console.log("invoice created:", res.data);

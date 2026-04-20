@@ -49,8 +49,8 @@ const Sections = ({ onItemClick }) => {
                   text-base sm:text-lg
                   ${
                     isActive
-                      ? "border-r-4 border-[#C9A14A] bg-gradient-to-l from-[#C9A14A]/25 to-transparent text-white shadow-sm"
-                      : "text-gray-300 hover:bg-gradient-to-l hover:from-[#C9A14A]/20 hover:to-transparent hover:text-white"
+                      ? "border-r-4 border-[#C9A14A] bg-linear-to-l from-[#C9A14A]/25 to-transparent text-white shadow-sm"
+                      : "text-gray-300 hover:bg-linear-to-l hover:from-[#C9A14A]/20 hover:to-transparent hover:text-white"
                   }
                 `}
               >

@@ -29,7 +29,7 @@ const Dashbord = () => {
     if (typeof token === "string" && token.trim() !== "") {
       try {
         const decoded = jwtDecode(token);
-        console.log("decoded token:", decoded.id);
+        // console.log("decoded token:", decoded.id);
         setDataoftkn(decoded);
       } catch (error) {
         console.error("Invalid token", error);
@@ -37,8 +37,7 @@ const Dashbord = () => {
       }
     }
   }, [token]);
-  console.log(dataoftkn?.id
-  );
+  // console.log(dataoftkn?.id);
 
   useEffect(() => {
     const handleClickOutside = (event) => {

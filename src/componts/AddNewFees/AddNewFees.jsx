@@ -108,11 +108,7 @@ const AddNewFees = () => {
       const res = await api.post(
         "/invoices/standalone",
         payload,
-        {
-          headers: {
-            authorization: `Bearer ${Cookies.get("token")}`,
-          },
-        }
+        
       );
 
       // console.log("invoice created:", res.data);

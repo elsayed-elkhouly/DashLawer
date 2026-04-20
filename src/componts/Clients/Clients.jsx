@@ -142,11 +142,7 @@ const Clients = () => {
     });
 
     function getStats() {
-        return api.get("/Client/", {
-            headers: {
-                authorization: `Bearer ${Cookies.get("token")}`,
-            }
-        })
+        return api.get("/Client/")
     }
 
     const addClientMutation = useMutation({

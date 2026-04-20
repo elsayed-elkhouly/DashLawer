@@ -33,16 +33,35 @@ import PyrollMangment from "./componts/PyrollMangment/PyrollMangment";
 import BookOfLaw from "./componts/BookofLaw/BookOfLaw";
 import AllSesions from "./componts/AllSesions/AllSesions";
 import AddNewCaseinvoice from "./componts/AddNewCaseinvoice/AddNewCaseinvoice";
+import Dashbord2 from "./componts/Dashbord2/Dashbord2";
+import { jwtDecode } from "jwt-decode";
+import PackegesMangment from "./componts/PackegesMangment/PackegesMangment";
+import ClientMangment from "./componts/ClientMangment/ClientMangment";
+import Coupon from "./componts/Coupon/Coupon";
 
 const client = new QueryClient();
+const token = document.cookie
+  .split("; ")
+  .find((row) => row.startsWith("token="))
+  ?.split("=")[1];
 
+const role = token ? jwtDecode(token)?.role : null;
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
     children: [
-      { index: true, element: <ProtectedRoute><Dashbord /></ProtectedRoute> },
+      {
+        index: true,
+        element: (
+          <ProtectedRoute>
+            {role === "SUPER_ADMIN" ? <Dashbord2 /> : <Dashbord />}
+          </ProtectedRoute>
+        )
+      },
       { path: "/CaseMangemnt", element: <ProtectedRoute><CaseMange /></ProtectedRoute> },
+      { path: "/PackegesMangment", element: <ProtectedRoute><PackegesMangment /></ProtectedRoute> },
+      { path: "/ClientMangment", element: <ProtectedRoute><ClientMangment /></ProtectedRoute> },
       { path: "/CaseMangemnt/AddNewCase", element: <ProtectedRoute><AddNewCase /></ProtectedRoute> },
       { path: "/CaseMangemnt/CaseDetails/:id", element: <ProtectedRoute><CaseDetails /></ProtectedRoute> },
       { path: "/CaseMangemnt/CaseDetails/:id/SessionDetails", element: <ProtectedRoute><SessionDetails /></ProtectedRoute> },
@@ -52,6 +71,7 @@ const router = createBrowserRouter([
       { path: "/TeamMember/TeamProfile/:id", element: <ProtectedRoute><TeamProfile /></ProtectedRoute> },
       { path: "/BookMangment", element: <ProtectedRoute><BookMangment /></ProtectedRoute> },
       { path: "/Bills", element: <ProtectedRoute><Bills /></ProtectedRoute> },
+      { path: "/Coupon", element: <ProtectedRoute><Coupon /></ProtectedRoute> },
       { path: "/Bills/AddNewFees", element: <ProtectedRoute><AddNewFees /></ProtectedRoute> },
       { path: "/Calender", element: <ProtectedRoute><Calendar /></ProtectedRoute> },
       { path: "/DigitalArchive", element: <ProtectedRoute><DigitalArchive /></ProtectedRoute> },
