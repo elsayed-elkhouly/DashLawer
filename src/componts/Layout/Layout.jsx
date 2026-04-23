@@ -15,10 +15,8 @@ const Layout = () => {
   }
 
   const { token } = auth;
-  // console.log(token);
-  const decoded = jwtDecode(token);
-  // console.log(decoded?.role);
-  const isSuperAdmin = decoded?.role === "SUPER_ADMIN";
+const decoded = token ? jwtDecode(token) : null;
+const isSuperAdmin = decoded?.role === "SUPER_ADMIN";
 
 
   return (

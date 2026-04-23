@@ -1,72 +1,136 @@
-import React, { useEffect, useState } from 'react'
-import { Camera, X, Info } from 'lucide-react';
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { url, z } from "zod";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UserPlus, ShieldCheck } from "lucide-react";
-import { FiEdit3, FiRotateCcw } from 'react-icons/fi'
-import { MdGavel, MdOutlineSecurity } from "react-icons/md";
-import { GrGroup } from "react-icons/gr";
-import { FaCamera, FaMoneyBills } from "react-icons/fa6";
-import { IoArrowBack, IoSettingsSharp } from "react-icons/io5";
-import InputField from '../InputField/InputField';
-import { IoIosCamera } from "react-icons/io";
-import axios from 'axios';
-import Cookies from 'js-cookie';
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import { Info, UserPlus } from "lucide-react";
 import api from '../../api/axios';
-import toast from 'react-hot-toast';
+import { FaArrowLeft, FaCamera } from "react-icons/fa";
+import toast from "react-hot-toast";
+const schema = z
+  .object({
+    UserName: z.string().trim().min(3, "الاسم لازم يكون 3 حروف على الأقل"),
+    email: z.string().email("بريد إلكتروني غير صالح"),
+    phone: z.string().regex(/^01[0125][0-9]{8}$/, "رقم الهاتف غير صحيح"),
+    jobTitle: z.string().min(2, "المسمى الوظيفي مطلوب"),
+    department: z.string().min(1, "اختار القسم"),
+    role: z.string().min(1, "اختار نوع الحساب"),
+    lawyerRegistrationNo: z.string().optional(),
+    password: z
+      .string()
+      .min(8, "كلمة المرور لازم تكون 8 أحرف على الأقل")
+      .regex(
+        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/,
+        "كلمة المرور لازم تحتوي على حرف كبير وحرف صغير ورقم واحد على الأقل"
+      ),
+    profile: z.any().optional(),
+    salary: z.string().regex(/^\d+$/, "لازم يكون أرقام بس"),
+  })
+  .superRefine((data, ctx) => {
+    if (data.role === "LAWYER") {
+      const regNo = data.lawyerRegistrationNo?.trim();
+
+      if (!regNo) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["lawyerRegistrationNo"],
+          message: "رقم تسجيل المحاماة مطلوب",
+        });
+        return;
+      }
+
+      if (!/^\d+$/.test(regNo)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["lawyerRegistrationNo"],
+          message: "لازم يكون أرقام بس",
+        });
+        return;
+      }
+
+      if (regNo.length !== 7) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["lawyerRegistrationNo"],
+          message: "رقم التسجيل لازم يكون 7 أرقام بالضبط",
+        });
+      }
+    }
+  });
+
+const InputField = ({
+  name,
+  label,
+  placeholder,
+  type = "text",
+  register,
+  error,
+  maxLength,
+  inputMode,
+  disabled = false,
+}) => {
+  const registerOptions = {};
+
+  if (name === "lawyerRegistrationNo" || name === "salary") {
+    registerOptions.onChange = (e) => {
+      e.target.value = e.target.value.replace(/\D/g, "");
+    };
+  }
+
+  return (
+    <div className="space-y-2">
+      <label className="mr-1 text-sm text-gray-400">{label}</label>
+
+      <input
+        type={type}
+        placeholder={placeholder}
+        inputMode={inputMode}
+        maxLength={maxLength}
+        disabled={disabled}
+        {...register(name, registerOptions)}
+        className={`w-full rounded-xl border bg-[#09172b] px-4 py-3 text-white focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 ${
+          error?.[name]
+            ? "border-red-500 focus:border-red-500"
+            : "border-gray-700 focus:border-[#C59D4A]"
+        }`}
+      />
+
+      {error?.[name] && (
+        <p className="text-xs text-red-500">{error[name].message}</p>
+      )}
+    </div>
+  );
+};
+
+const SelectField = ({ label, options, name, error, register, disabled }) => (
+  <div className="space-y-2">
+    <label className="mr-1 text-sm text-gray-400">{label}</label>
+
+    <select
+      {...register(name)}
+      disabled={disabled}
+      className={`w-full rounded-xl border bg-[#09172b] px-4 py-3 text-white focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 ${
+        error?.[name]
+          ? "border-red-500 focus:border-red-500"
+          : "border-gray-700 focus:border-[#C59D4A]"
+      }`}
+    >
+      <option value="">اختر...</option>
+      {options.map((opt) => (
+        <option key={opt.value} value={opt.value}>
+          {opt.label}
+        </option>
+      ))}
+    </select>
+
+    {error?.[name] && (
+      <p className="text-xs text-red-500">{error[name].message}</p>
+    )}
+  </div>
+);
 
 const AddMember = () => {
-  const [loding, setLoding] = useState(false);
-
-  const schema = z
-    .object({
-      UserName: z.string().trim().min(3, "الاسم لازم يكون 3 حروف على الأقل"),
-      email: z.string().email("بريد إلكتروني غير صالح"),
-      phone: z.string().regex(/^01[0125][0-9]{8}$/, "رقم الهاتف غير صحيح"),
-      jobTitle: z.string().min(2, "المسمى الوظيفي مطلوب"),
-      department: z.string().min(1, "اختار القسم"),
-      role: z.string().min(1, "اختار نوع الحساب"),
-      lawyerRegistrationNo: z.string().optional(),
-      password: z
-        .string()
-        .min(8, "كلمة المرور لازم تكون 8 أحرف على الأقل")
-        .regex(
-          /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/,
-          "كلمة المرور لازم تحتوي على حرف كبير وحرف صغير ورقم واحد على الأقل"
-        ),
-      profile: z.any().optional(),
-      salary: z.string().regex(/^\d+$/, "لازم يكون أرقام بس"),
-    })
-    .superRefine((data, ctx) => {
-      if (data.role === "LAWYER") {
-        if (!data.lawyerRegistrationNo?.trim()) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            path: ["lawyerRegistrationNo"],
-            message: "رقم تسجيل المحاماة مطلوب",
-          });
-          return;
-        }
-
-        if (!/^\d+$/.test(data.lawyerRegistrationNo)) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            path: ["lawyerRegistrationNo"],
-            message: "لازم يكون أرقام بس",
-          });
-        }
-
-        if (data.lawyerRegistrationNo.length < 7) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            path: ["lawyerRegistrationNo"],
-            message: "رقم التسجيل لازم يكون 7 أرقام على الأقل",
-          });
-        }
-      }
-    });
+  const [loading, setLoading] = useState(false);
 
   const {
     register,
@@ -74,6 +138,8 @@ const AddMember = () => {
     watch,
     reset,
     setValue,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -100,23 +166,25 @@ const AddMember = () => {
   useEffect(() => {
     if (selectedRole !== "LAWYER") {
       setValue("lawyerRegistrationNo", "");
+      clearErrors("lawyerRegistrationNo");
     }
-  }, [selectedRole, setValue]);
+  }, [selectedRole, setValue, clearErrors]);
 
   const AddUser = async (data) => {
-    const formData = new FormData();
+    clearErrors();
 
-    formData.append("UserName", data.UserName);
-    formData.append("email", data.email);
-    formData.append("phone", data.phone);
-    formData.append("jobTitle", data.jobTitle);
+    const formData = new FormData();
+    formData.append("UserName", data.UserName.trim());
+    formData.append("email", data.email.trim());
+    formData.append("phone", data.phone.trim());
+    formData.append("jobTitle", data.jobTitle.trim());
     formData.append("department", data.department);
     formData.append("role", data.role);
     formData.append("password", data.password);
-    formData.append("salary", data.salary);
+    formData.append("salary", data.salary.trim());
 
-    if (data.role === "LAWYER" && data.lawyerRegistrationNo) {
-      formData.append("lawyerRegistrationNo", data.lawyerRegistrationNo);
+    if (data.role === "LAWYER" && data.lawyerRegistrationNo?.trim()) {
+      formData.append("lawyerRegistrationNo", data.lawyerRegistrationNo.trim());
     }
 
     if (data.profile && data.profile[0]) {
@@ -124,53 +192,57 @@ const AddMember = () => {
     }
 
     try {
-      setLoding(true);
+      setLoading(true);
 
-      const response = await api.post("/users/addUsers", formData);
+      const response = await api.post("/users/addUsers", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+// console.log(response);
 
-      toast.success(response?.data?.message);
+      toast.success(response?.data?.message || "تم إضافة العضو بنجاح");
       reset();
+
       setTimeout(() => {
         window.location.reload();
-      }, 1500)
+      }, 1500);
     } catch (error) {
       console.log("FULL ERROR:", error?.response?.data);
 
-      if (Array.isArray(error?.response?.data?.message)) {
-        error.response.data.message.forEach((err, index) => {
-          console.log(`Error ${index + 1}:`);
-          console.log("Path:", err.path);
-          console.log("Message:", err.message);
-          console.log("Code:", err.code);
+      const backendData = error?.response?.data;
+
+      if (backendData?.details?.length) {
+        backendData.details.forEach((item) => {
+          if (item?.errors) {
+            Object.entries(item.errors).forEach(([fieldName, messages]) => {
+              setError(fieldName, {
+                type: "server",
+                message: Array.isArray(messages) ? messages[0] : messages,
+              });
+            });
+          }
         });
+
+        
+      } else if (Array.isArray(backendData?.message)) {
+        backendData.message.forEach((err) => {
+          if (err?.path?.[0]) {
+            setError(err.path[0], {
+              type: "server",
+              message: err.message,
+            });
+          }
+        });
+
+        toast.error("يرجى مراجعة البيانات المدخلة");
       } else {
-        toast.error(error?.response?.data?.message || "حصل خطأ");
+        toast.error(backendData?.message || "حصل خطأ");
       }
     } finally {
-      setLoding(false);
+      setLoading(false);
     }
   };
-
-  const SelectField = ({ label, options, name, error, register }) => (
-    <div className="space-y-2">
-      <label className="mr-1 text-sm text-gray-400">{label}</label>
-      <select
-        {...register(name)}
-        className="w-full rounded-xl border border-gray-700 bg-[#09172b] px-4 py-3 text-white focus:border-[#C59D4A] focus:outline-none"
-      >
-        <option value="">اختر...</option>
-        {options.map((opt) => (
-          <option key={opt.value} value={opt.value}>
-            {opt.label}
-          </option>
-        ))}
-      </select>
-
-      {error[name] && (
-        <p className="text-xs text-red-500">{error[name].message}</p>
-      )}
-    </div>
-  );
 
   return (
     <form onSubmit={handleSubmit(AddUser)}>
@@ -187,18 +259,19 @@ const AddMember = () => {
             <button
               type="button"
               onClick={() => reset()}
-              className="w-full cursor-pointer rounded-lg border border-gray-700 px-6 py-2.5 text-gray-400 transition-colors hover:bg-[#09172b] sm:w-auto"
+              disabled={loading}
+              className="w-full cursor-pointer rounded-lg border border-gray-700 px-6 py-2.5 text-gray-400 transition-colors hover:bg-[#09172b] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
             >
               إلغاء
             </button>
 
-            <Link to={"/TeamMember"} className="w-full sm:w-auto">
+            <Link to="/TeamMember" className="w-full sm:w-auto">
               <button
                 type="button"
                 className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-gray-700 px-6 py-2.5 text-white transition-colors duration-300 hover:bg-[#C9A14A] sm:w-auto"
               >
                 Back
-                <IoArrowBack />
+                <FaArrowLeft  />
               </button>
             </Link>
           </div>
@@ -225,13 +298,14 @@ const AddMember = () => {
                       className="h-full w-full object-cover"
                     />
                   ) : (
-                    <IoIosCamera className="text-4xl text-[#C9A14A]" />
+                    <FaCamera className="text-4xl text-[#C9A14A]" />
                   )}
 
                   <input
                     type="file"
                     accept="image/*"
                     className="hidden"
+                    disabled={loading}
                     {...register("profile")}
                   />
                 </label>
@@ -251,6 +325,7 @@ const AddMember = () => {
                   placeholder="أدخل الاسم الرباعي"
                   register={register}
                   error={errors}
+                  disabled={loading}
                 />
 
                 <InputField
@@ -260,14 +335,18 @@ const AddMember = () => {
                   type="email"
                   register={register}
                   error={errors}
+                  disabled={loading}
                 />
 
                 <InputField
                   name="phone"
                   label="رقم الهاتف"
-                  placeholder="+966"
+                  placeholder="01012345678"
+                  inputMode="numeric"
+                  maxLength={11}
                   register={register}
                   error={errors}
+                  disabled={loading}
                 />
 
                 <InputField
@@ -276,6 +355,7 @@ const AddMember = () => {
                   placeholder="مثال: محامي أول"
                   register={register}
                   error={errors}
+                  disabled={loading}
                 />
 
                 <SelectField
@@ -283,6 +363,7 @@ const AddMember = () => {
                   error={errors}
                   name="department"
                   label="القسم"
+                  disabled={loading}
                   options={[
                     { value: "القضايا التجارية", label: "القضايا التجارية" },
                     { value: "القضايا الجنائية", label: "القضايا الجنائية" },
@@ -296,6 +377,7 @@ const AddMember = () => {
                   error={errors}
                   name="role"
                   label="نوع الحساب"
+                  disabled={loading}
                   options={[
                     { value: "ADMIN", label: "مدير النظام" },
                     { value: "LAWYER", label: "محامي شريك" },
@@ -310,6 +392,9 @@ const AddMember = () => {
                     placeholder="8372492"
                     register={register}
                     error={errors}
+                    maxLength={7}
+                    inputMode="numeric"
+                    disabled={loading}
                   />
                 )}
 
@@ -320,24 +405,28 @@ const AddMember = () => {
                   type="password"
                   register={register}
                   error={errors}
+                  disabled={loading}
                 />
 
                 <InputField
                   name="salary"
                   label="salary"
+                  placeholder="5000"
+                  inputMode="numeric"
                   register={register}
                   error={errors}
+                  disabled={loading}
                 />
               </div>
 
               <div className="pt-8 sm:pt-10">
                 <button
                   type="submit"
-                  disabled={loding}
+                  disabled={loading}
                   className="mx-auto flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#C59D4A] px-6 py-3 font-bold text-[#0B121D] shadow-lg shadow-[#C59D4A]/20 transition-colors hover:bg-[#b08b3e] disabled:cursor-not-allowed disabled:opacity-70 sm:mx-0 sm:min-w-45 sm:w-auto"
                 >
                   <UserPlus size={18} />
-                  {loding ? (
+                  {loading ? (
                     <span className="loading loading-infinity loading-xl text-[#C9A14A]"></span>
                   ) : (
                     "حفظ العضو"
@@ -352,4 +441,4 @@ const AddMember = () => {
   );
 };
 
-export default AddMember
+export default AddMember;

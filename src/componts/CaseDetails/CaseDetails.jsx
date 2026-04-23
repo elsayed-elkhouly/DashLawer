@@ -37,11 +37,11 @@ const CaseDetails = () => {
                 }
             );
 
-            console.log(res.data);
+            // console.log(res.data);
             toast.success("تم رفع الملف بنجاح");
             queryClient.invalidateQueries({ queryKey: ["CaseDetails", id] });
         } catch (error) {
-            console.error(error);
+            // console.error(error);
             toast.error(error?.response?.data?.message || "حصل خطأ أثناء رفع الملف");
         } finally {
             setLoading(false);
@@ -75,7 +75,7 @@ const CaseDetails = () => {
                 }
             );
 
-            console.log(res.data);
+            // console.log(res.data);
             toast.success("تم حذف الملف بنجاح");
             queryClient.invalidateQueries({ queryKey: ["CaseDetails", id] });
         } catch (error) {
@@ -238,7 +238,7 @@ const CaseDetails = () => {
 
             toast.success("Download Done");
         } catch (error) {
-            console.log(error);
+            // console.log(error);
             toast.error("حصل خطأ أثناء تنزيل الملف");
         }
     }

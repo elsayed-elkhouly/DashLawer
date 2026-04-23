@@ -68,7 +68,7 @@ const CaseMange = () => {
   async function deleteCase(id) {
     try {
       const res = await api.delete(
-        `/LegalCase/${id}`,
+        `/LegalCase/hardDelete/${id}`,
         {
           headers: {
             authorization: `Bearer ${Cookies.get("token")}`,
@@ -76,7 +76,7 @@ const CaseMange = () => {
         }
       );
 
-      console.log("Delete response:", res.data);
+      // console.log("Delete response:", res.data);
       return res.data;
     } catch (error) {
       console.log("Delete error:", error);

@@ -38,14 +38,33 @@ import { jwtDecode } from "jwt-decode";
 import PackegesMangment from "./componts/PackegesMangment/PackegesMangment";
 import ClientMangment from "./componts/ClientMangment/ClientMangment";
 import Coupon from "./componts/Coupon/Coupon";
+import OfficeProfile from "./componts/OfficeProfile/OfficeProfile";
 
 const client = new QueryClient();
-const token = document.cookie
-  .split("; ")
-  .find((row) => row.startsWith("token="))
-  ?.split("=")[1];
+function getCookie(name) {
+  const cookie = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith(`${name}=`));
 
-const role = token ? jwtDecode(token)?.role : null;
+  if (!cookie) return null;
+
+  return decodeURIComponent(cookie.split("=").slice(1).join("="));
+}
+
+let role = null;
+
+try {
+  const token = getCookie("token");
+
+  console.log("token:", token);
+  console.log("type:", typeof token);
+
+  if (typeof token === "string" && token.trim() !== "") {
+    role = jwtDecode(token).role;
+  }
+} catch (error) {
+  console.error("Token decode error:", error);
+}
 const router = createBrowserRouter([
   {
     path: "/",
@@ -64,6 +83,7 @@ const router = createBrowserRouter([
       { path: "/ClientMangment", element: <ProtectedRoute><ClientMangment /></ProtectedRoute> },
       { path: "/CaseMangemnt/AddNewCase", element: <ProtectedRoute><AddNewCase /></ProtectedRoute> },
       { path: "/CaseMangemnt/CaseDetails/:id", element: <ProtectedRoute><CaseDetails /></ProtectedRoute> },
+      { path: "/ClientMangment/OfficeProfile/:id", element: <ProtectedRoute><OfficeProfile /></ProtectedRoute> },
       { path: "/CaseMangemnt/CaseDetails/:id/SessionDetails", element: <ProtectedRoute><SessionDetails /></ProtectedRoute> },
       { path: "/CaseMangemnt/CaseDetails/:id/AddSession", element: <ProtectedRoute><AddSession /></ProtectedRoute> },
       { path: "/CaseMangemnt/CaseDetails/:id/AddNewCaseinvoice", element: <ProtectedRoute><AddNewCaseinvoice /></ProtectedRoute> },

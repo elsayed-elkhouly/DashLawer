@@ -14,9 +14,11 @@ import {
 } from "react-icons/fi";
 import { useQuery } from '@tanstack/react-query';
 import api from '../../api/axios';
+import { Link } from 'react-router-dom';
 const ClientMangment = () => {
+
   function getAllOffice() {
-    return api.get("https://api.helperlawyer.online//super-admin/getAllOffices")
+    return api.get("/super-admin/getAllOffices")
   }
 
   const { data } = useQuery({
@@ -24,7 +26,13 @@ const ClientMangment = () => {
     queryFn: getAllOffice
   })
   console.log(data?.data?.offices);
-  
+  const formatDate = (date) => {
+    return new Date(date).toLocaleDateString("ar-EG", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+  };
 
   const stats = [
     {
@@ -110,29 +118,22 @@ const ClientMangment = () => {
     },
   ];
 
-  const planClasses = {
-    الاحترافية:
-      "border border-[#b89438]/30 bg-[#b89438]/10 text-[#e0b54b]",
-    الأساسية:
-      "border border-[#314564] bg-[#1a2b46] text-[#c8d3e5]",
-    "لا يوجد": "border border-[#5b4a2c]/40 bg-[#3a3123] text-[#c9b28a]",
-  };
+  
 
-  const subscriptionStatusClasses = {
-    نشط: "text-[#11c58b]",
-    "لم يشترك": "text-[#8d9ab0]",
-    منتهي: "text-[#ff5a5f]",
-  };
 
-  const subscriptionDotClasses = {
-    نشط: "bg-[#11c58b]",
-    "لم يشترك": "bg-[#8d9ab0]",
-    منتهي: "bg-[#ff5a5f]",
+ 
+
+  const statusClasses2 = {
+    active: "bg-[#123c2b] text-[#63d39b]",
+    cancelled: "bg-[#4a1616] text-[#ff8e8e]",
+    suspended: "bg-[#4a1616] text-[#ff8e8e]",
+    expired: "bg-[#4a1616] text-[#ff8e8e]",
+    pending: "border border-[#b9973d]/30 bg-[#b9973d]/10 text-[#f2be42]",
   };
 
   return (
     <>
-      <div dir="rtl" className=" bg-[#06111f] px-6 py-10 md:px-10">
+      <div dir="rtl" className="  px-6 py-10 md:px-10">
         <div className="mx-auto max-w-[1600px]">
           <div className="mb-10 text-right">
             <h1 className="text-4xl font-extrabold text-white md:text-5xl">
@@ -186,7 +187,7 @@ const ClientMangment = () => {
           </div>
         </div>
       </div>
-      <div dir="rtl" className="min-h-screen bg-[#071427] p-4 md:p-5">
+      <div dir="rtl" className=" p-4 md:p-5">
         <div className="overflow-hidden rounded-[18px] border border-white/5 bg-[linear-gradient(180deg,#12233d_0%,#101f36_100%)] shadow-[0_18px_50px_rgba(0,0,0,0.25)]">
           <div className="px-5 pt-4 md:px-6 md:pt-4">
             <div className="mb-4 flex flex-col-reverse gap-3 xl:flex-row xl:items-center xl:justify-between">
@@ -230,17 +231,13 @@ const ClientMangment = () => {
               </div>
 
               <div>
-                {data?.data?.offices.map((client) => (
+                {data?.data?.offices?.map((client) => (
                   <div
                     key={client.id}
                     className="grid grid-cols-7 items-center border-b border-white/5 px-5 py-4 transition hover:bg-white/2 md:px-6"
                   >
                     <div className="flex items-center justify-start gap-3">
-                      <img
-                        src={client.avatar}
-                        alt={client.name}
-                        className="h-8 w-8 rounded-full object-cover ring-1 ring-white/10"
-                      />
+
                       <span className="text-[12px] font-semibold text-white/95">
                         {client.name}
                       </span>
@@ -256,40 +253,42 @@ const ClientMangment = () => {
 
                     <div>
                       <span
-                        className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold ${planClasses[client.plan]
+                        className={`inline-flex rounded-full px-4 py-1.5 bgre text-xs font-bold border border-white/10 bg-white/5 text-white/90
                           }`}
                       >
-                        {client.subscription.planSlug}
+                        {client.subscription?.planSlug}
                       </span>
                     </div>
 
                     <div>
                       <span
-                        className={`inline-flex items-center gap-1.5 text-[11px] font-bold ${subscriptionStatusClasses[client.subscriptionStatus]
+                        className={`inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-bold ${statusClasses2[client.subscription.status]
                           }`}
                       >
                         <span
-                          className={`h-1.5 w-1.5 rounded-full ${subscriptionDotClasses[client.subscriptionStatus]
+                          className={`h-1.5 w-1.5 rounded-full ${statusClasses2[client.subscription.status]
                             }`}
                         />
-                        {client.subscriptionStatus}
+                        {client.subscription?.status}
                       </span>
                     </div>
 
                     <div className="text-[11px] text-white/80">
-                      {client.registeredAt}
-                    </div>
+                      {formatDate(client.subscription?.startDate)}              
+                            </div>
 
-                    <div className="flex items-center gap-4 text-white/60">
-                      <button className="transition hover:text-white">
+                    <div className="  text-white/60">
+                     <Link to={`/ClientMangment/OfficeProfile/${client._id}`} >
+                      <button className="transition hover:text-white cursor-pointer">
                         <FiEye size={14} />
                       </button>
-                      <button className="transition hover:text-white">
+                     </Link>
+                      {/* <button className="transition hover:text-white cursor-pointer">
                         <FiEdit2 size={13} />
-                      </button>
-                      <button className="transition hover:text-[#ff7b7b]">
+                      </button> */}
+                      {/* <button className="transition hover:text-[#ff7b7b] cursor-pointer">
                         <FiTrash2 size={13} />
-                      </button>
+                      </button> */}
                     </div>
                   </div>
                 ))}

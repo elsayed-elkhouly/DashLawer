@@ -67,12 +67,9 @@ const AddNewCase = () => {
       reset();
       setloding(false)
     } catch (error) {
-      console.log("Full Error:", error);
-      console.log("Response Data:", error?.response?.data);
-      toast.error(error?.response?.data)
-      console.log("Response Status:", error?.response?.status);
-      console.log("Response Headers:", error?.response?.headers);
-
+      
+      toast.error(error?.response?.data?.message)
+     
     }
 
 

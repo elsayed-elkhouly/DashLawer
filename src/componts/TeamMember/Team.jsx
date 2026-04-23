@@ -44,7 +44,7 @@ const Team = () => {
 
   const deleteMutation = useMutation({
     mutationFn: (id) =>
-      api.delete(`/users/hardDeleteUser/${id}`, {
+      api.delete(`/users/deleteUser/${id}`, {
         headers: {
           authorization: `Bearer ${Cookies.get("token")}`,
         },
@@ -57,6 +57,7 @@ const Team = () => {
 
     onError: (error) => {
       console.log(error.response?.data || error.message);
+      toast.error(error.response?.data?.message)
     },
   });
   const handleDelete = (id) => {

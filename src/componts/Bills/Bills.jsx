@@ -24,6 +24,7 @@ import api from '../../api/axios';
 
 const Bills = () => {
   const [open, setOpen] = useState(false);
+  const [showInvoice, setShowInvoice] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -363,8 +364,8 @@ const Bills = () => {
 
                         <div
                           className={`text-center text-[12px] ${invoice.status === "متأخرة"
-                              ? "text-[#F05B5B]"
-                              : "text-[#8EA3BF]"
+                            ? "text-[#F05B5B]"
+                            : "text-[#8EA3BF]"
                             }`}
                         >
                           {invoice?.dueDate
@@ -384,7 +385,7 @@ const Bills = () => {
 
                         <div className="flex items-center justify-center gap-2 text-[#8EA3BF]">
                           <button
-                            onClick={() => setSelectedInvoice(invoice)}
+                            onClick={() => setShowInvoice(true)}
                             className="rounded-full border border-white/10 bg-white/2 p-2 transition hover:bg-white/10 hover:text-white"
                           >
                             <HiOutlineEye size={14} />
@@ -413,6 +414,7 @@ const Bills = () => {
                   )}
 
                 </div>
+
               </div>
 
               <div className="flex flex-col gap-4 border-t border-white/5 px-6 py-4 md:flex-row md:items-center md:justify-between">
@@ -459,7 +461,77 @@ const Bills = () => {
                 </div>
               </div>
             </div>
+            {showInvoice && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+                <div className="relative w-full max-w-4xl rounded-[30px] border border-white/10 bg-[#0f2238] p-6 shadow-[0_20px_80px_rgba(0,0,0,0.5)]">
 
+                  {/* close */}
+                  <button
+                    onClick={() => setShowInvoice(false)}
+                    className="absolute left-5 top-5 text-white/50 hover:text-white"
+                  >
+                    ✕
+                  </button>
+
+                  {/* header */}
+                  <div className="mb-6 flex items-center justify-between">
+                    <div className="text-right">
+                      <h2 className="text-xl font-bold text-white">تفاصيل الفاتورة</h2>
+                      <p className="text-sm text-white/50">#INV-8842-2024</p>
+                    </div>
+
+                    <span className="rounded-full border border-yellow-500/30 bg-yellow-500/10 px-4 py-1 text-sm text-yellow-400">
+                      مدفوعة
+                    </span>
+                  </div>
+
+                  {/* top cards */}
+                  <div className="grid grid-cols-3 gap-4 mb-6">
+                    <div className="rounded-xl border border-white/5 bg-white/5 p-4 text-right">
+                      <p className="text-xs text-white/50">تاريخ الفاتورة</p>
+                      <p className="text-white">12 أكتوبر 2023</p>
+                    </div>
+
+                    <div className="rounded-xl border border-white/5 bg-white/5 p-4 text-right">
+                      <p className="text-xs text-white/50">نوع الخدمة</p>
+                      <p className="text-white">قضية</p>
+                    </div>
+
+                    <div className="rounded-xl border border-white/5 bg-white/5 p-4 text-right">
+                      <p className="text-xs text-white/50">اسم العميل</p>
+                      <p className="text-white">شركة المجد</p>
+                    </div>
+                  </div>
+
+                  {/* table */}
+                  <div className="rounded-xl border border-white/5 overflow-hidden">
+                    <div className="grid grid-cols-3 bg-[#132740] px-4 py-3 text-sm text-white/70">
+                      <div className="text-right">البند</div>
+                      <div className="text-right">الوصف</div>
+                      <div className="text-right">المبلغ</div>
+                    </div>
+
+                    <div className="grid grid-cols-3 px-4 py-3 border-t border-white/5 text-white">
+                      <div>أتعاب المحاماة</div>
+                      <div>قضية تجارية</div>
+                      <div>15,000</div>
+                    </div>
+
+                    <div className="grid grid-cols-3 px-4 py-3 border-t border-white/5 text-white">
+                      <div>رسوم إدارية</div>
+                      <div>ملفات</div>
+                      <div>1,200</div>
+                    </div>
+                  </div>
+
+                  {/* total */}
+                  <div className="mt-6 text-right">
+                    <p className="text-white/60">الإجمالي النهائي</p>
+                    <h3 className="text-2xl font-bold text-yellow-400">18,244</h3>
+                  </div>
+                </div>
+              </div>
+            )}
             <div className="mt-7 grid grid-cols-1 gap-4 md:grid-cols-3">
               <div className="rounded-[22px] border border-white/5 bg-[#081A31]/95 px-6 py-5 shadow-[0_25px_40px_rgba(0,0,0,0.2)]">
                 <div className="flex items-center justify-between gap-4">

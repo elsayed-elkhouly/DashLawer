@@ -93,7 +93,7 @@ const AddSession = () => {
             reset();
             navigate(-1);
         } catch (error) {
-            console.log(error?.response?.data || error);
+            // console.log(error?.response?.data || error);
             toast.error(error?.response?.data?.message || "حدث خطأ أثناء إنشاء الجلسة");
         }
     };
