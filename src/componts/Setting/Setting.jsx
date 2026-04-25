@@ -983,8 +983,8 @@ const Setting = () => {
 
       {/*  إعدادات القضايا  */}
       <section>
-        <div className="min-h-screen text-white p-4 md:p-8" dir="rtl">
-          <div className="mx-auto max-w-4xl">
+        <div className="min-h-screen  text-white p-4 md:p-8" dir="rtl">
+          <div className="mx-auto bg-[#081226] pt-2 max-w-4xl">
             <div className="mb-6 md:mb-8 text-right">
               <h1 className="text-2xl md:text-4xl font-extrabold tracking-tight text-white">
                 إعدادات القضايا

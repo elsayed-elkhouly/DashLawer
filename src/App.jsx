@@ -56,8 +56,8 @@ let role = null;
 try {
   const token = getCookie("token");
 
-  console.log("token:", token);
-  console.log("type:", typeof token);
+  // console.log("token:", token);
+  // console.log("type:", typeof token);
 
   if (typeof token === "string" && token.trim() !== "") {
     role = jwtDecode(token).role;

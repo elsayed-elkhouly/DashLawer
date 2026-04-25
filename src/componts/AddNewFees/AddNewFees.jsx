@@ -360,7 +360,7 @@ const AddNewFees = () => {
 
                     <div>
                       <label className="mb-2 block text-sm text-[#D7E1EF]">
-                        الخصم
+                        الخصم (%)
                       </label>
                       <input
                         type="number"

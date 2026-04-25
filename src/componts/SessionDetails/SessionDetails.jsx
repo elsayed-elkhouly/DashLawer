@@ -38,6 +38,7 @@ const SessionDetails = () => {
     city: "",
     circuit: "",
     notes: "",
+    status:"",
     assignedTo: "",
     team: [],
   });
@@ -58,6 +59,8 @@ const SessionDetails = () => {
     queryKey: ["session", id],
     queryFn: getAllSesions,
   });
+  console.log(sessionResponse);
+  
 
   const updateSession = (updatedData) => {
     return api.patch(`/session/${id}`, updatedData, {
@@ -170,6 +173,7 @@ const SessionDetails = () => {
       city: formData.city,
       circuit: formData.circuit,
       notes: formData.notes,
+      status:formData.status,
       assignedTo: formData.assignedTo,
       team: Array.isArray(formData.team)
         ? formData.team.flat().filter(Boolean)
@@ -292,7 +296,7 @@ const SessionDetails = () => {
               <button
                 type="button"
                 onClick={() => setIsEditing(true)}
-                className="inline-flex h-11 items-center gap-2 rounded-full outline-0 bg-[#d3a53d] px-5 text-sm font-semibold text-[#0b1830] transition hover:opacity-90"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-full outline-0 bg-[#d3a53d] px-5 text-sm font-semibold text-[#0b1830] transition hover:opacity-90"
               >
                 <HiOutlinePencil size={16} />
                 تعديل الجلسه
@@ -430,6 +434,16 @@ const SessionDetails = () => {
                       type="text"
                       name="circuit"
                       value={formData.circuit}
+                      onChange={handleChange}
+                      className="w-full rounded-2xl border border-[#FFFFFF14] bg-[#0d2139] px-4 py-3 text-white outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-2 block text-sm text-white">حاله القضيه</label>
+                    <input
+                      type="text"
+                      name="status"
+                      value={formData.status}
                       onChange={handleChange}
                       className="w-full rounded-2xl border border-[#FFFFFF14] bg-[#0d2139] px-4 py-3 text-white outline-none"
                     />

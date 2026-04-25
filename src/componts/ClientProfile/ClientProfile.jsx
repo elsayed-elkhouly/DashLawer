@@ -69,9 +69,6 @@ const ClientProfile = () => {
 
 
 
-
-
-
   async function AddDocument() {
     if (!file) {
       alert("اختر ملف أولا");
@@ -137,7 +134,7 @@ const ClientProfile = () => {
           data: {
             publicId: publicId,
           },
-        
+
         }
       );
 
@@ -158,7 +155,7 @@ const ClientProfile = () => {
         `/invoices/client/${id}/print-all`,
         {
           responseType: "blob",
-        
+
         }
       );
 
@@ -176,7 +173,7 @@ const ClientProfile = () => {
 
       toast.success("Download Done ");
     } catch (error) {
-      console.log(error);
+      console.log(error.response);
       toast.error("حصل خطأ أثناء تنزيل الملف");
     }
   }
@@ -186,7 +183,7 @@ const ClientProfile = () => {
         `/invoices/${id}/print`,
         {
           responseType: "blob",
-        
+
         }
       );
 
@@ -297,6 +294,7 @@ const ClientProfile = () => {
 
               <InvoicesTable
                 invoices={data?.data?.invoices}
+                clientId={id}
                 printAll={PrintAllInvoic}
                 printSingle={PrintSingleInvoic}
               />

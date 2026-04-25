@@ -24,7 +24,7 @@ import api from '../../api/axios';
 
 const Bills = () => {
   const [open, setOpen] = useState(false);
-  const [showInvoice, setShowInvoice] = useState(false);
+  // const [showInvoice, setShowInvoice] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -32,7 +32,24 @@ const Bills = () => {
   const queryClient = useQueryClient();
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 10;
+  const [invoice, setInvoice] = useState(null);
+  const [showInvoice, setShowInvoice] = useState(false);
 
+  const getInvoice = async (id) => {
+    try {
+      const res = await api.get(
+        `/invoices/${id}`
+
+      );
+
+      setInvoice(res.data?.invoice);
+      console.log(res.data?.invoice);
+
+      setShowInvoice(true);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const tabs = [
     { key: "late", label: "المتأخرة" },
     { key: "unpaid", label: "غير المدفوعة" },
@@ -210,7 +227,7 @@ const Bills = () => {
       toast.error("حصل خطأ أثناء تنزيل الملف");
     }
   }
-  console.log(data?.data);
+  // console.log(data?.data);
 
   if (isLoading) return <div className="text-[#C9A14A] flex items-center justify-center min-h-screen "> <span className="loading loading-infinity loading-xl w-[50%]  "></span></div>;
   if (isError) return <div className="text-red-500">حصل خطأ</div>;
@@ -385,7 +402,7 @@ const Bills = () => {
 
                         <div className="flex items-center justify-center gap-2 text-[#8EA3BF]">
                           <button
-                            onClick={() => setShowInvoice(true)}
+                            onClick={() => getInvoice(invoice._id)} // مهم تبعت الـ id
                             className="rounded-full border border-white/10 bg-white/2 p-2 transition hover:bg-white/10 hover:text-white"
                           >
                             <HiOutlineEye size={14} />
@@ -461,7 +478,7 @@ const Bills = () => {
                 </div>
               </div>
             </div>
-            {showInvoice && (
+            {showInvoice && invoice && (
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
                 <div className="relative w-full max-w-4xl rounded-[30px] border border-white/10 bg-[#0f2238] p-6 shadow-[0_20px_80px_rgba(0,0,0,0.5)]">
 
@@ -477,57 +494,100 @@ const Bills = () => {
                   <div className="mb-6 flex items-center justify-between">
                     <div className="text-right">
                       <h2 className="text-xl font-bold text-white">تفاصيل الفاتورة</h2>
-                      <p className="text-sm text-white/50">#INV-8842-2024</p>
+                      <p className="text-sm text-white/50">#{invoice.invoiceNumber}</p>
                     </div>
 
-                    <span className="rounded-full border border-yellow-500/30 bg-yellow-500/10 px-4 py-1 text-sm text-yellow-400">
-                      مدفوعة
+                    <span
+                      className={`rounded-full px-4 py-1 text-sm border ${invoice.status === "مدفوعة"
+                          ? "border-green-500/30 bg-green-500/10 text-green-400"
+                          : invoice.status === "متأخرة"
+                            ? "border-red-500/30 bg-red-500/10 text-red-400"
+                            : "border-yellow-500/30 bg-yellow-500/10 text-yellow-400"
+                        }`}
+                    >
+                      {invoice.status}
                     </span>
                   </div>
 
                   {/* top cards */}
-                  <div className="grid grid-cols-3 gap-4 mb-6">
+                  <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
                     <div className="rounded-xl border border-white/5 bg-white/5 p-4 text-right">
                       <p className="text-xs text-white/50">تاريخ الفاتورة</p>
-                      <p className="text-white">12 أكتوبر 2023</p>
+                      <p className="text-white">
+                        {new Date(invoice.issueDate).toLocaleDateString("ar-EG")}
+                      </p>
                     </div>
 
                     <div className="rounded-xl border border-white/5 bg-white/5 p-4 text-right">
-                      <p className="text-xs text-white/50">نوع الخدمة</p>
-                      <p className="text-white">قضية</p>
+                      <p className="text-xs text-white/50">طريقة الدفع</p>
+                      <p className="text-white">{invoice.paymentMethod}</p>
                     </div>
 
                     <div className="rounded-xl border border-white/5 bg-white/5 p-4 text-right">
                       <p className="text-xs text-white/50">اسم العميل</p>
-                      <p className="text-white">شركة المجد</p>
+                      <p className="text-white">{invoice.client?.fullName}</p>
                     </div>
                   </div>
 
                   {/* table */}
-                  <div className="rounded-xl border border-white/5 overflow-hidden">
+                  <div className="overflow-hidden rounded-xl border border-white/5">
                     <div className="grid grid-cols-3 bg-[#132740] px-4 py-3 text-sm text-white/70">
                       <div className="text-right">البند</div>
                       <div className="text-right">الوصف</div>
                       <div className="text-right">المبلغ</div>
                     </div>
 
-                    <div className="grid grid-cols-3 px-4 py-3 border-t border-white/5 text-white">
-                      <div>أتعاب المحاماة</div>
-                      <div>قضية تجارية</div>
-                      <div>15,000</div>
+                    {invoice.items?.map((item, index) => (
+                      <div
+                        key={index}
+                        className="grid grid-cols-3 border-t border-white/5 px-4 py-3 text-white"
+                      >
+                        <div>{`بند ${index + 1}`}</div>
+                        <div>{item.description}</div>
+                        <div>{item.amount} ج.م</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* summary */}
+                  <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4 text-right">
+                    <div className="rounded-xl border border-white/5 bg-white/5 p-4">
+                      <p className="text-xs text-white/50">الإجمالي</p>
+                      <p className="text-white font-semibold">{invoice.total} ج.م</p>
                     </div>
 
-                    <div className="grid grid-cols-3 px-4 py-3 border-t border-white/5 text-white">
-                      <div>رسوم إدارية</div>
-                      <div>ملفات</div>
-                      <div>1,200</div>
+                    <div className="rounded-xl border border-white/5 bg-white/5 p-4">
+                      <p className="text-xs text-white/50">المدفوع</p>
+                      <p className="text-green-400 font-semibold">{invoice.paidAmount} ج.م</p>
+                    </div>
+
+                    <div className="rounded-xl border border-white/5 bg-white/5 p-4">
+                      <p className="text-xs text-white/50">المتبقي</p>
+                      <p className="text-red-400 font-semibold">{invoice.remaining} ج.م</p>
+                    </div>
+
+                    <div className="rounded-xl border border-white/5 bg-white/5 p-4">
+                      <p className="text-xs text-white/50">تاريخ الاستحقاق</p>
+                      <p className="text-white font-semibold">
+                        {new Date(invoice.dueDate).toLocaleDateString("ar-EG")}
+                      </p>
                     </div>
                   </div>
 
-                  {/* total */}
+                  {/* notes */}
+                  {invoice.notes && (
+                    <div className="mt-6 rounded-xl border border-white/5 bg-white/5 p-4 text-right">
+                      <p className="mb-2 text-xs text-white/50">ملاحظات</p>
+                      <p className="text-white">{invoice.notes}</p>
+                    </div>
+                  )}
+
+                  {/* final total */}
                   <div className="mt-6 text-right">
                     <p className="text-white/60">الإجمالي النهائي</p>
-                    <h3 className="text-2xl font-bold text-yellow-400">18,244</h3>
+                    <h3 className="text-2xl font-bold text-yellow-400">
+                      {invoice.total} ج.م
+                    </h3>
                   </div>
                 </div>
               </div>

@@ -230,7 +230,7 @@ const Clients = () => {
             <section>
                 <div className="w-full p-6 flex flex-col-reverse lg:flex-row items-start lg:items-center justify-between gap-4">
 
-                    
+
 
                     {/* Right Side: Title */}
                     <h1 className="text-white text-[28px] sm:text-[32px] lg:text-[37px] font-bold">
@@ -394,8 +394,8 @@ const Clients = () => {
                                                     type="button"
                                                     onClick={() => setValue("type", "شركة", { shouldValidate: true })}
                                                     className={`flex h-12 items-center justify-center gap-2 rounded-full border px-4 text-sm font-semibold transition ${clientType === "شركة"
-                                                            ? "border-[#d3a63f] bg-[#d3a63f]/10 text-[#f1c55e]"
-                                                            : "border-white/10 bg-[#11243a] text-white hover:border-white/20"
+                                                        ? "border-[#d3a63f] bg-[#d3a63f]/10 text-[#f1c55e]"
+                                                        : "border-white/10 bg-[#11243a] text-white hover:border-white/20"
                                                         }`}
                                                 >
                                                     <Building2 size={18} />
@@ -408,8 +408,8 @@ const Clients = () => {
                                                         setValue("type", "فرد", { shouldValidate: true })
                                                     }
                                                     className={`flex h-12 items-center justify-center gap-2 rounded-full border px-4 text-sm font-semibold transition ${clientType === "فرد"
-                                                            ? "border-[#d3a63f] bg-[#d3a63f]/10 text-[#f1c55e]"
-                                                            : "border-white/10 bg-[#11243a] text-white hover:border-white/20"
+                                                        ? "border-[#d3a63f] bg-[#d3a63f]/10 text-[#f1c55e]"
+                                                        : "border-white/10 bg-[#11243a] text-white hover:border-white/20"
                                                         }`}
                                                 >
                                                     <UserRound size={18} />
@@ -490,96 +490,113 @@ const Clients = () => {
                 </div>
             </section>
             <section>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 lg:grid-cols-4  place-items-center">
-                    <div className="w-full max-w-70 p-6 bg-[#081226] border border-[#EF444433] rounded-3xl shadow-xl flex flex-col justify-between h-49.25 hover:border-[#EF4444] duration-300">
-                        <div className="flex justify-start">
-                            <span className="text-[#EF4444] font-semibold text-sm">
-                                متأخرات
-                            </span>
-                        </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 
-                        <div className="flex flex-col items-end gap-2">
-                            <div className="p-3 bg-[#EF44441A] rounded-3xl">
-                                <MdOutlineAccountBalanceWallet className="w-6 h-6 text-[#EF4444]" />
-                            </div>
-                            <div className="text-right ">
-                                <p className="text-slate-400 text-sm font-medium my-1 "> مستحقات معلقة </p>
-                                <div className='flex items-center gap-2'>
-                                    <p className=' text-[14px] text-[#64748B]'>Egy</p>
-                                    <h2 className="text-white text-4xl font-bold tracking-tight py-2 ">
-                                        {stats?.data?.stats?.pendingFees}
-                                    </h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="w-full max-w-70 p-6 bg-[#081226] border border-slate-800 rounded-3xl shadow-xl flex flex-col justify-between h-49.25 hover:border-amber-200 duration-300">
-                        <div className="flex justify-start">
-                            <span className="text-[#C9A34A] font-semibold text-sm">
-                                هذا الشهر
-                            </span>
-                        </div>
+                    {/* 4 */}
+                    <div className="w-full h-52 p-5 bg-[#081226] border border-slate-800 rounded-3xl shadow-xl flex flex-col justify-between hover:border-emerald-400 duration-300">
 
-                        <div className="flex flex-col items-end gap-2">
-                            <div className="p-3 bg-[#C9A34A1A] rounded-3xl">
-                                <GiGavel className="w-6 h-6 text-[#C9A34A]" />
-                            </div>
-
-                            <div className="text-right">
-                                <p className="text-slate-400 text-sm font-medium mb-1 ">
-                                    عملاء جدد
-                                </p>
-                                <h2 className="text-white text-4xl font-bold tracking-tight py-2 ">
-                                    {stats?.data?.stats?.newThisMonth}                                </h2>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="w-full max-w-70 p-6 bg-[#081226] border border-slate-800 rounded-3xl shadow-xl flex flex-col justify-between h-49.25 hover:border-amber-200 duration-300">
-                        <div className="flex justify-start">
-                            <span className="text-emerald-400 font-semibold text-sm">
-                                +5%
-                            </span>
-                        </div>
-
-                        <div className="flex flex-col items-end gap-2">
-                            <div className="p-3 bg-[#C9A34A1A] rounded-3xl">
-                                <MdGavel className="w-6 h-6 text-[#C9A34A]" />
-                            </div>
-
-                            <div className="text-right">
-                                <p className="text-slate-400 text-sm font-medium mb-1 ">
-                                    العملاء النشطون
-                                </p>
-                                <h2 className="text-white text-4xl font-bold tracking-tight py-2 ">
-                                    {stats?.data?.stats?.activeClients}
-                                </h2>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="w-full max-w-70 p-6 bg-[#081226] border border-slate-800 rounded-3xl shadow-xl flex flex-col justify-between h-49.25 hover:border-amber-200 duration-300">
                         <div className="flex justify-start">
                             <span className="text-emerald-400 font-semibold text-sm">
                                 +12%
                             </span>
                         </div>
 
-                        <div className="flex flex-col items-end gap-2">
-                            <div className="p-3 bg-[#C9A34A1A] rounded-3xl">
-                                <Users className="w-6 h-6 text-[#C9A34A]" />
+                        <div className="flex flex-col items-end gap-3">
+                            <div className="p-3 bg-emerald-400/10 rounded-2xl">
+                                <Users className="w-6 h-6 text-emerald-400" />
                             </div>
 
-                            <div className="text-right">
-                                <p className="text-slate-400 text-sm font-medium mb-1 ">
+                            <div className="text-right w-full">
+                                <p className="text-slate-400 text-sm font-medium">
                                     إجمالي العملاء
                                 </p>
-                                <h2 className="text-white text-4xl font-bold tracking-tight py-2 ">
+
+                                <h2 className="text-white text-3xl font-bold mt-1">
                                     {stats?.data?.stats?.totalClients}
                                 </h2>
                             </div>
                         </div>
                     </div>
+                    {/* 3 */}
+                    <div className="w-full h-52 p-5 bg-[#081226] border border-slate-800 rounded-3xl shadow-xl flex flex-col justify-between hover:border-emerald-400 duration-300">
+
+                        <div className="flex justify-start">
+                            <span className="text-emerald-400 font-semibold text-sm">
+                                +5%
+                            </span>
+                        </div>
+
+                        <div className="flex flex-col items-end gap-3">
+                            <div className="p-3 bg-emerald-400/10 rounded-2xl">
+                                <MdGavel className="w-6 h-6 text-emerald-400" />
+                            </div>
+
+                            <div className="text-right w-full">
+                                <p className="text-slate-400 text-sm font-medium">
+                                    العملاء النشطون
+                                </p>
+
+                                <h2 className="text-white text-3xl font-bold mt-1">
+                                    {stats?.data?.stats?.activeClients}
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                    {/* 2 */}
+                    <div className="w-full h-52 p-5 bg-[#081226] border border-slate-800 rounded-3xl shadow-xl flex flex-col justify-between hover:border-[#C9A34A] duration-300">
+
+                        <div className="flex justify-start">
+                            <span className="text-[#C9A34A] font-semibold text-sm">
+                                هذا الشهر
+                            </span>
+                        </div>
+
+                        <div className="flex flex-col items-end gap-3">
+                            <div className="p-3 bg-[#C9A34A1A] rounded-2xl">
+                                <GiGavel className="w-6 h-6 text-[#C9A34A]" />
+                            </div>
+
+                            <div className="text-right w-full">
+                                <p className="text-slate-400 text-sm font-medium">
+                                    عملاء جدد
+                                </p>
+
+                                <h2 className="text-white text-3xl font-bold mt-1">
+                                    {stats?.data?.stats?.newThisMonth}
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* 1 */}
+                    <div className="w-full h-52 p-5 bg-[#081226] border border-[#EF444433] rounded-3xl shadow-xl flex flex-col justify-between hover:border-[#EF4444] duration-300">
+
+                        <div className="flex justify-start">
+                            <span className="text-[#EF4444] font-semibold text-sm">
+                                متأخرات
+                            </span>
+                        </div>
+
+                        <div className="flex flex-col items-end gap-3">
+                            <div className="p-3 bg-[#EF44441A] rounded-2xl">
+                                <MdOutlineAccountBalanceWallet className="w-6 h-6 text-[#EF4444]" />
+                            </div>
+
+                            <div className="text-right w-full">
+                                <p className="text-slate-400 text-sm font-medium">
+                                    مستحقات معلقة
+                                </p>
+
+                                <div className="flex items-center justify-end gap-2 mt-1">
+                                    <p className="text-sm text-[#64748B]">EGP</p>
+                                    <h2 className="text-white text-3xl font-bold">
+                                        {stats?.data?.stats?.pendingFees}
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
 
                 </div>
             </section>

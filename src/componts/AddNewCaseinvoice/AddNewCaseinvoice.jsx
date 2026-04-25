@@ -14,11 +14,11 @@ import {
 import toast from "react-hot-toast";
 import { Link, useParams } from "react-router-dom";
 import api from "../../api/axios";
- 
+
 const AddNewCaseinvoice = () => {
-   const {id} =useParams()
-   console.log(id);
-   
+  const { id } = useParams()
+  // console.log(id);
+
   const [search, setSearch] = useState("");
   const [showClients, setShowClients] = useState(false);
 
@@ -61,6 +61,7 @@ const AddNewCaseinvoice = () => {
       discount: 0,
       tax: 0,
       notes: "",
+      isFromFees: "false",
       items: [
         { description: "", amount: 0 },
         ,
@@ -77,7 +78,7 @@ const AddNewCaseinvoice = () => {
   const discountPercent = Number(watch("discount")) || 0;
   const taxPercent = Number(watch("tax")) || 0;
   const paid = Number(watch("paidAmount")) || 0;
-  const paymentMethod = Number(watch("paymentMethod")) || "كاش";
+  const paymentMethod = Number(watch("paymentMethod"));
 
   const subtotal =
     items?.reduce((sum, item) => sum + (Number(item.amount) || 0), 0) || 0;
@@ -99,6 +100,7 @@ const AddNewCaseinvoice = () => {
         paymentMethod: data.paymentMethod,
         discount: Number(data.discount),
         tax: Number(data.tax),
+        isFromFees: data.isFromFees === "true",
         notes: data.notes,
         dueDate: data.dueDate,
         caseNumber: data.caseNumber,
@@ -107,15 +109,20 @@ const AddNewCaseinvoice = () => {
       const res = await api.post(
         `/LegalCase/${id}/invoices`,
         payload,
-       
-      );
 
-      // console.log("invoice created:", res.data);
+      );
+      console.log(payload);
+
+      console.log(res);
+
+
       toast.success("تم إنشاء الفاتورة بنجاح");
       reset();
       setSearch("");
-      
+
     } catch (error) {
+      console.error(error.response?.data);
+
       console.error("create invoice error:", error);
       toast.error("حصل خطأ أثناء إنشاء الفاتورة");
     }
@@ -147,31 +154,49 @@ const AddNewCaseinvoice = () => {
                       {isSubmitting ? "جاري الحفظ..." : "حفظ الفاتورة"}
                     </button>
 
-                   <Link to={"/Bills"}>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        reset();
-                        setSearch("");
-                      }}
-                      className=" cursor-pointer rounded-xl border border-white/10 bg-[#0D223C] px-5 py-3 text-sm text-white"
-                    >
-                      إلغاء
-                    </button>
-                   </Link>
+                    <Link to={"/Bills"}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          reset();
+                          setSearch("");
+                        }}
+                        className=" cursor-pointer rounded-xl border border-white/10 bg-[#0D223C] px-5 py-3 text-sm text-white"
+                      >
+                        إلغاء
+                      </button>
+                    </Link>
                   </div>
                 </div>
-
+                {/* case */}
                 {/* Client & case section */}
                 <div className="mb-10">
                   <div className="mb-5 flex items-center gap-2 text-lg font-semibold">
                     <HiOutlineBriefcase className="text-[#E7B53F]" size={20} />
                     <h2>تفاصيل العميل والقضية</h2>
                   </div>
+                  <div className="flex gap-5 py-3">
+                    <label>
+                      <input
+                        type="radio"
+                        value="true"
+                        {...register("isFromFees")}
+                      />
+                      خاص بالاتعاب
+                    </label>
 
+                    <label>
+                      <input
+                        type="radio"
+                        value="false"
+                        {...register("isFromFees")}
+                      />
+                      أخرى
+                    </label>
+                  </div>
                   <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                     {/* client search */}
-                    <div className="md:col-span-2">
+                    {/* <div className="md:col-span-2">
                       <label className="mb-2 block text-sm text-[#D7E1EF]">
                         العميل
                       </label>
@@ -232,7 +257,7 @@ const AddNewCaseinvoice = () => {
                           ))}
                         </div>
                       )}
-                    </div>
+                    </div> */}
 
 
                     {/* due date */}
@@ -350,13 +375,13 @@ const AddNewCaseinvoice = () => {
                         <option value="كاش">كاش</option>
                         <option value="تحويل">تحويل بنكي</option>
                         <option value="شيك">شيك</option>
-                        <option value= "محفظه الكنرونية">محفظه الكنرونية</option>
+                        <option value="محفظه الكنرونية">محفظه الكنرونية</option>
                       </select>
                     </div>
 
                     <div>
                       <label className="mb-2 block text-sm text-[#D7E1EF]">
-                        الخصم
+                        الخصم (%)
                       </label>
                       <input
                         type="number"
@@ -444,23 +469,23 @@ const AddNewCaseinvoice = () => {
                   </div>
                 </div>
 
-                <div className="rounded-[24px] border border-white/5 bg-[#0B1D34] p-4">
+                {/* <div className="rounded-[24px] border border-white/5 bg-[#0B1D34] p-4">
                   <p className="mb-3 text-center text-xs text-[#92A6C3]">طريقة الدفع</p>
                   <button
                     type="button"
                     className="w-full rounded-2xl border border-white/10 bg-[#09182B] px-4 py-3 text-sm text-white"
                   >
-                    {paymentMethod} 
+                    {paymentMethod}
                   </button>
-                </div>
+                </div> */}
 
-                <button
+                {/* <button
                   type="button"
                   className="flex w-full items-center justify-center gap-2 rounded-2xl border border-white/10 bg-[#1A2B45] px-4 py-4 text-sm font-semibold text-white"
                 >
                   <HiOutlinePrinter size={18} />
                   طباعة الفاتورة
-                </button>
+                </button> */}
               </div>
             </div>
           </div>

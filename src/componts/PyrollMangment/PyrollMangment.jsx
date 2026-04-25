@@ -145,6 +145,8 @@ function PyrollMangment() {
     queryKey: ["MonthPayrol", selectedMonth, selectedYear],
     queryFn: () => getMonthlyPayroll(selectedMonth, selectedYear),
   });
+  console.log(MonthPay);
+  
 
   const getuserMonthlyPayroll = async (month, year, id) => {
     const { data } = await api.get(`/payroll/employee/${id}`, {
@@ -239,8 +241,8 @@ function PyrollMangment() {
     const { data } = await api.post(
       "/payroll/approve",
       { month, year },
-    
-    
+
+
     );
 
     return data;
@@ -541,7 +543,7 @@ function PyrollMangment() {
               <p className="text-lg text-[#8EA3BF]">صافي الرواتب</p>
               <h3 className="text-xl font-bold">
                 {MonthPay?.summary?.totalNetSalary ??
-                  MonthPay?.summary?.totalAdvances}
+                  MonthPay?.summary?.totalNet}
               </h3>
             </div>
             <div className="text-green-400">

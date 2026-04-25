@@ -225,49 +225,75 @@ export default function Calendar({
   const [activeType, setActiveType] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [calendarData, setCalendarData] = useState({
-  message: "",
-  range: {
-    startDate: "",
-    endDate: "",
-  },
-  types: [],
-  summary: {
-    sessions: 0,
-    tasks: 0,
-    invoices: 0,
-    appointments: 0,
-  },
-  days: {},
-});
+    message: "",
+    range: {
+      startDate: "",
+      endDate: "",
+    },
+    types: [],
+    summary: {
+      sessions: 0,
+      tasks: 0,
+      invoices: 0,
+      appointments: 0,
+    },
+    days: {},
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
- const loadCalendar = useCallback(async () => {
-  try {
-    setLoading(true);
-    setError("");
+  const loadCalendar = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError("");
 
-    const params = new URLSearchParams({
-      startDate,
-      endDate,
-      previewLimit: String(previewLimit),
-    });
+      const params = new URLSearchParams({
+        startDate,
+        endDate,
+        previewLimit: String(previewLimit),
+      });
 
-    if (activeType !== "all") {
-      params.append("type", activeType);
+      if (activeType !== "all") {
+        params.append("type", activeType);
+      }
+
+      const response = await api(`/calendar/range?${params.toString()}`, {
+        headers: {
+          authorization: `Bearer ${Cookies.get("token")}`,
+        },
+      });
+
+      const data = response?.data || null;
+
+      setCalendarData(data);
+
+      const availableDays = Object.keys(data?.days || {}).sort();
+
+      setSelectedDate((currentValue) => {
+        if (currentValue && currentValue >= startDate && currentValue <= endDate) {
+          return currentValue;
+        }
+
+        if (availableDays.length > 0) {
+          return availableDays[0];
+        }
+
+        return data?.range?.startDate || startDate;
+      });
+    } catch (err) {
+      setError(err?.response?.data?.message || err.message || "حدث خطأ أثناء جلب البيانات");
+    } finally {
+      setLoading(false);
     }
+  }, [activeType, endDate, previewLimit, startDate]);
 
-    const response = await api(`/calendar/range?${params.toString()}`, {
-      headers: {
-        authorization: `Bearer ${Cookies.get("token")}`,
-      },
-    });
+  useEffect(() => {
+    loadCalendar();
+  }, [loadCalendar]);
+  useEffect(() => {
+    if (!calendarData?.days) return;
 
-    const data = response?.data || null;
-
-    setCalendarData(data);
-
-    const availableDays = Object.keys(data?.days || {}).sort();
+    const availableDays = Object.keys(calendarData.days).sort();
 
     setSelectedDate((currentValue) => {
       if (currentValue && currentValue >= startDate && currentValue <= endDate) {
@@ -278,36 +304,10 @@ export default function Calendar({
         return availableDays[0];
       }
 
-      return data?.range?.startDate || startDate;
+      return startDate;
     });
-  } catch (err) {
-    setError(err?.response?.data?.message || err.message || "حدث خطأ أثناء جلب البيانات");
-  } finally {
-    setLoading(false);
-  }
-}, [activeType, endDate, previewLimit, startDate]);
+  }, [calendarData, startDate, endDate]);
 
-  useEffect(() => {
-    loadCalendar();
-  }, [loadCalendar]);
- useEffect(() => {
-  if (!calendarData?.days) return;
-
-  const availableDays = Object.keys(calendarData.days).sort();
-
-  setSelectedDate((currentValue) => {
-    if (currentValue && currentValue >= startDate && currentValue <= endDate) {
-      return currentValue;
-    }
-
-    if (availableDays.length > 0) {
-      return availableDays[0];
-    }
-
-    return startDate;
-  });
-}, [calendarData, startDate, endDate]);
-  
 
   const monthCells = useMemo(() => buildMonthCells(startDate, endDate), [startDate, endDate]);
   const monthLabel = useMemo(() => formatMonthLabel(startDate), [startDate]);
@@ -320,11 +320,11 @@ export default function Calendar({
   };
 
   const selectedDayData = calendarData?.days?.[selectedDate] || null;
-const selectedDayPreview = filterPreview(
-  selectedDayData?.preview || [],
-  activeType,
-  searchTerm
-);
+  const selectedDayPreview = filterPreview(
+    selectedDayData?.preview || [],
+    activeType,
+    searchTerm
+  );
 
   const statCards = [
     {
@@ -383,7 +383,7 @@ const selectedDayPreview = filterPreview(
             </p>
           </div>
 
-          <div className="grid w-full gap-3 sm:grid-cols-2 xl:w-[760px] xl:grid-cols-4">
+          <div className="grid w-full gap-3 sm:grid-cols-2 xl:w-190 xl:grid-cols-4">
             {statCards.map((card) => (
               <StatCard
                 key={card.key}
@@ -397,15 +397,18 @@ const selectedDayPreview = filterPreview(
         </div>
 
         <div className="mb-6 rounded-3xl border border-white/10 bg-[#061328] p-4 shadow-[0_24px_80px_-48px_rgba(59,130,246,0.65)] backdrop-blur-sm">
-          <div className="grid grid-cols-1 gap-3 xl:grid-cols-[minmax(0,1fr)_170px_170px_130px]">
-            <div className="relative">
-              <FiSearch className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-slate-400" />
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_170px_170px_130px] xl:items-end">
+            <div className="relative flex flex-col gap-1 md:col-span-2 xl:col-span-1">
+              <span className="text-sm text-slate-400 opacity-0">بحث</span>
+
+              <FiSearch className="pointer-events-none absolute right-4 bottom-4 text-slate-400" />
+
               <input
                 type="text"
                 value={searchTerm}
                 onChange={(event) => setSearchTerm(event.target.value)}
                 placeholder="ابحث داخل المعروض من الأحداث"
-                className="h-12 w-full rounded-2xl border border-white/10 bg-[#0c1d34] pr-11 text-sm text-white outline-none transition focus:border-blue-400/40"
+                className="h-12 w-full rounded-2xl border border-white/10 bg-[#0c1d34] pr-11 pl-4 text-sm text-white outline-none transition focus:border-blue-400/40"
               />
             </div>
 
@@ -415,7 +418,7 @@ const selectedDayPreview = filterPreview(
                 type="date"
                 value={startDate}
                 onChange={(event) => setStartDate(event.target.value)}
-                className="h-12 rounded-2xl border border-white/10 bg-[#0c1d34] px-4 text-white outline-none transition focus:border-blue-400/40"
+                className="h-12 w-full rounded-2xl border border-white/10 bg-[#0c1d34] px-4 text-white outline-none transition focus:border-blue-400/40"
               />
             </label>
 
@@ -425,14 +428,15 @@ const selectedDayPreview = filterPreview(
                 type="date"
                 value={endDate}
                 onChange={(event) => setEndDate(event.target.value)}
-                className="h-12 rounded-2xl border border-white/10 bg-[#0c1d34] px-4 text-white outline-none transition focus:border-blue-400/40"
+                className="h-12 w-full rounded-2xl border border-white/10 bg-[#0c1d34] px-4 text-white outline-none transition focus:border-blue-400/40"
               />
             </label>
 
             <button
               type="button"
               onClick={loadCalendar}
-              className="mt-auto inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-amber-400 px-4 font-semibold text-slate-950 transition hover:opacity-90"
+              disabled={loading}
+              className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-amber-400 px-4 font-semibold text-slate-950 transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70 md:col-span-2 xl:col-span-1"
             >
               {loading ? <FiLoader className="animate-spin" /> : <FiRefreshCw />}
               تحديث
@@ -568,7 +572,7 @@ const selectedDayPreview = filterPreview(
               </div>
 
               <div className="inline-flex rounded-2xl   p-1 text-sm">
-               
+
                 <button type="button" className="rounded-xl bg-amber-400 px-4 py-2 font-semibold text-slate-950">
                   شهري
                 </button>
@@ -576,7 +580,7 @@ const selectedDayPreview = filterPreview(
             </div>
 
             <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#09172b]">
-              <div className="grid grid-cols-7 border-b border-white/10 bg-white/[0.02]">
+              <div className="grid grid-cols-7 border-b border-white/10 bg-white/2">
                 {WEEK_DAYS.map((day) => (
                   <div key={day} className="px-3 py-4 text-center text-sm font-medium text-slate-400">
                     {day}
@@ -585,78 +589,77 @@ const selectedDayPreview = filterPreview(
               </div>
 
               <div className="grid grid-cols-7 gap-px bg-white/10">
-  {monthCells.map((cell) => {
-    const dayData = calendarData?.days?.[cell.date] || null;
-    const preview = filterPreview(dayData?.preview || [], activeType, searchTerm);
+                {monthCells.map((cell) => {
+                  const dayData = calendarData?.days?.[cell.date] || null;
+                  const preview = filterPreview(dayData?.preview || [], activeType, searchTerm);
 
-    const totalCount =
-      activeType === "all"
-        ? countDayItems(dayData?.counts || {})
-        : dayData?.counts?.[activeType] || 0;
+                  const totalCount =
+                    activeType === "all"
+                      ? countDayItems(dayData?.counts || {})
+                      : dayData?.counts?.[activeType] || 0;
 
-    const hiddenCount = Math.max(0, totalCount - preview.length);
-    const isSelected = cell.date === selectedDate;
+                  const hiddenCount = Math.max(0, totalCount - preview.length);
+                  const isSelected = cell.date === selectedDate;
 
-    return (
-      <button
-        key={cell.date}
-        type="button"
-        onClick={() => setSelectedDate(cell.date)}
-        className={`min-h-[124px] bg-[#0b1a30] p-3 text-right transition md:min-h-[138px]
+                  return (
+                    <button
+                      key={cell.date}
+                      type="button"
+                      onClick={() => setSelectedDate(cell.date)}
+                      className={`min-h-31 bg-[#0b1a30] p-3 text-right transition md:min-h-34.5
           ${cell.isCurrentMonth ? "text-white" : "text-slate-500"}
           ${cell.inSelectedRange ? "" : "opacity-50"}
           ${isSelected ? "ring-1 ring-amber-400/40" : "hover:bg-[#10213b]"}
         `}
-      >
-        <div className="mb-3 flex items-start justify-between gap-2">
-          <div
-            className={`inline-flex h-8 min-w-8 items-center justify-center rounded-full px-2 text-sm font-semibold
-              ${
-                isSelected
-                  ? "bg-amber-400 text-slate-950"
-                  : cell.isCurrentMonth
-                  ? "bg-white/[0.05] text-slate-200"
-                  : "bg-white/[0.03] text-slate-500"
-              }
+                    >
+                      <div className="mb-3 flex items-start justify-between gap-2">
+                        <div
+                          className={`inline-flex h-8 min-w-8 items-center justify-center rounded-full px-2 text-sm font-semibold
+              ${isSelected
+                              ? "bg-amber-400 text-slate-950"
+                              : cell.isCurrentMonth
+                                ? "bg-white/5 text-slate-200"
+                                : "bg-white/3 text-slate-500"
+                            }
             `}
-          >
-            {cell.dayNumber}
-          </div>
+                        >
+                          {cell.dayNumber}
+                        </div>
 
-          {totalCount > 0 && (
-            <span className="rounded-full bg-white/[0.05] px-2 py-1 text-[11px] text-slate-300">
-              {totalCount} عنصر
-            </span>
-          )}
-        </div>
+                        {totalCount > 0 && (
+                          <span className="rounded-full bg-white/5 px-2 py-1 text-[11px] text-slate-300">
+                            {totalCount} عنصر
+                          </span>
+                        )}
+                      </div>
 
-        <div className="space-y-2">
-          {preview.length > 0 ? (
-            <>
-              {preview.map((item) => (
-                <EventBadge key={`${item.type}-${item.id}`} item={item} />
-              ))}
+                      <div className="space-y-2">
+                        {preview.length > 0 ? (
+                          <>
+                            {preview.map((item) => (
+                              <EventBadge key={`${item.type}-${item.id}`} item={item} />
+                            ))}
 
-              {hiddenCount > 0 && (
-                <div className="rounded-xl border border-amber-400/20 bg-amber-500/10 px-2 py-1 text-[11px] text-amber-300">
-                  + {hiddenCount} عناصر أخرى
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="rounded-xl border border-dashed border-white/5 px-3 py-2 text-[11px] text-slate-500">
-              —
-            </div>
-          )}
-        </div>
-      </button>
-    );
-  })}
-</div>
+                            {hiddenCount > 0 && (
+                              <div className="rounded-xl border border-amber-400/20 bg-amber-500/10 px-2 py-1 text-[11px] text-amber-300">
+                                + {hiddenCount} عناصر أخرى
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <div className="rounded-xl border border-dashed border-white/5 px-3 py-2 text-[11px] text-slate-500">
+                            —
+                          </div>
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
             {loading && (
-              <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-slate-300">
+              <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/3 px-4 py-2 text-sm text-slate-300">
                 <FiLoader className="animate-spin" />
                 جاري تحميل بيانات التقويم...
               </div>
