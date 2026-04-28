@@ -39,7 +39,6 @@ const ClientMangment = () => {
       id: 1,
       title: "إجمالي العملاء",
       value: "12,450",
-      change: "+12%",
       changeColor: "text-emerald-400",
       icon: <HiOutlineUsers size={28} />,
       iconColor: "text-[#d8a63c]",
@@ -50,7 +49,6 @@ const ClientMangment = () => {
       id: 2,
       title: "العملاء الجدد هذا الشهر",
       value: "1,200",
-      change: "+5%",
       changeColor: "text-emerald-400",
       icon: <HiOutlineUserAdd size={28} />,
       iconColor: "text-[#d8a63c]",
@@ -134,7 +132,7 @@ const ClientMangment = () => {
   return (
     <>
       <div dir="rtl" className="  px-6 py-10 md:px-10">
-        <div className="mx-auto max-w-[1600px]">
+        <div className="mx-auto max-w-400">
           <div className="mb-10 text-right">
             <h1 className="text-4xl font-extrabold text-white md:text-5xl">
               إدارة العملاء

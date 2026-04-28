@@ -35,7 +35,15 @@ const CaseMange = () => {
 
 
 
+  const formatDateISO = (dateString) => {
+    if (!dateString) return "-";
 
+    const date = new Date(dateString);
+
+    if (isNaN(date.getTime())) return "-";
+
+    return date.toISOString().split("T")[0];
+  };
 
 
   const getStatusStyle = (status) => {
@@ -104,30 +112,32 @@ const CaseMange = () => {
   };
   // console.log(Cases?.data?.cases);
   const cases = Cases?.data?.cases || [];
-const filteredCases = useMemo(() => {
-  let result = cases;
+  console.log(cases);
 
-  // فلترة التاب
-  if (activeTab !== "all") {
-    result = result.filter((item) => item.tab === activeTab);
-  }
+  const filteredCases = useMemo(() => {
+    let result = cases;
 
-  // فلترة السيرش
-  if (searchTerm.trim() !== "") {
-    const term = searchTerm.toLowerCase();
+    // فلترة التاب
+    if (activeTab !== "all") {
+      result = result.filter((item) => item.tab === activeTab);
+    }
 
-    result = result.filter((item) => {
-      return (
-        item.caseNumber?.toLowerCase().includes(term) ||
-        item.client?.fullName?.toLowerCase().includes(term) ||
-        item.caseType?.name?.toLowerCase().includes(term) ||
-        item.court?.toLowerCase().includes(term)
-      );
-    });
-  }
+    // فلترة السيرش
+    if (searchTerm.trim() !== "") {
+      const term = searchTerm.toLowerCase();
 
-  return result;
-}, [cases, activeTab, searchTerm]);
+      result = result.filter((item) => {
+        return (
+          item.caseNumber?.toLowerCase().includes(term) ||
+          item.client?.fullName?.toLowerCase().includes(term) ||
+          item.caseType?.name?.toLowerCase().includes(term) ||
+          item.court?.toLowerCase().includes(term)
+        );
+      });
+    }
+
+    return result;
+  }, [cases, activeTab, searchTerm]);
   return (
     <>
       <div className="w-full  px-4 sm:px-6 lg:px-8 py-5 sm:py-6 lg:py-8 font-sans" dir="rtl">
@@ -171,14 +181,14 @@ const filteredCases = useMemo(() => {
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                  className="h-12 w-full rounded-2xl border border-[#132949] bg-[#091b35] pr-11 pl-4 text-sm text-white outline-none transition placeholder:text-[#59708f] focus:border-[#d4aa45]/70 focus:ring-2 focus:ring-[#d4aa45]/20"
+                className="h-12 w-full rounded-2xl border border-[#132949] bg-[#091b35] pr-11 pl-4 text-sm text-white outline-none transition placeholder:text-[#59708f] focus:border-[#d4aa45]/70 focus:ring-2 focus:ring-[#d4aa45]/20"
                 placeholder="البحث برقم القضية، اسم العميل، أو موضوع النزاع..."
               />
             </div>
 
-         
 
-            
+
+
           </div>
         </div>
       </div>
@@ -261,12 +271,10 @@ const filteredCases = useMemo(() => {
                         <td className="px-6 py-5 text-[#c8d6e8]">{item.court}</td>
 
                         <td className="px-6 py-5">
-                          <div className="text-[#dbe7f5]">{item.nextSession}</div>
-                          {item.nextSessionTime ? (
-                            <div className="mt-1 text-xs text-[#6f86a6]">
-                              {item.nextSessionTime}
-                            </div>
-                          ) : null}
+                          <div className="text-[#dbe7f5]">
+                            {formatDateISO(item?.openedAt)}
+                          </div>
+
                         </td>
 
                         <td className="px-6 py-5">
