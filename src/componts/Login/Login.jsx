@@ -8,12 +8,14 @@ import { useForm } from 'react-hook-form'
 import * as z from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
+import { CiLogin } from "react-icons/ci";
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { Authcontext } from '../../Context/AuthContextProvider';
 import Cookies from "js-cookie";
 import logo from "../../assets/images/LEX LOGO.png"
 import api from '../../api/axios';
+import LexoraHero from '../LexoraHero/LexoraHero';
 
 
 const Login = () => {
@@ -57,36 +59,29 @@ const Login = () => {
   }
   return (
     <>
-      <div className="bg1  min-h-screen flex items-center justify-center  relative  "
-        style={{ backgroundImage: `url(${scaleImage})` }}
-      >
-        <div className="relative z-10 w-full max-w-md p-8">
-          {/* Logo and Title */}
-          {/* <div className="text-center mb-8">
-            <div className="bg-[#C9A14A] w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <div className="text-slate-900 font-bold text-xl"><MdGavel /></div>
-            </div>
-            <h1 className="text-[#C9A14A] text-xl font-semibold tracking-wide">
-              مؤسسة هيلبر للمحاماة
-            </h1>
-          </div> */}
-          {/* Login Card */}
-          <div className="bg-[#0F1B2EF2] border border-[#C9A14A] p-8 rounded-2xl shadow-2xl backdrop-blur-md">
-           <div className="w-32 sm:w-40 md:w-40 mx-auto flex justify-center">
-  <img src={logo} className="w-full object-contain" alt="" />
-</div>
-            <h2 className="text-white text-2xl font-bold text-center mb-2">تسجيل الدخول</h2>
-            <p className="text-slate-400 text-lg text-center mb-8 flex items-center justify-center gap-2">  <span className='text-[#c9a14a] font-bold text-xl'>Lexora</span>   مرحبا بك مجدددا في  </p>
+      <div className="bg1 min-h-screen flex items-stretch relative">
 
-            <form onSubmit={handleSubmit(Signin)}
-              className="space-y-6" dir="rtl" >
+        {/* الجزء الأيمن - فورم تسجيل الدخول */}
+<div className="w-full md:w-1/2 min-h-screen flex items-center justify-center bg-[#0f1a2b] p-8">
+          <div className="bg-[#0F1B2EF2] border border-[#C9A14A] p-8 rounded-2xl shadow-2xl backdrop-blur-md w-full max-w-md">
+
+            <div className="w-32 sm:w-40 md:w-40 mx-auto flex justify-center">
+              <img src={logo} className="w-full object-contain" alt="" />
+            </div>
+
+            <h2 className="text-white text-2xl font-bold text-center mb-2">تسجيل الدخول</h2>
+            <p className="text-slate-400 text-lg text-center mb-8 flex items-center justify-center gap-2">
+              <span className="text-[#c9a14a] font-bold text-xl">Lexora</span>
+              مرحبا بك مجددا في
+            </p>
+
+            <form onSubmit={handleSubmit(Signin)} className="space-y-6" dir="rtl">
               {/* Email Field */}
               <div>
                 <label className="block text-slate-300 mb-2 text-sm font-bold">البريد الإلكتروني</label>
                 <div className="relative">
                   <input
                     type="email"
-
                     placeholder="example@email.com"
                     className="w-full bg-slate-950 border border-[#C9A24A33] rounded-lg py-3 px-10 text-white focus:ring-2 focus:ring-[#C9A14A] outline-none transition-all"
                     {...register("email")}
@@ -114,14 +109,20 @@ const Login = () => {
                   </button>
                 </div>
               </div>
-              
+
               {/* Submit Button */}
               <button className="w-full bg-[#C9A14A] hover:bg-amber-600 text-slate-900 font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition-colors">
-                {isLoding ? <span className="loading loading-infinity loading-xl"></span> : "تسجيل الدخول"}
+                {isLoding ? <span className="loading loading-infinity loading-xl"></span> : <div className='items-center flex justify-center gap-2'><CiLogin className='text-2xl' /> تسجيل الدخول</div>}
               </button>
             </form>
           </div>
         </div>
+
+        {/* الجزء الأيسر - LexoraHero */}
+<div className="w-1/2 min-h-screen hidden md:flex items-center justify-center">
+          <LexoraHero />
+        </div>
+
       </div>
     </>
   )
