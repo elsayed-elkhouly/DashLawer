@@ -62,7 +62,7 @@ const Login = () => {
       <div className="bg1 min-h-screen flex items-stretch relative">
 
         {/* الجزء الأيمن - فورم تسجيل الدخول */}
-<div className="w-full md:w-1/2 min-h-screen flex items-center justify-center bg-[#0f1a2b] p-8">
+        <div className="w-full md:w-1/2 min-h-screen flex items-center justify-center bg-[#0f1a2b] p-8">
           <div className="bg-[#0F1B2EF2] border border-[#C9A14A] p-8 rounded-2xl shadow-2xl backdrop-blur-md w-full max-w-md">
 
             <div className="w-32 sm:w-40 md:w-40 mx-auto flex justify-center">
@@ -119,7 +119,7 @@ const Login = () => {
         </div>
 
         {/* الجزء الأيسر - LexoraHero */}
-<div className="w-1/2 min-h-screen hidden md:flex items-center justify-center">
+        <div className="w-1/2 min-h-screen hidden md:flex items-center justify-center">
           <LexoraHero />
         </div>
 

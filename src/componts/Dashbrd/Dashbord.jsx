@@ -347,7 +347,7 @@ const Dashbord = () => {
             >
               <div className="absolute top-5 right-5 bg-[#1f1f28] p-3 rounded-full mb-3">
                 {card.icon}
-            </div>
+              </div>
               <div className="mt-auto text-right pt-8 sm:pt-10">
                 <p className="text-gray-400 text-sm">{card.title}</p>
                 <p className="text-white text-xl sm:text-2xl font-bold mt-1 wrap-break-word">
@@ -377,7 +377,8 @@ const Dashbord = () => {
 
           <div className="space-y-4">
             {Session?.data?.sessions
-              ?.slice(0, 3)
+              ?.filter(item => item?.legalCase)
+              .slice(0, 3)
               .map((hearing) => (
                 <div
                   key={hearing.id}
@@ -393,12 +394,11 @@ const Dashbord = () => {
 
                       <div className="text-right min-w-0">
                         <h3 className="font-semibold text-sm sm:text-base mb-1 wrap-break-word">
-                          {hearing.legalCase.description}
-                        </h3>
+                          {hearing?.legalCase?.description || "لا يوجد وصف"}                        </h3>
                         <div className="flex items-center gap-1 text-xs sm:text-sm text-gray-500">
                           <BiMapPin className="w-3 h-3 shrink-0" />
                           <span className="wrap-break-word">
-                            {hearing.courtName} - {hearing.city}
+                            {hearing?.courtName || "-"} - {hearing?.city || "-"}
                           </span>
                         </div>
                       </div>
@@ -410,7 +410,7 @@ const Dashbord = () => {
                           {formatDate(hearing.startAt)}
                         </p>
                         <span className="inline-block text-[10px] sm:text-xs px-3 py-1 rounded-full border bg-[#101c2e]">
-                          {hearing.type}
+                         {hearing?.type || "-"}
                         </span>
                       </div>
                       <BiChevronLeft className="w-5 h-5 text-gray-600 group-hover:text-white transition-colors shrink-0" />
@@ -487,7 +487,7 @@ const Dashbord = () => {
               <h2 className="text-base sm:text-lg font-bold">آخر القضايا المضافة</h2>
             </div>
 
-            
+
           </div>
 
           <div className="overflow-x-auto">
@@ -520,7 +520,7 @@ const Dashbord = () => {
             </table>
           </div>
 
-          
+
         </div>
       </section>
     </div>
