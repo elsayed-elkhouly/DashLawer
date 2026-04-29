@@ -145,7 +145,7 @@ function PyrollMangment() {
     queryKey: ["MonthPayrol", selectedMonth, selectedYear],
     queryFn: () => getMonthlyPayroll(selectedMonth, selectedYear),
   });
-  console.log(MonthPay);
+  // console.log(MonthPay);
   
 
   const getuserMonthlyPayroll = async (month, year, id) => {

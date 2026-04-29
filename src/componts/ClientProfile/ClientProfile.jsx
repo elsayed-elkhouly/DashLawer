@@ -95,7 +95,7 @@ const ClientProfile = () => {
       setFile(null);
     } catch (error) {
       setLoding(false)
-      console.error(error.response?.data?.message);
+      // console.error(error.response?.data?.message);
       toast.error(error.response?.data?.message);
       ;
     } finally {
@@ -144,7 +144,7 @@ const ClientProfile = () => {
       queryClient.invalidateQueries({ queryKey: ["ClientProfile", id] });
     } catch (error) {
       console.log(error);
-      toast.error("حصل خطأ أثناء المسح");
+      toast.error(error.response?.data?.message);
     }
   }
 
@@ -173,8 +173,7 @@ const ClientProfile = () => {
 
       toast.success("Download Done ");
     } catch (error) {
-      console.log(error.response);
-      toast.error("حصل خطأ أثناء تنزيل الملف");
+      toast.error(error.response?.data?.message);
     }
   }
   async function PrintSingleInvoic(id) {
@@ -201,10 +200,8 @@ const ClientProfile = () => {
 
       toast.success("Download Done");
     } catch (error) {
-      console.log(error);
-      console.log("Message:", error.response?.data?.message);
 
-      toast.error("حصل خطأ أثناء تنزيل الملف");
+      toast.error(error.response?.data?.message);
     }
   }
 

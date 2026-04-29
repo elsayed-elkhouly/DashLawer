@@ -38,7 +38,7 @@ const SessionDetails = () => {
     city: "",
     circuit: "",
     notes: "",
-    status:"",
+    status: "",
     assignedTo: "",
     team: [],
   });
@@ -59,8 +59,8 @@ const SessionDetails = () => {
     queryKey: ["session", id],
     queryFn: getAllSesions,
   });
-  console.log(sessionResponse);
-  
+  // console.log(sessionResponse);
+
 
   const updateSession = (updatedData) => {
     return api.patch(`/session/${id}`, updatedData, {
@@ -81,7 +81,6 @@ const SessionDetails = () => {
     },
   });
   const session = sessionResponse?.data?.session;
-  // console.log(session);
 
   useEffect(() => {
     if (session) {
@@ -131,31 +130,31 @@ const SessionDetails = () => {
     }
   }
   async function deleteDoc(publicId) {
-        try {
-            setLoading(true);
+    try {
+      setLoading(true);
 
-            const res = await api.delete(
-                `/session/${id}/attachments`,
-                {
-                    headers: {
-                        authorization: `Bearer ${Cookies.get("token")}`,
-                    },
-                    data: {
-                        publicId,
-                    },
-                }
-            );
-
-            // console.log(res.data);
-            toast.success("تم حذف الملف بنجاح");
-            queryClient.invalidateQueries({ queryKey: ["session", id]  });
-        } catch (error) {
-            console.error(error);
-            toast.error(error?.response?.data?.message || "حصل خطأ أثناء حذف الملف");
-        } finally {
-            setLoading(false);
+      const res = await api.delete(
+        `/session/${id}/attachments`,
+        {
+          headers: {
+            authorization: `Bearer ${Cookies.get("token")}`,
+          },
+          data: {
+            publicId,
+          },
         }
+      );
+
+      // console.log(res.data);
+      toast.success("تم حذف الملف بنجاح");
+      queryClient.invalidateQueries({ queryKey: ["session", id] });
+    } catch (error) {
+      // console.error(error);
+      toast.error(error?.response?.data?.message || "حصل خطأ أثناء حذف الملف");
+    } finally {
+      setLoading(false);
     }
+  }
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -173,7 +172,7 @@ const SessionDetails = () => {
       city: formData.city,
       circuit: formData.circuit,
       notes: formData.notes,
-      status:formData.status,
+      status: formData.status,
       assignedTo: formData.assignedTo,
       team: Array.isArray(formData.team)
         ? formData.team.flat().filter(Boolean)
@@ -251,12 +250,12 @@ const SessionDetails = () => {
   }
 
   return (
-    <div dir="rtl" className="min-h-screen bg-[radial-gradient(circle_at_top,#0d2847_0%,#07192e_45%,#05111f_100%)] p-4 md:p-6">
-      <div className="mx-auto max-w-7xl space-y-6">
+    <div dir="rtl" className="min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_top,#0d2847_0%,#07192e_45%,#05111f_100%)] p-3 sm:p-4 md:p-6">
+      <div className="mx-auto max-w-7xl space-y-4 sm:space-y-6">
         <div className="rounded-3xl bg-[#071a31] p-5 shadow-sm  border border-[#FFFFFF14] md:p-6">
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+          <div className="flex flex-col gap-4 md:gap-5 lg:flex-row lg:items-start lg:justify-between">
             <div className="space-y-3">
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <span className="rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700">
                   {session?.type || "جلسة"}
                 </span>
@@ -288,7 +287,7 @@ const SessionDetails = () => {
               </div>
             </div>
 
-            <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 lg:w-auto lg:min-w-85">
+            <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 lg:w-auto lg:min-w-[340px]">
               <QuickInfoCard
                 label="رقم القضية"
                 value={session?.legalCase?.caseNumber || "-"}
@@ -304,7 +303,6 @@ const SessionDetails = () => {
             </div>
           </div>
         </div>
-
         <div className="grid gap-6 lg:grid-cols-3">
           <div className="space-y-6 lg:col-span-2">
             <section className="rounded-3xl bg-[#071a31] p-5 shadow-sm border border-[#FFFFFF14]">
@@ -312,7 +310,7 @@ const SessionDetails = () => {
                 <h2 className="text-lg font-bold text-white">تفاصيل الجلسة</h2>
 
                 {isEditing && (
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <button
                       type="button"
                       onClick={() => {
@@ -383,7 +381,7 @@ const SessionDetails = () => {
                   />
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-2">
+                <form onSubmit={handleSubmit} className="grid gap-4 grid-cols-1 md:grid-cols-2">
                   <div>
                     <label className="mb-2 block text-sm text-white">نوع الجلسة</label>
                     <input
@@ -538,7 +536,6 @@ const SessionDetails = () => {
                   <HiOutlineFolderOpen size={18} className="text-[#d3a53d]" />
                   المستندات
                 </h2>
-
                 <label
                   className={`cursor-pointer rounded-lg bg-[#d3a53d] px-4 py-2 text-sm text-black hover:opacity-90 ${loading ? "pointer-events-none opacity-50" : ""
                     }`}
@@ -563,8 +560,7 @@ const SessionDetails = () => {
                   session.attachments.map((file, index) => (
                     <div
                       key={file.publicId || index}
-                      className="flex items-center justify-between rounded-2xl border border-[#13243b] bg-[#0d1c33] px-4 py-4 transition hover:bg-[#10203a]"
-                    >
+                      className="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between rounded-2xl border border-[#13243b] bg-[#0d1c33] px-4 py-4 transition hover:bg-[#10203a]"                    >
                       <div className="flex min-w-0 items-center gap-3">
                         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#3d2b2f] bg-[#1b1620] text-[#ff5f7a]">
                           <FaRegFilePdf size={16} />
@@ -580,7 +576,7 @@ const SessionDetails = () => {
                         </div>
                       </div>
 
-                      <div className="flex shrink-0 items-center gap-3">
+                      <div className="flex shrink-0 items-center gap-3 self-end sm:self-auto">
                         <a
                           href={file.url}
                           target="_blank"
@@ -610,7 +606,7 @@ const SessionDetails = () => {
               <h2 className="mb-4 text-lg font-bold text-white">تم الإنشاء بواسطة</h2>
 
               {session?.createdBy ? (
-                <div className="flex items-center gap-3 rounded-2xl bg-[#0d2139] p-4  border border-[#FFFFFF14]">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 rounded-2xl bg-[#0d2139] p-4 border border-[#FFFFFF14]">
                   <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#071a31] text-[#d4aa45]">
                     <FaUser />
                   </div>
@@ -657,7 +653,7 @@ export default SessionDetails;
 
 const QuickInfoCard = ({ label, value, breakAll = false }) => {
   return (
-    <div className="rounded-2xl bg-[#0d2139] flex flex-col justify-center p-2  border border-[#FFFFFF14]">
+    <div className="rounded-2xl bg-[#0d2139] flex min-h-18 flex-col justify-center p-3 border border-[#FFFFFF14]">
       <p className="text-sm  text-white ">{label}</p>
       <p
         className={`mt-1 font-bold text-slate-500 ${breakAll ? "break-all text-sm" : ""
@@ -678,7 +674,7 @@ const DetailCard = ({ icon, label, value }) => {
 
       <div className="min-w-0">
         <p className="text-sm text-white">{label}</p>
-        <p className="mt-1 font-semibold leading-7 text-slate-500">{value}</p>
+        <p className="mt-1 font-semibold leading-7 text-slate-500 wrap-break-word">{value}</p>
       </div>
     </div>
   );
@@ -703,7 +699,7 @@ const EmptyState = ({ text }) => {
 
 const PersonCard = ({ person }) => {
   return (
-    <div className="flex items-center gap-3 rounded-2xl border border-[#FFFFFF14] bg-[#0d2139] p-4">
+    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 rounded-2xl border border-[#FFFFFF14] bg-[#0d2139] p-4">
       {person?.ProfilePhoto?.url ? (
         <img
           src={person.ProfilePhoto.url}
@@ -723,12 +719,12 @@ const PersonCard = ({ person }) => {
 
         <div className="mt-2 flex items-center gap-2 text-sm text-slate-600">
           <FaEnvelope className="shrink-0" />
-          <span className="truncate">{person?.email || "-"}</span>
+          <span className="truncate break-all">{person?.email || "-"}</span>
         </div>
 
         <div className="mt-1 flex items-center gap-2 text-sm text-slate-600">
           <FaPhone className="shrink-0" />
-          <span>{person?.phone || "-"}</span>
+          <span className="break-all">{person?.phone || "-"}</span>
         </div>
       </div>
     </div>

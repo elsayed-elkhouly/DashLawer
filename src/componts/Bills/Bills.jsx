@@ -43,11 +43,11 @@ const Bills = () => {
       );
 
       setInvoice(res.data?.invoice);
-      console.log(res.data?.invoice);
+      // console.log(res.data?.invoice);
 
       setShowInvoice(true);
     } catch (error) {
-      console.error(error);
+      // console.error(error);
     }
   };
   const tabs = [
@@ -327,10 +327,9 @@ const Bills = () => {
               <div className="w-full overflow-x-auto xl:overflow-visible">
                 <div className="min-w-275 xl:min-w-0">
                   {/* Header */}
-                  <div className="grid grid-cols-[1.2fr_1.7fr_1.15fr_1.2fr_0.95fr_0.95fr_0.95fr_1.15fr_1fr_1.15fr] items-center gap-4 bg-white/3 px-6 py-4 text-[12px] text-[#90A4BF]">
+                  <div className="grid grid-cols-[1.2fr_1.7fr_1.2fr_1.2fr_0.95fr_0.95fr_1.15fr_1fr_1.15fr] items-center gap-4 bg-white/3 px-6 py-4 text-[12px] text-[#90A4BF]">
                     <div>رقم الفاتورة</div>
                     <div>العميل</div>
-                    <div>نوع الخدمة</div>
                     <div>المجموع الكلي</div>
                     <div className="text-center">المجموع بعد الخصم</div>
                     <div className="text-center">المدفوع</div>
@@ -349,7 +348,7 @@ const Bills = () => {
                     tabFilteredInvoices.map((invoice) => (
                       <div
                         key={invoice._id}
-                        className="grid grid-cols-[1.2fr_1.7fr_1.15fr_1.2fr_0.95fr_0.95fr_0.95fr_1.15fr_1fr_1.15fr] items-center gap-4 border-t border-white/5 px-6 py-4 text-[13px] text-white"
+                        className="grid grid-cols-[1.2fr_1.7fr_1.2fr_0.95fr_0.95fr_0.95fr_1.15fr_1fr_1.15fr] items-center gap-4 border-t border-white/5 px-6 py-4 text-[13px] text-white"
                       >
                         <div className="font-medium text-[#D7AE46]">
                           {invoice.invoiceNumber}
@@ -361,9 +360,6 @@ const Bills = () => {
                           </span>
                         </div>
 
-                        <div className="text-[12px] text-[#D1D9E6]">
-                          {invoice.service}
-                        </div>
 
                         <div>{invoice.subtotal}</div>
 
@@ -479,30 +475,36 @@ const Bills = () => {
               </div>
             </div>
             {showInvoice && invoice && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-                <div className="relative w-full max-w-4xl rounded-[30px] border border-white/10 bg-[#0f2238] p-6 shadow-[0_20px_80px_rgba(0,0,0,0.5)]">
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-3 sm:p-4">
+
+                <div className="relative w-full max-w-4xl rounded-[20px] md:rounded-[30px] border border-white/10 bg-[#0f2238] p-4 sm:p-5 md:p-6 shadow-[0_20px_80px_rgba(0,0,0,0.5)] max-h-[90vh] overflow-y-auto">
 
                   {/* close */}
                   <button
                     onClick={() => setShowInvoice(false)}
-                    className="absolute left-5 top-5 text-white/50 hover:text-white"
+                    className="absolute left-4  md:left-5 md:top-5 lg:top-3 pb-5 cursor-pointer text-white/50 hover:text-white"
                   >
                     ✕
                   </button>
 
                   {/* header */}
-                  <div className="mb-6 flex items-center justify-between">
+                  <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="text-right">
-                      <h2 className="text-xl font-bold text-white">تفاصيل الفاتورة</h2>
-                      <p className="text-sm text-white/50">#{invoice.invoiceNumber}</p>
+                      <h2 className="text-lg sm:text-xl font-bold text-white">
+                        تفاصيل الفاتورة
+                      </h2>
+
+                      <p className="text-sm text-white/50">
+                        #{invoice.invoiceNumber}
+                      </p>
                     </div>
 
                     <span
-                      className={`rounded-full px-4 py-1 text-sm border ${invoice.status === "مدفوعة"
-                          ? "border-green-500/30 bg-green-500/10 text-green-400"
-                          : invoice.status === "متأخرة"
-                            ? "border-red-500/30 bg-red-500/10 text-red-400"
-                            : "border-yellow-500/30 bg-yellow-500/10 text-yellow-400"
+                      className={`w-fit self-end sm:self-auto rounded-full px-4 py-1 text-sm border ${invoice.status === "مدفوعة"
+                        ? "border-green-500/30 bg-green-500/10 text-green-400"
+                        : invoice.status === "متأخرة"
+                          ? "border-red-500/30 bg-red-500/10 text-red-400"
+                          : "border-yellow-500/30 bg-yellow-500/10 text-yellow-400"
                         }`}
                     >
                       {invoice.status}
@@ -513,62 +515,77 @@ const Bills = () => {
                   <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
                     <div className="rounded-xl border border-white/5 bg-white/5 p-4 text-right">
                       <p className="text-xs text-white/50">تاريخ الفاتورة</p>
-                      <p className="text-white">
+                      <p className="text-white break-words">
                         {new Date(invoice.issueDate).toLocaleDateString("ar-EG")}
                       </p>
                     </div>
 
                     <div className="rounded-xl border border-white/5 bg-white/5 p-4 text-right">
                       <p className="text-xs text-white/50">طريقة الدفع</p>
-                      <p className="text-white">{invoice.paymentMethod}</p>
+                      <p className="text-white ">
+                        {invoice.paymentMethod}
+                      </p>
                     </div>
 
                     <div className="rounded-xl border border-white/5 bg-white/5 p-4 text-right">
                       <p className="text-xs text-white/50">اسم العميل</p>
-                      <p className="text-white">{invoice.client?.fullName}</p>
+                      <p className="text-white ">
+                        {invoice.client?.fullName}
+                      </p>
                     </div>
                   </div>
 
                   {/* table */}
                   <div className="overflow-hidden rounded-xl border border-white/5">
                     <div className="grid grid-cols-3 bg-[#132740] px-4 py-3 text-sm text-white/70">
-                      <div className="text-right">البند</div>
-                      <div className="text-right">الوصف</div>
+                      <div className="text-right">البند</div> <div className="text-right">الوصف</div>
                       <div className="text-right">المبلغ</div>
                     </div>
-
                     {invoice.items?.map((item, index) => (
                       <div
                         key={index}
                         className="grid grid-cols-3 border-t border-white/5 px-4 py-3 text-white"
                       >
                         <div>{`بند ${index + 1}`}</div>
-                        <div>{item.description}</div>
-                        <div>{item.amount} ج.م</div>
+
+                        <div className="break-words">
+                          {item.description}
+                        </div>
+
+                        <div className="whitespace-nowrap">
+                          {item.amount} ج.م
+                        </div>
                       </div>
                     ))}
                   </div>
 
                   {/* summary */}
-                  <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4 text-right">
+                  <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-right">
                     <div className="rounded-xl border border-white/5 bg-white/5 p-4">
                       <p className="text-xs text-white/50">الإجمالي</p>
-                      <p className="text-white font-semibold">{invoice.total} ج.م</p>
+                      <p className="text-white font-semibold">
+                        {invoice.total} ج.م
+                      </p>
                     </div>
 
                     <div className="rounded-xl border border-white/5 bg-white/5 p-4">
                       <p className="text-xs text-white/50">المدفوع</p>
-                      <p className="text-green-400 font-semibold">{invoice.paidAmount} ج.م</p>
+                      <p className="text-green-400 font-semibold">
+                        {invoice.paidAmount} ج.م
+                      </p>
                     </div>
 
                     <div className="rounded-xl border border-white/5 bg-white/5 p-4">
                       <p className="text-xs text-white/50">المتبقي</p>
-                      <p className="text-red-400 font-semibold">{invoice.remaining} ج.م</p>
+                      <p className="text-red-400 font-semibold">
+                        {invoice.remaining} ج.م
+                      </p>
                     </div>
 
                     <div className="rounded-xl border border-white/5 bg-white/5 p-4">
                       <p className="text-xs text-white/50">تاريخ الاستحقاق</p>
-                      <p className="text-white font-semibold">
+
+                      <p className="text-white font-semibold break-words">
                         {new Date(invoice.dueDate).toLocaleDateString("ar-EG")}
                       </p>
                     </div>
@@ -578,17 +595,24 @@ const Bills = () => {
                   {invoice.notes && (
                     <div className="mt-6 rounded-xl border border-white/5 bg-white/5 p-4 text-right">
                       <p className="mb-2 text-xs text-white/50">ملاحظات</p>
-                      <p className="text-white">{invoice.notes}</p>
+
+                      <p className="text-white break-words">
+                        {invoice.notes}
+                      </p>
                     </div>
                   )}
 
                   {/* final total */}
                   <div className="mt-6 text-right">
-                    <p className="text-white/60">الإجمالي النهائي</p>
-                    <h3 className="text-2xl font-bold text-yellow-400">
+                    <p className="text-white/60">
+                      الإجمالي النهائي
+                    </p>
+
+                    <h3 className="text-xl sm:text-2xl font-bold text-yellow-400">
                       {invoice.total} ج.م
                     </h3>
                   </div>
+
                 </div>
               </div>
             )}

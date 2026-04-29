@@ -103,7 +103,7 @@ const CaseMange = () => {
     },
 
     onError: (error) => {
-      console.log("Delete mutation error:", error);
+      // console.log("Delete mutation error:", error);
       toast.error("Something went wrong while deleting");
     },
   });
@@ -112,7 +112,7 @@ const CaseMange = () => {
   };
   // console.log(Cases?.data?.cases);
   const cases = Cases?.data?.cases || [];
-  console.log(cases);
+  // console.log(cases);
 
   const filteredCases = useMemo(() => {
     let result = cases;

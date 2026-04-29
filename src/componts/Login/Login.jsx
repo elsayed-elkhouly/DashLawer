@@ -12,6 +12,7 @@ import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { Authcontext } from '../../Context/AuthContextProvider';
 import Cookies from "js-cookie";
+import logo from "../../assets/images/LEX LOGO.png"
 import api from '../../api/axios';
 
 
@@ -34,26 +35,26 @@ const Login = () => {
     },
     resolver: zodResolver(schame)
 
-  }) 
- 
-async function Signin(values) {
-  setisLoding(true);
+  })
 
-  try {
-    const { data } = await api.post("/auth/authSignin", values);
+  async function Signin(values) {
+    setisLoding(true);
 
-    toast.success(data.message);
-    insertToken(data.access_token);
-    Cookies.set("token", data.access_token, { expires: 1 });
+    try {
+      const { data } = await api.post("/auth/authSignin", values);
 
-    navigate("/");
-  } catch (error) {
-    console.log("Message:", error.response?.data?.message);
-    toast.error(error.response?.data?.message);
-  } finally {
-    setisLoding(false);
+      toast.success(data.message);
+      insertToken(data.access_token);
+      Cookies.set("token", data.access_token, { expires: 1 });
+
+      navigate("/");
+    } catch (error) {
+      console.log("Message:", error.response?.data?.message);
+      toast.error(error.response?.data?.message);
+    } finally {
+      setisLoding(false);
+    }
   }
-}
   return (
     <>
       <div className="bg1  min-h-screen flex items-center justify-center  relative  "
@@ -61,28 +62,31 @@ async function Signin(values) {
       >
         <div className="relative z-10 w-full max-w-md p-8">
           {/* Logo and Title */}
-          <div className="text-center mb-8">
+          {/* <div className="text-center mb-8">
             <div className="bg-[#C9A14A] w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <div className="text-slate-900 font-bold text-xl"><MdGavel /></div>
             </div>
             <h1 className="text-[#C9A14A] text-xl font-semibold tracking-wide">
               مؤسسة هيلبر للمحاماة
             </h1>
-          </div>
+          </div> */}
           {/* Login Card */}
           <div className="bg-[#0F1B2EF2] border border-[#C9A14A] p-8 rounded-2xl shadow-2xl backdrop-blur-md">
+           <div className="w-32 sm:w-40 md:w-40 mx-auto flex justify-center">
+  <img src={logo} className="w-full object-contain" alt="" />
+</div>
             <h2 className="text-white text-2xl font-bold text-center mb-2">تسجيل الدخول</h2>
-            <p className="text-slate-400 text-sm text-center mb-8">ادخل بياناتك للوصول إلى النظام</p>
+            <p className="text-slate-400 text-lg text-center mb-8 flex items-center justify-center gap-2">  <span className='text-[#c9a14a] font-bold text-xl'>Lexora</span>   مرحبا بك مجدددا في  </p>
 
             <form onSubmit={handleSubmit(Signin)}
               className="space-y-6" dir="rtl" >
               {/* Email Field */}
               <div>
-                <label className="block text-slate-300 mb-2 text-sm">البريد الإلكتروني</label>
+                <label className="block text-slate-300 mb-2 text-sm font-bold">البريد الإلكتروني</label>
                 <div className="relative">
                   <input
                     type="email"
-                    
+
                     placeholder="example@email.com"
                     className="w-full bg-slate-950 border border-[#C9A24A33] rounded-lg py-3 px-10 text-white focus:ring-2 focus:ring-[#C9A14A] outline-none transition-all"
                     {...register("email")}
@@ -93,7 +97,7 @@ async function Signin(values) {
 
               {/* Password Field */}
               <div>
-                <label className="block text-slate-300 mb-2 text-sm">كلمة المرور</label>
+                <label className="block text-slate-300 mb-2 text-sm font-bold">كلمة المرور</label>
                 <div className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
@@ -110,11 +114,7 @@ async function Signin(values) {
                   </button>
                 </div>
               </div>
-              {/* Remember Me */}
-              <div className="flex items-center gap-2 text-slate-400 text-sm">
-                <input type="checkbox" className="accent-amber-500" />
-                <span>تذكرني</span>
-              </div>
+              
               {/* Submit Button */}
               <button className="w-full bg-[#C9A14A] hover:bg-amber-600 text-slate-900 font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition-colors">
                 {isLoding ? <span className="loading loading-infinity loading-xl"></span> : "تسجيل الدخول"}

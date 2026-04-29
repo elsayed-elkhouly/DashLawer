@@ -348,117 +348,112 @@ const TeamProfile = () => {
                                     )}
                                 </div>
 
-                                <div className="text-right">
-                                    <div className="flex items-center justify-end gap-2">
-                                        <span className="rounded-full bg-green-500/20 px-2 py-1 text-xs text-green-400">
-                                            نشط
-                                        </span>
+                              <div className="text-right">
+  <div className="flex flex-wrap items-center justify-end gap-2">
+    <span className="rounded-full bg-green-500/20 px-2 py-1 text-xs text-green-400">
+      نشط
+    </span>
 
-                                        {isEditing ? (
-                                            <input
-                                                {...register("jobTitle", {
-                                                })}
-                                                className="rounded-full bg-amber-400/20 px-2 py-1 text-xs text-amber-300 outline-none border border-white/10"
-                                            />
-                                        ) : (
-                                            <span className="rounded-full bg-amber-400/20 px-2 py-1 text-xs text-amber-300">
-                                                {UserData?.jobTitle}
-                                            </span>
-                                        )}
-                                    </div>
+    {isEditing ? (
+      <input
+        {...register("jobTitle", {})}
+        className="rounded-full bg-amber-400/20 px-2 py-1 text-xs text-amber-300 outline-none border border-white/10"
+      />
+    ) : (
+      <span className="rounded-full bg-amber-400/20 px-2 py-1 text-xs text-amber-300">
+        {UserData?.jobTitle}
+      </span>
+    )}
+  </div>
 
-                                    {isEditing ? (
-                                        <div className="mt-2">
-                                            <input
-                                                {...register("UserName", {
-                                                })}
-                                                className="text-2xl font-bold bg-transparent border-b border-white/20 outline-none text-right"
-                                            />
-                                            {errors.UserName && (
-                                                <p className="mt-1 text-xs text-red-400">
-                                                    {errors.UserName.message}
-                                                </p>
-                                            )}
-                                        </div>
-                                    ) : (
-                                        <h2 className="mt-2 text-2xl font-bold">{UserData?.UserName}</h2>
-                                    )}
+  {isEditing ? (
+    <div className="mt-2">
+      <input
+        {...register("UserName", {})}
+        className="text-lg sm:text-xl md:text-2xl font-bold bg-transparent border-b border-white/20 outline-none text-right w-full"
+      />
+      {errors.UserName && (
+        <p className="mt-1 text-xs text-red-400">{errors.UserName.message}</p>
+      )}
+    </div>
+  ) : (
+    <h2 className="mt-2 text-lg sm:text-xl md:text-2xl font-bold break-words">
+      {UserData?.UserName}
+    </h2>
+  )}
 
-                                    <p className="rounded-full bg-amber-400/20 px-2 py-1 text-xs text-amber-300 w-fit mt-2">
-                                        {UserData?.role}
-                                    </p>
+  <p className="rounded-full bg-amber-400/20 px-2 py-1 text-xs text-amber-300 w-fit mt-2">
+    {UserData?.role}
+  </p>
 
-                                    <div className="mt-2 space-y-2">
-                                        {isEditing ? (
-                                            <>
-                                                <div>
-                                                    <input
-                                                        {...register("department", {
-                                                        })}
-                                                        placeholder="القسم"
-                                                        className="block w-full text-sm bg-transparent border border-white/10 rounded-lg px-3 py-2 outline-none"
-                                                    />
-                                                    {errors.department && (
-                                                        <p className="mt-1 text-xs text-red-400">
-                                                            {errors.department.message}
-                                                        </p>
-                                                    )}
-                                                </div>
+  <div className="mt-2 space-y-2">
+    {isEditing ? (
+      <>
+        <div>
+          <input
+            {...register("department", {})}
+            placeholder="القسم"
+            className="block w-full text-sm bg-transparent border border-white/10 rounded-lg px-3 py-2 outline-none"
+          />
+          {errors.department && (
+            <p className="mt-1 text-xs text-red-400">
+              {errors.department.message}
+            </p>
+          )}
+        </div>
 
-                                                <div>
-                                                    <input
-                                                        {...register("email", {
-                                                            pattern: {
-                                                                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                                                                message: "صيغة الإيميل غير صحيحة",
-                                                            },
-                                                        })}
-                                                        placeholder="البريد الإلكتروني"
-                                                        className="block w-full text-sm bg-transparent border border-white/10 rounded-lg px-3 py-2 outline-none"
-                                                    />
-                                                    {errors.email && (
-                                                        <p className="mt-1 text-xs text-red-400">
-                                                            {errors.email.message}
-                                                        </p>
-                                                    )}
-                                                </div>
+        <div>
+          <input
+            {...register("email", {
+              pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: "صيغة الإيميل غير صحيحة",
+              },
+            })}
+            placeholder="البريد الإلكتروني"
+            className="block w-full text-sm bg-transparent border border-white/10 rounded-lg px-3 py-2 outline-none"
+          />
+          {errors.email && (
+            <p className="mt-1 text-xs text-red-400">{errors.email.message}</p>
+          )}
+        </div>
 
-                                                <div>
-                                                    <input
-                                                        type="text"
-                                                        {...register("phone", {
-                                                            pattern: {
-                                                                value: /^01[0125][0-9]{8}$/,
-                                                                message: "رقم الهاتف يجب أن يكون 11 رقم ويبدأ بـ 010 أو 011 أو 012 أو 015",
-                                                            },
-                                                        })}
-                                                        placeholder="رقم الهاتف"
-                                                        className="block w-full text-sm bg-transparent border border-white/10 rounded-lg px-3 py-2 outline-none"
-                                                    />
-                                                    {errors.phone && (
-                                                        <p className="mt-1 text-xs text-red-400">
-                                                            {errors.phone.message}
-                                                        </p>
-                                                    )}
-                                                </div>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <p className="text-sm text-[#8EA3BF]">
-                                                    القسم: {UserData?.department}
-                                                </p>
+        <div>
+          <input
+            type="text"
+            {...register("phone", {
+              pattern: {
+                value: /^01[0125][0-9]{8}$/,
+                message:
+                  "رقم الهاتف يجب أن يكون 11 رقم ويبدأ بـ 010 أو 011 أو 012 أو 015",
+              },
+            })}
+            placeholder="رقم الهاتف"
+            className="block w-full text-sm bg-transparent border border-white/10 rounded-lg px-3 py-2 outline-none"
+          />
+          {errors.phone && (
+            <p className="mt-1 text-xs text-red-400">{errors.phone.message}</p>
+          )}
+        </div>
+      </>
+    ) : (
+      <>
+        <p className="text-sm text-[#8EA3BF] break-words">
+          القسم: {UserData?.department}
+        </p>
 
-                                                <p className="text-sm text-[#8EA3BF]">
-                                                    رقم التسجيل: {UserData?.lawyerRegistrationNo}
-                                                </p>
+        <p className="text-sm text-[#8EA3BF] break-words">
+          رقم التسجيل: {UserData?.lawyerRegistrationNo}
+        </p>
 
-                                                <p className="mt-2 text-xs text-[#8EA3BF]">
-                                                    {UserData?.email} • {UserData?.phone}
-                                                </p>
-                                            </>
-                                        )}
-                                    </div>
-                                </div>
+        <p className="mt-2 text-xs text-[#8EA3BF] break-words">
+          {UserData?.email} • {UserData?.phone}
+        </p>
+      </>
+    )}
+  </div>
+</div>
+
                             </div>
 
                             <div className="flex items-center gap-3">

@@ -428,7 +428,7 @@ const Setting = () => {
       <section>
         <div
           dir="rtl"
-          className="min-h-screen flex items-center justify-center p-3 md:p-6"
+          className="flex items-center justify-center p-3 md:p-6"
         >
           <div className="w-full max-w-5xl bg-[#081226] rounded-2xl p-4 md:p-8 shadow-2xl border border-[#1E2D3D]">
 
@@ -983,7 +983,7 @@ const Setting = () => {
 
       {/*  إعدادات القضايا  */}
       <section>
-        <div className="min-h-screen  text-white p-4 md:p-8" dir="rtl">
+        <div className="  text-white p-4 md:p-8" dir="rtl">
           <div className="mx-auto bg-[#081226] pt-2 max-w-4xl">
             <div className="mb-6 md:mb-8 text-right">
               <h1 className="text-2xl md:text-4xl font-extrabold tracking-tight text-white">

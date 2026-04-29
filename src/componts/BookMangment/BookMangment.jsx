@@ -96,7 +96,6 @@ const BookMangment = () => {
         queryKey: ["Slots"],
         queryFn: getAppoint,
     });
-   console.log(data?.data?.stats);
     const stats = [
         {
             id: 1,

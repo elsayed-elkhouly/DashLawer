@@ -59,7 +59,7 @@ const MyProfile = () => {
     const Stats = data?.data?.stats
 
     // console.log(UserData);
-    console.log(Stats);
+    // console.log(Stats);
 
 
     const {
