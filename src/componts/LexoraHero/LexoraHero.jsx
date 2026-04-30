@@ -48,8 +48,8 @@ export default function LexoraHero() {
             <div className="relative  mx-auto  px-6  flex items-center justify-center ">
                 <div className="flex flex-col items-center text-center">
                     {/* Logo */}
-                    <div className="">
-                        <div className="w-32 sm:w-40 md:w-50 mx-auto flex justify-center">
+                    <div className="mt-17">
+                        <div className="w-32 sm:w-40 md:w-45 mx-auto flex justify-center">
                             <img src={logo} className="w-full " alt="" />
                         </div>
                     </div>
@@ -70,10 +70,10 @@ export default function LexoraHero() {
                             {/* إدارة القضايا الذكية */}
                             <div className="flex items-center justify-end gap-6">
                                 <div className="bg-[#1a2a4a] border border-[#C9A14A33] rounded-2xl p-4 flex-shrink-0">
-                                    <MdVerified className="text-[#C9A14A] w-8 h-8" />
+                                    <MdVerified className="text-[#C9A14A] w-4 h-4" />
                                 </div>
                                 <div className="text-right">
-                                    <h3 className="text-white text-xl font-bold mb-1">إدارة القضايا الذكية</h3>
+                                    <h3 className="text-white text-l font-bold mb-1">إدارة القضايا الذكية</h3>
                                     <p className="text-slate-400 text-sm">تنظيم وجدولة متقدمة لكل تفاصيل ملفاتك</p>
                                 </div>
                             </div>
@@ -81,21 +81,21 @@ export default function LexoraHero() {
                             {/* بوابة العملاء */}
                             <div className="flex items-center justify-around gap-6">
                                 <div className="bg-[#1a2a4a] border border-[#C9A14A33] rounded-2xl p-4 flex-shrink-0">
-                                    <BsPeopleFill className="text-[#C9A14A] w-8 h-8" />
+                                    <BsPeopleFill className="text-[#C9A14A] w-4 h-4" />
                                 </div>
                                 <div className="text-right">
-                                    <h3 className="text-white text-xl font-bold mb-1">بوابة العملاء</h3>
+                                    <h3 className="text-white text-l font-bold mb-1">بوابة العملاء</h3>
                                     <p className="text-slate-400 text-sm">تواصل احترافي ومشاركة آمنة للمستندات</p>
                                 </div>
                             </div>
 
                             {/* نظام مالي متطور */}
-                            <div className="flex items-center justify-around gap-9">
+                            <div className="flex items-center justify-around gap-10">
                                 <div className="bg-[#1a2a4a] border border-[#C9A14A33] rounded-2xl p-4 ">
-                                    <MdAccountBalanceWallet className="text-[#C9A14A] w-8 h-8" />
+                                    <MdAccountBalanceWallet className="text-[#C9A14A] w-4 h-4" />
                                 </div>
                                 <div className="text-right">
-                                    <h3 className="text-white text-xl font-bold mb-1">نظام مالي متطور</h3>
+                                    <h3 className="text-white text-l font-bold mb-1">نظام مالي متطور</h3>
                                     <p className="text-slate-400 text-sm">فوترة دقيقة وتحصيل إلكتروني سريع</p>
 
                                 </div>

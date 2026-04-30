@@ -24,7 +24,6 @@ const Dashbord2 = () => {
     queryKey: ["Dashbord"],
     queryFn: getDashbord
   })
-  console.log(data?.data?.stats);
 
   const stats = [
     {
@@ -151,7 +150,7 @@ const Dashbord2 = () => {
   const planClasses2 = {
     "الباقة الأساسية": "border border-white/10 bg-white/5 text-white/90",
     "باقة المؤسسات": "border border-[#b9973d]/30 bg-[#b9973d]/10 text-[#f2be42]",
-    " الباقة الاحترافية": "border border-white/10 bg-white/5 text-white/85",
+    "الباقة الاحترافية": "border border-white/10 bg-white/5 text-white/85",
   };
 
   const statusClasses2 = {
