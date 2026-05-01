@@ -116,7 +116,7 @@ const Login = () => {
               </button>
             </form>
           </div>
-        </div>
+        </div>                        
 
         {/* الجزء الأيسر - LexoraHero */}
         <div className="w-1/2 min-h-screen hidden md:flex items-center justify-center">
