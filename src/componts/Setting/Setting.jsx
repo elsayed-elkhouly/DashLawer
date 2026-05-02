@@ -734,15 +734,15 @@ const Setting = () => {
 
       {/*  مواعيد العمل  */}
       <section>
-        <div className="w-full max-w-4xl px-4 mx-auto text-white" dir="rtl">
-          <div className="bg-[#081226] p-4 md:p-6 rounded-xl mb-8">
+        <div className="w-full max-w-4xl bg-[#081226] px-4 mx-auto text-white" dir="rtl">
+          <div className="bg-[#081226] p-4 md:p-6 rounded-xl mb-4">
             <h2 className="text-xl md:text-[40px] font-bold mb-1">إضافة مواعيد العمل</h2>
             <p className="text-gray-400 text-sm md:text-[20px] mb-6">
               قم بتحديد المواعيد المتاحة للعمل
             </p>
 
             <form onSubmit={handleSubmitWork(AddDate)}>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+              <div className="grid   grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">
                 <div className="flex flex-col gap-1">
                   <div className="bg-slate-800 p-3 rounded-lg border border-slate-700 w-full space-y-2">
                     {validDays.map((day, index) => (
@@ -806,13 +806,13 @@ const Setting = () => {
           </div>
 
           {/* جدول مواعيد العمل */}
-          <div className="bg-[#081226] rounded-xl overflow-hidden border border-[#2D3245] shadow-2xl">
-            <div className="p-4 font-bold text-lg md:text-xl bg-[#081226] text-[#C9A14A] border border-[#2D3245]">
+          <div className="bg-[#081226] mb-4 rounded-xl overflow-hidden border border-[#2D3245] shadow-2xl">
+            <div className="p-4 font-bold text-lg md:text-xl bg-[#232e3d]  border border-[#2D3245]">
               مواعيد العمل
             </div>
 
             <div className="overflow-x-auto">
-              <table className="w-full text-right border-collapse min-w-[480px]">
+              <table className="w-full text-right border-collapse min-w-120">
                 <thead>
                   <tr className="text-gray-400 bg-[#1C1F2B80]">
                     <th className="ps-4 md:ps-10 py-3 text-sm md:text-base">اليوم</th>
@@ -915,13 +915,13 @@ const Setting = () => {
           <div dir="rtl" className="mt-6 flex items-start justify-center">
             <div className="w-full overflow-hidden rounded-2xl border border-white/10 bg-[#151b2b] shadow-2xl shadow-black/40">
               <div className="px-4 md:px-6 py-5 border-b bg-[#232e3d] border-white/5">
-                <h2 className="text-lg md:text-xl font-semibold text-[#f0b44b]">
+                <h2 className="text-lg md:text-xl font-semibold ">
                   مواعيد العمل
                 </h2>
               </div>
 
               <div className="overflow-x-auto">
-                <table className="w-full text-xs md:text-sm text-right text-white/90 min-w-[420px]">
+                <table className="w-full text-xs md:text-sm text-right text-white/90 min-w-105">
                   <thead>
                     <tr className="text-white/60">
                       <th className="px-3 md:px-6 py-4 font-medium">اليوم</th>
@@ -983,10 +983,10 @@ const Setting = () => {
 
       {/*  إعدادات القضايا  */}
       <section>
-        <div className="  text-white p-4 md:p-8" dir="rtl">
-          <div className="mx-auto bg-[#081226] pt-2 max-w-4xl">
+        <div className="  text-white p-4 md:p-8 " dir="rtl">
+          <div className="mx-auto bg-[#081226]  rounded-xl pt-2 max-w-4xl">
             <div className="mb-6 md:mb-8 text-right">
-              <h1 className="text-2xl md:text-4xl font-extrabold tracking-tight text-white">
+              <h1 className="text-2xl md:text-4xl font-extrabold tracking-tight text-white p-5">
                 إعدادات القضايا
               </h1>
               <p className="mt-2 text-sm md:text-base text-slate-400">
