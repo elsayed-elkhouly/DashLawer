@@ -63,7 +63,7 @@ const AllWebSite = () => {
     return (
         <>
             <header>
-                <div class=" p-8 dir-rtl flex items-center justify-between" dir="rtl">
+                <div class=" p-8 dir-rtl flex  items-center justify-between" dir="rtl">
                     <div class="mb-6">
                         <h2 class="text-white text-2xl font-bold">مواقع تهمك</h2>
                         <p class="text-gray-400 mt-1">روابط سريعة للمواقع الحكومية والخدمات القانونية</p>

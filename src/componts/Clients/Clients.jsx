@@ -13,10 +13,13 @@ import Pagination from '../Pagination/Pagination';
 import React, { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import api from '../../api/axios';
+import { ARAB_COUNTRY_CODES } from '../../utils/constants';
+
 const Clients = () => {
     const queryClient = useQueryClient();
     const [search, setSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
+    const [countryCode, setCountryCode] = useState("+20");
     const limit = 4;
 
 
@@ -167,7 +170,8 @@ const Clients = () => {
         },
     });
     const onSubmit = (data) => {
-        addClientMutation.mutate(data);
+        const payload = { ...data, phone: countryCode + data.phone };
+        addClientMutation.mutate(payload);
     }
 
     async function deleteClient(id) {
@@ -344,20 +348,35 @@ const Clients = () => {
                                                 <label className="mb-2 block text-sm font-medium text-slate-200">
                                                     رقم الجوال
                                                 </label>
-                                                <div className="flex rounded-full border border-white/5 bg-[#11243a] focus-within:border-[#d3a63f] focus-within:ring-2 focus-within:ring-[#d3a63f]/20">
-                                                    <span className="flex items-center rounded-r-full border-l border-white/10 px-4 text-sm text-slate-400">
-                                                        +01
-                                                    </span>
+                                                <div className="flex rounded-full border border-white/5 bg-[#11243a] focus-within:border-[#d3a63f] focus-within:ring-2 focus-within:ring-[#d3a63f]/20 overflow-hidden">
+                                                    <select
+                                                        value={countryCode}
+                                                        onChange={(e) => setCountryCode(e.target.value)}
+                                                        className="bg-transparent text-slate-300 px-3 py-2 outline-none border-l border-white/10 cursor-pointer text-sm font-medium"
+                                                        dir="ltr"
+                                                    >
+                                                        {ARAB_COUNTRY_CODES.map(c => (
+                                                            <option key={c.code} value={c.code} title={c.name} className="bg-[#11243a] text-white">
+                                                                {c.code}
+                                                            </option>
+                                                        ))}
+                                                    </select>
                                                     <input
-                                                        className="h-9.5 w-full rounded-l-full bg-transparent px-4 text-sm text-white outline-none placeholder:text-slate-400"
-                                                        placeholder="5xxxxxxxx"
+                                                        className="h-9.5 w-full bg-transparent px-4 text-sm text-white outline-none placeholder:text-slate-400"
+                                                        placeholder="1012345678"
+                                                        inputMode="numeric"
+                                                        maxLength={10}
                                                         {...register("phone", {
                                                             required: "رقم الهاتف مطلوب",
                                                             pattern: {
-                                                                value: /^[0-9]{8,15}$/,
-                                                                message: "رقم الجوال يجب أن يكون من 8 إلى 15 رقمًا",
+                                                                value: /^\d{7,10}$/,
+                                                                message: "رقم الجوال يجب أن يكون من 7 إلى 10 أرقام",
                                                             },
                                                         })}
+                                                        onChange={(e) => {
+                                                            e.target.value = e.target.value.replace(/\D/g, "");
+                                                            register("phone").onChange(e);
+                                                        }}
                                                     />
                                                 </div>
                                                 {errors.phone && (

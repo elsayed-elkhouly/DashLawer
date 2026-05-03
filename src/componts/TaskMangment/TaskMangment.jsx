@@ -13,8 +13,10 @@ import api from '../../api/axios';
 import Cookies from 'js-cookie';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const TaskMangment = () => {
+  const navigate = useNavigate();
 
 
   const queryClient = useQueryClient();
@@ -205,17 +207,8 @@ const TaskMangment = () => {
     },
   ];
   const priorities = ["عاجلة", "عالية", "متوسطة", "منخفضة"];
-  const [selectedTask, setSelectedTask] = useState(null);
-  const [isViewOpen, setIsViewOpen] = useState(false);
-
   const handleViewTask = (task) => {
-    setSelectedTask(task);
-    setIsViewOpen(true);
-  };
-
-  const handleCloseView = () => {
-    setSelectedTask(null);
-    setIsViewOpen(false);
+    navigate(`/TaskMangment/TaskDetails/${task.id || task._id}`, { state: { task } });
   };
   async function deleteTask(id) {
     const res = await api.delete(`/task/${id}`, {
@@ -657,69 +650,6 @@ const TaskMangment = () => {
                   </div>
                 ))}
               </div>
-              {isViewOpen && selectedTask && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-                  <div className="w-full max-w-2xl rounded-2xl border border-white/10 bg-[#081a2f] p-6 shadow-2xl">
-
-                    <div className="mb-4 flex items-start justify-between">
-                      <div className="text-right">
-                        <h2 className="text-xl font-bold text-[#C9A14A]">
-                          {selectedTask.title || "تفاصيل المهمة"}
-                        </h2>
-                        <p className="mt-2 text-sm leading-7 text-[#D7E3F4]">
-                          {selectedTask.description || "لا يوجد وصف متاح لهذه المهمة"}
-                        </p>
-                      </div>
-
-                      <button
-                        onClick={handleCloseView}
-                        className="rounded-lg px-3 py-1 text-sm text-white hover:bg-white/10"
-                      >
-                        ✕
-                      </button>
-                    </div>
-
-                    <div className="grid grid-cols-1 gap-4 border-t border-white/10 pt-4 md:grid-cols-2">
-                      <div className="text-right">
-                        <p className="text-xs text-[#8EA3BF]">الموكل</p>
-                        <p className="text-white mt-1">
-                          {selectedTask.client?.fullName || "-"}
-                        </p>
-                      </div>
-
-                      <div className="text-right">
-                        <p className="text-xs text-[#8EA3BF]">المحامي المسؤول</p>
-                        <p className="text-white mt-1">
-                          {selectedTask.assignedTo?.UserName || "-"}
-                        </p>
-                      </div>
-
-                      <div className="text-right">
-                        <p className="text-xs text-[#8EA3BF]">الموعد النهائي</p>
-                        <p className="text-white mt-1">
-                          {selectedTask.dueDate
-                            ? new Date(selectedTask.dueDate).toLocaleDateString("ar-EG")
-                            : "-"}
-                        </p>
-                      </div>
-
-                      <div className="text-right">
-                        <p className="text-xs text-[#8EA3BF]">الأولوية</p>
-                        <p className="mt-1 text-[#C9A14A]">
-                          {selectedTask.priority || "-"}
-                        </p>
-                      </div>
-
-                      <div className="text-right">
-                        <p className="text-xs text-[#8EA3BF]">الحالة</p>
-                        <p className="mt-1 text-white">
-                          {selectedTask.status || "-"}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
             </>
           )}
 

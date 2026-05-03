@@ -24,6 +24,7 @@ import CaseDetails from "./componts/CaseDetails/CaseDetails";
 import Eror from "./componts/Eror/Eror";
 import AddNewFees from "./componts/AddNewFees/AddNewFees";
 import TaskMangment from "./componts/TaskMangment/TaskMangment";
+import TaskDetails from "./componts/TaskMangment/TaskDetails";
 import BookMangment from "./componts/BookMangment/BookMangment";
 import AddSession from "./componts/AddSession/AddSession";
 import TeamProfile from "./componts/TeamProfile/TeamProfile";
@@ -101,6 +102,7 @@ const router = createBrowserRouter([
       { path: "/AllWebSite", element: <ProtectedRoute><AllWebSite /></ProtectedRoute> },
       { path: "/Clients", element: <ProtectedRoute><Clients /></ProtectedRoute> },
       { path: "/TaskMangment", element: <ProtectedRoute><TaskMangment /></ProtectedRoute> },
+      { path: "/TaskMangment/TaskDetails/:id", element: <ProtectedRoute><TaskDetails /></ProtectedRoute> },
       { path: "/PyrollMangment", element: <ProtectedRoute><PyrollMangment /></ProtectedRoute> },
       { path: "/Setting", element: <ProtectedRoute><Setting /></ProtectedRoute> },
       { path: "/BookOfLaw", element: <ProtectedRoute><BookOfLaw /></ProtectedRoute> },

@@ -7,8 +7,17 @@ import Cookies from 'js-cookie';
 import toast from 'react-hot-toast';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '../../api/axios';
+import { ARAB_COUNTRY_CODES } from '../../utils/constants';
 
-
+const parsePhone = (fullPhone) => {
+  if (!fullPhone) return { countryCode: "+20", localPhone: "" };
+  const phoneStr = String(fullPhone);
+  const codeObj = ARAB_COUNTRY_CODES.find(c => phoneStr.startsWith(c.code));
+  if (codeObj) {
+      return { countryCode: codeObj.code, localPhone: phoneStr.slice(codeObj.code.length) };
+  }
+  return { countryCode: "+20", localPhone: phoneStr };
+};
 
 const Setting = () => {
   const emptyValues = {
@@ -22,16 +31,22 @@ const Setting = () => {
     mapEmbedUrl: "",
   };
 
-  const mapSettingsToForm = (settings) => ({
-    officeName: settings?.officeName || "",
-    crNumber: settings?.crNumber || "",
-    officialEmail: settings?.officialEmail || "",
-    phone: settings?.phone || "",
-    addressDetail: settings?.addressDetail || "",
-    governorate: settings?.governorate || "",
-    country: settings?.country || "",
-    mapEmbedUrl: settings?.mapEmbedUrl || "",
-  });
+  const [countryCode, setCountryCode] = useState("+20");
+
+  const mapSettingsToForm = (settings) => {
+    const parsed = parsePhone(settings?.phone);
+    setCountryCode(parsed.countryCode);
+    return {
+      officeName: settings?.officeName || "",
+      crNumber: settings?.crNumber || "",
+      officialEmail: settings?.officialEmail || "",
+      phone: parsed.localPhone,
+      addressDetail: settings?.addressDetail || "",
+      governorate: settings?.governorate || "",
+      country: settings?.country || "",
+      mapEmbedUrl: settings?.mapEmbedUrl || "",
+    };
+  };
 
   const [activeToggleId, setActiveToggleId] = useState(null);
   const [logo, setLogo] = useState(null);
@@ -318,7 +333,8 @@ const Setting = () => {
   });
 
   const AddSetting = (data) => {
-    addSettingMutation.mutate(data);
+    const payload = { ...data, phone: countryCode + data.phone };
+    addSettingMutation.mutate(payload);
   };
 
   const AddCase = () => {
@@ -491,8 +507,8 @@ const Setting = () => {
                         <label className="block text-sm md:text-[18px] text-[#7f93b0] mb-2 md:mb-3">
                           رقم الهاتف
                         </label>
-                        <p className="text-white text-lg md:text-[24px] font-bold">
-                          {watchedValues.phone || "-"}
+                        <p className="text-white text-lg md:text-[24px] font-bold" dir="ltr" style={{ textAlign: "right" }}>
+                          {watchedValues.phone ? (countryCode + watchedValues.phone) : "-"}
                         </p>
                       </div>
 
@@ -601,12 +617,30 @@ const Setting = () => {
                       <label className="block text-sm text-gray-300 mb-2">
                         رقم التواصل
                       </label>
-                      <input
-                        type="text"
-                        placeholder="+04 5212765"
-                        className="w-full bg-[#1A2638] border border-[#1E2D3D] text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C6A24F] text-sm md:text-base"
-                        {...register("phone")}
-                      />
+                      <div className="flex bg-[#1A2638] border border-[#1E2D3D] rounded-xl overflow-hidden focus-within:border-[#C6A24F] focus-within:ring-2 focus-within:ring-[#C6A24F]">
+                        <select
+                            value={countryCode}
+                            onChange={(e) => setCountryCode(e.target.value)}
+                            className="bg-transparent text-white px-3 py-3 outline-none border-l border-[#1E2D3D] cursor-pointer text-sm md:text-base font-medium"
+                            dir="ltr"
+                        >
+                            {ARAB_COUNTRY_CODES.map(c => (
+                                <option key={c.code} value={c.code} title={c.name} className="bg-[#1A2638] text-white">
+                                    {c.code}
+                                </option>
+                            ))}
+                        </select>
+                        <input
+                            type="text"
+                            placeholder="1012345678"
+                            className="w-full bg-transparent text-white px-4 py-3 outline-none text-sm md:text-base"
+                            {...register("phone")}
+                            onChange={(e) => {
+                                e.target.value = e.target.value.replace(/\D/g, "");
+                                register("phone").onChange(e);
+                            }}
+                        />
+                      </div>
                     </div>
                   </div>
 

@@ -15,6 +15,17 @@ import Cookies from 'js-cookie';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import { ARAB_COUNTRY_CODES } from '../../utils/constants';
+
+const parsePhone = (fullPhone) => {
+    if (!fullPhone) return { countryCode: "+20", localPhone: "" };
+    const phoneStr = String(fullPhone);
+    const codeObj = ARAB_COUNTRY_CODES.find(c => phoneStr.startsWith(c.code));
+    if (codeObj) {
+        return { countryCode: codeObj.code, localPhone: phoneStr.slice(codeObj.code.length) };
+    }
+    return { countryCode: "+20", localPhone: phoneStr };
+};
 
 const TeamProfile = () => {
 
@@ -28,6 +39,7 @@ const TeamProfile = () => {
     const [loading, setLoading] = useState(false);
     const [photoLoading, setPhotoLoading] = useState(false);
     const [previewImage, setPreviewImage] = useState("");
+    const [countryCode, setCountryCode] = useState("+20");
 
     function getUserData() {
         return api.get(`/users/${id}`, {
@@ -65,10 +77,12 @@ const TeamProfile = () => {
 
     useEffect(() => {
         if (UserData) {
+            const parsed = parsePhone(UserData?.phone);
+            setCountryCode(parsed.countryCode);
             reset({
                 UserName: UserData?.UserName || "",
                 email: UserData?.email || "",
-                phone: UserData?.phone ? String(UserData.phone) : "",
+                phone: parsed.localPhone,
                 department: UserData?.department || "",
                 jobTitle: UserData?.jobTitle || "",
             });
@@ -78,10 +92,12 @@ const TeamProfile = () => {
     }, [UserData, reset]);
 
     const handleEditClick = () => {
+        const parsed = parsePhone(UserData?.phone);
+        setCountryCode(parsed.countryCode);
         reset({
             UserName: UserData?.UserName || "",
             email: UserData?.email || "",
-            phone: UserData?.phone ? String(UserData.phone) : "",
+            phone: parsed.localPhone,
             department: UserData?.department || "",
             jobTitle: UserData?.jobTitle || "",
         });
@@ -142,10 +158,12 @@ const TeamProfile = () => {
     }, []);
 
     const handleCancel = () => {
+        const parsed = parsePhone(UserData?.phone);
+        setCountryCode(parsed.countryCode);
         reset({
             UserName: UserData?.UserName || "",
             email: UserData?.email || "",
-            phone: UserData?.phone ? String(UserData.phone) : "",
+            phone: parsed.localPhone,
             department: UserData?.department || "",
             jobTitle: UserData?.jobTitle || "",
         });
@@ -162,7 +180,7 @@ const TeamProfile = () => {
                 {
                     UserName: formValues.UserName,
                     email: formValues.email,
-                    phone: String(formValues.phone),
+                    phone: countryCode + String(formValues.phone),
                     department: formValues.department,
                     jobTitle: formValues.jobTitle,
                     employmentDate: UserData?.employmentDate,
@@ -185,10 +203,12 @@ const TeamProfile = () => {
                 },
             }));
 
+            const parsed = parsePhone(updatedUser?.phone);
+            setCountryCode(parsed.countryCode);
             reset({
                 UserName: updatedUser?.UserName || "",
                 email: updatedUser?.email || "",
-                phone: updatedUser?.phone ? String(updatedUser.phone) : "",
+                phone: parsed.localPhone,
                 department: updatedUser?.department || "",
                 jobTitle: updatedUser?.jobTitle || "",
             });
@@ -419,18 +439,33 @@ const TeamProfile = () => {
         </div>
 
         <div>
-          <input
-            type="text"
-            {...register("phone", {
-              pattern: {
-                value: /^01[0125][0-9]{8}$/,
-                message:
-                  "رقم الهاتف يجب أن يكون 11 رقم ويبدأ بـ 010 أو 011 أو 012 أو 015",
-              },
-            })}
-            placeholder="رقم الهاتف"
-            className="block w-full text-sm bg-transparent border border-white/10 rounded-lg px-3 py-2 outline-none"
-          />
+          <div className="flex border border-white/10 rounded-lg overflow-hidden focus-within:border-[#C59D4A] transition-colors">
+            <select
+              value={countryCode}
+              onChange={(e) => setCountryCode(e.target.value)}
+              className="bg-[#1A2638] text-white px-3 py-2 outline-none border-l border-white/10 cursor-pointer text-sm font-medium"
+              dir="ltr"
+            >
+              {ARAB_COUNTRY_CODES.map(c => (
+                <option key={c.code} value={c.code} title={c.name}>{c.code}</option>
+              ))}
+            </select>
+            <input
+              type="text"
+              {...register("phone", {
+                pattern: {
+                  value: /^\d{7,10}$/,
+                  message: "رقم الهاتف يجب أن يكون من 7 إلى 10 أرقام",
+                },
+              })}
+              placeholder="1012345678"
+              className="block w-full text-sm bg-transparent px-3 py-2 outline-none"
+              onChange={(e) => {
+                e.target.value = e.target.value.replace(/\D/g, "");
+                register("phone").onChange(e);
+              }}
+            />
+          </div>
           {errors.phone && (
             <p className="mt-1 text-xs text-red-400">{errors.phone.message}</p>
           )}

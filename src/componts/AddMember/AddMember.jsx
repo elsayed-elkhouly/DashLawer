@@ -7,11 +7,13 @@ import { Info, UserPlus } from "lucide-react";
 import api from '../../api/axios';
 import { FaArrowLeft, FaCamera } from "react-icons/fa";
 import toast from "react-hot-toast";
+import { ARAB_COUNTRY_CODES } from '../../utils/constants';
+
 const schema = z
   .object({
     UserName: z.string().trim().min(3, "الاسم لازم يكون 3 حروف على الأقل"),
     email: z.string().email("بريد إلكتروني غير صالح"),
-    phone: z.string().regex(""),
+    phone: z.string().regex(/^\d{7,10}$/, "رقم الهاتف يجب أن يكون من 7 إلى 10 أرقام"),
     jobTitle: z.string().min(2, "المسمى الوظيفي مطلوب"),
     department: z.string().min(1, "اختار القسم"),
     role: z.string().min(1, "اختار نوع الحساب"),
@@ -131,6 +133,7 @@ const SelectField = ({ label, options, name, error, register, disabled }) => (
 
 const AddMember = () => {
   const [loading, setLoading] = useState(false);
+  const [countryCode, setCountryCode] = useState("+20");
 
   const {
     register,
@@ -176,7 +179,7 @@ const AddMember = () => {
     const formData = new FormData();
     formData.append("UserName", data.UserName.trim());
     formData.append("email", data.email.trim());
-    formData.append("phone", data.phone.trim());
+    formData.append("phone", countryCode + data.phone.trim());
     formData.append("jobTitle", data.jobTitle.trim());
     formData.append("department", data.department);
     formData.append("role", data.role);
@@ -207,7 +210,7 @@ const AddMember = () => {
         window.location.reload();
       }, 1500);
     } catch (error) {
-      console.log("FULL ERROR:", error?.response?.data);
+      console.log("FULL ERROR:", error?.response);
 
       const backendData = error?.response?.data;
 
@@ -237,6 +240,8 @@ const AddMember = () => {
         toast.error("يرجى مراجعة البيانات المدخلة");
       } else {
         toast.error(backendData?.message || "حصل خطأ");
+              console.log("FULL ERROR:", error?.response);
+
       }
     } finally {
       setLoading(false);
@@ -337,16 +342,38 @@ const AddMember = () => {
                   disabled={loading}
                 />
 
-                <InputField
-                  name="phone"
-                  label="رقم الهاتف"
-                  placeholder="01012345678"
-                  inputMode="numeric"
-                  maxLength={11}
-                  register={register}
-                  error={errors}
-                  disabled={loading}
-                />
+                <div className="space-y-2">
+                  <label className="mr-1 text-sm text-gray-400">رقم الهاتف</label>
+                  <div className={`flex border rounded-xl bg-[#09172b] overflow-hidden focus-within:border-[#C59D4A] transition-colors ${errors?.phone ? "border-red-500" : "border-gray-700"}`}>
+                    <select
+                      value={countryCode}
+                      onChange={(e) => setCountryCode(e.target.value)}
+                      disabled={loading}
+                      className="bg-[#1A2638] text-white px-3 py-3 outline-none border-l border-gray-700 cursor-pointer text-sm font-medium"
+                      dir="ltr"
+                    >
+                      {ARAB_COUNTRY_CODES.map(c => (
+                        <option key={c.code} value={c.code} title={c.name}>{c.code}</option>
+                      ))}
+                    </select>
+                    <input
+                      type="text"
+                      placeholder="1012345678"
+                      inputMode="numeric"
+                      maxLength={10}
+                      disabled={loading}
+                      {...register("phone")}
+                      className="w-full bg-transparent px-4 py-3 text-white focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+                      onChange={(e) => {
+                        e.target.value = e.target.value.replace(/\D/g, "");
+                        register("phone").onChange(e);
+                      }}
+                    />
+                  </div>
+                  {errors?.phone && (
+                    <p className="text-xs text-red-500">{errors.phone.message}</p>
+                  )}
+                </div>
 
                 <InputField
                   name="jobTitle"

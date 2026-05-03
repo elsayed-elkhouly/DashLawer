@@ -1,7 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import { MdOutlinePerson } from "react-icons/md";
+import { ARAB_COUNTRY_CODES } from '../../utils/constants';
+
+const parsePhone = (fullPhone) => {
+  if (!fullPhone) return { countryCode: "+20", localPhone: "" };
+  const phoneStr = String(fullPhone);
+  const codeObj = ARAB_COUNTRY_CODES.find(c => phoneStr.startsWith(c.code));
+  if (codeObj) {
+      return { countryCode: codeObj.code, localPhone: phoneStr.slice(codeObj.code.length) };
+  }
+  return { countryCode: "+20", localPhone: phoneStr };
+};
 
 const PersonalInfp = ({ client, onSave, isSaving }) => {
+  const [countryCode, setCountryCode] = useState("+20");
   const [isEditing, setIsEditing] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -15,10 +27,12 @@ const PersonalInfp = ({ client, onSave, isSaving }) => {
 
   useEffect(() => {
     if (client) {
+      const parsed = parsePhone(client.phone);
+      setCountryCode(parsed.countryCode);
       setFormData({
         fullName: client.fullName || "",
         crNumber: client.crNumber || "",
-        phone: client.phone || "",
+        phone: parsed.localPhone,
         email: client.email || "",
         address: client.address || "",
         notes: client.notes || "",
@@ -36,7 +50,7 @@ const PersonalInfp = ({ client, onSave, isSaving }) => {
   };
 
   const handleSave = () => {
-    onSave(formData);
+    onSave({ ...formData, phone: countryCode + formData.phone });
     setIsEditing(false);
   };
 
@@ -91,14 +105,31 @@ const PersonalInfp = ({ client, onSave, isSaving }) => {
             <p className="text-[#64748B] text-sm">رقم الهاتف</p>
 
             {isEditing ? (
-              <input
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                className="w-full bg-[#1d2a3b] p-2 rounded mt-2"
-              />
+              <div className="flex w-full bg-[#1d2a3b] rounded mt-2 overflow-hidden border border-transparent focus-within:border-[#C59D4A]">
+                <select
+                  value={countryCode}
+                  onChange={(e) => setCountryCode(e.target.value)}
+                  className="bg-transparent text-white px-2 py-2 outline-none border-l border-gray-600 cursor-pointer text-sm"
+                  dir="ltr"
+                >
+                  {ARAB_COUNTRY_CODES.map(c => (
+                    <option key={c.code} value={c.code} title={c.name} className="bg-[#1d2a3b]">{c.code}</option>
+                  ))}
+                </select>
+                <input
+                  name="phone"
+                  value={formData.phone}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/\D/g, "");
+                    setFormData(prev => ({ ...prev, phone: val }));
+                  }}
+                  className="w-full bg-transparent px-3 py-2 outline-none text-sm"
+                  inputMode="numeric"
+                  maxLength={10}
+                />
+              </div>
             ) : (
-              <p className="text-lg sm:text-xl font-semibold break-all">
+              <p className="text-lg sm:text-xl font-semibold break-all" dir="ltr" style={{ textAlign: "right" }}>
                 {client?.phone}
               </p>
             )}
