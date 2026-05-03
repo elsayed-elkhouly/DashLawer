@@ -9,21 +9,13 @@ import { Authcontext } from '../../Context/AuthContextProvider';
 
 const BookOfLaw = () => {
   const { AllBooks } = useContext(Authcontext)
-  const egyptianLaw = AllBooks?.data?.laws.find(
-    (item) => item.category === "EGYPTIAN_LAW"
-  );
-  // console.log(egyptianLaw);
+
 
   const queryClient = useQueryClient();
 
-  // console.log(AllBooks?.data?.laws);
   const deleteMutation = useMutation({
     mutationFn: (id) => {
-      return api.delete(`/lawReminder/${id}`, {
-        headers: {
-          Authorization: `Bearer ${Cookies.get("token")}`,
-        },
-      });
+      return api.delete(`/lawReminder/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["AllBokks"]);
@@ -36,7 +28,7 @@ const BookOfLaw = () => {
   return (
     <>
       <UploadLawPdf />
-      <LawsList data={AllBooks?.data?.laws} del={(id) => deleteMutation.mutate(id)} />
+      <LawsList data={AllBooks?.laws} del={(id) => deleteMutation.mutate(id)} />
     </>
   )
 }

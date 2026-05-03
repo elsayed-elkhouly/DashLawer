@@ -251,7 +251,7 @@ const TaskDetails = () => {
     queryKey: ["Comments", id],
     queryFn: getCommnets
   });
-  console.log(Comments);
+  // console.log(Comments);
 
   function getActivity() {
     return api.get(`/task/${id}/activity`);
@@ -260,7 +260,7 @@ const TaskDetails = () => {
     queryKey: ["Activity", id],
     queryFn: getActivity
   });
-  console.log(Activity?.data?.logs);
+  // console.log(Activity?.data?.logs);
 
   // Fallback data if task is not provided
 

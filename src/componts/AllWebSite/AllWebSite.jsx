@@ -13,7 +13,6 @@ const AllWebSite = () => {
         { title: "هيئة الاستثمار", subtitle: "تسجيل الشركات والاستثمار", icon: <FaChartLine />, link: "https://www.investinegypt.gov.eg/Arabic/Pages/default.aspx" },
         { title: "مصلحة الضرائب", subtitle: "الخدمات الضريبية الإلكترونية", icon: <FaFileInvoiceDollar />, link: "https://eta.gov.eg/ar/home" },
         { title: "الشهر العقاري", subtitle: "توثيق العقارات والملكية", icon: <FaBuilding />, link: "https://rern.gov.eg/" },
-        // { title: "منصة النخبة القانونية", subtitle: "المنصة القانونية المتكاملة", icon: <FaStar />, link: "/elite" },
         { title: "المرور", subtitle: "خدمات المرور وترخيص السيارات", icon: <FaCar />, link: "https://traffic.moi.gov.eg/Arabic/Pages/default.aspx" },
         { title: "وزارة الداخلية", subtitle: "الخدمات المدنية والأمنية", icon: <FaShieldAlt />, link: "https://moi.gov.eg/" },
     ];
@@ -63,14 +62,14 @@ const AllWebSite = () => {
     return (
         <>
             <header>
-                <div class=" p-8 dir-rtl flex  items-center justify-between" dir="rtl">
-                    <div class="mb-6">
-                        <h2 class="text-white text-2xl font-bold">مواقع تهمك</h2>
-                        <p class="text-gray-400 mt-1">روابط سريعة للمواقع الحكومية والخدمات القانونية</p>
+                <div className=" p-8 dir-rtl flex  items-center justify-between" dir="rtl">
+                    <div className="mb-6">
+                        <h2 className="text-white text-2xl font-bold">مواقع تهمك</h2>
+                        <p className="text-gray-400 mt-1">روابط سريعة للمواقع الحكومية والخدمات القانونية</p>
                     </div>
 
-                    <div class="inline-flex bg-[#1e293b] p-1 rounded-xl">
-                        <button class="bg-[#eab308] text-white px-6 py-2 rounded-lg font-bold transition-all">
+                    <div className="inline-flex bg-[#1e293b] p-1 rounded-xl">
+                        <button className="bg-[#eab308] text-white px-6 py-2 rounded-lg font-bold transition-all">
                             المواقع الحكومية
                         </button>
                         {/*     
