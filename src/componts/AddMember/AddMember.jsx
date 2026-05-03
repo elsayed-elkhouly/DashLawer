@@ -11,7 +11,7 @@ const schema = z
   .object({
     UserName: z.string().trim().min(3, "الاسم لازم يكون 3 حروف على الأقل"),
     email: z.string().email("بريد إلكتروني غير صالح"),
-    phone: z.string().regex(/^01[0125][0-9]{8}$/, "رقم الهاتف غير صحيح"),
+    phone: z.string().regex(""),
     jobTitle: z.string().min(2, "المسمى الوظيفي مطلوب"),
     department: z.string().min(1, "اختار القسم"),
     role: z.string().min(1, "اختار نوع الحساب"),
@@ -199,7 +199,6 @@ const AddMember = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-// console.log(response);
 
       toast.success(response?.data?.message || "تم إضافة العضو بنجاح");
       reset();

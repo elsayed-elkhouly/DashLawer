@@ -40,6 +40,7 @@ import ClientMangment from "./componts/ClientMangment/ClientMangment";
 import Coupon from "./componts/Coupon/Coupon";
 import OfficeProfile from "./componts/OfficeProfile/OfficeProfile";
 import AddCopoun from "./componts/AddCopoun/AddCopoun";
+import AllWebSite from "./componts/AllWebSite/AllWebSite";
 
 const client = new QueryClient();
 function getCookie(name) {
@@ -97,6 +98,7 @@ const router = createBrowserRouter([
       { path: "/Bills/AddNewFees", element: <ProtectedRoute><AddNewFees /></ProtectedRoute> },
       { path: "/Calender", element: <ProtectedRoute><Calendar /></ProtectedRoute> },
       { path: "/DigitalArchive", element: <ProtectedRoute><DigitalArchive /></ProtectedRoute> },
+      { path: "/AllWebSite", element: <ProtectedRoute><AllWebSite /></ProtectedRoute> },
       { path: "/Clients", element: <ProtectedRoute><Clients /></ProtectedRoute> },
       { path: "/TaskMangment", element: <ProtectedRoute><TaskMangment /></ProtectedRoute> },
       { path: "/PyrollMangment", element: <ProtectedRoute><PyrollMangment /></ProtectedRoute> },
