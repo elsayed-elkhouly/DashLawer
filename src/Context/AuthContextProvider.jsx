@@ -34,15 +34,15 @@ const AuthContextProvider = ({ children }) => {
     }
   }
 
-  async function getAllBooks() {
-    const res = await api.get("/lawReminder/dropdown");
-    return res.data;
-  }
+  // async function getAllBooks() {
+  //   const res = await api.get("/lawReminder/dropdown");
+  //   return res.data;
+  // }
 
-  const { data: AllBooks } = useQuery({
-    queryKey: ["AllBooks"],
-    queryFn: getAllBooks
-  });
+  // const { data: AllBooks } = useQuery({
+  //   queryKey: ["AllBooks"],
+  //   queryFn: getAllBooks
+  // });
 
  useEffect(() => {
   api
@@ -73,7 +73,7 @@ const AuthContextProvider = ({ children }) => {
         insertToken,
         Logout,
         setting,
-        AllBooks,
+        // AllBooks,
         
       }}
     >
