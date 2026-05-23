@@ -48,14 +48,14 @@ const AuthContextProvider = ({ children }) => {
 useEffect(() => {
   if (!token) return;
 
-  api
-    .get("/csrf-token")
-    .then((res) => {
-      setCsrfToken(res.data.csrfToken);
-    })
-    .catch((error) => {
-      console.log("CSRF init error:", error.message);
-    });
+  // // api
+  // //   .get("/csrf-token")
+  //   .then((res) => {
+  //     setCsrfToken(res.data.csrfToken);
+  //   })
+  //   .catch((error) => {
+  //     console.log("CSRF init error:", error.message);
+  //   });
 }, [token]);
 
   useEffect(() => {

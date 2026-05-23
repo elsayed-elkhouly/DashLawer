@@ -14,9 +14,8 @@ import { useNavigate } from 'react-router-dom';
 import { Authcontext } from '../../Context/AuthContextProvider';
 import Cookies from "js-cookie";
 import logo from "../../assets/images/LEX LOGO.png"
-import api from '../../api/axios';
+import api, { setCsrfToken } from '../../api/axios';
 import LexoraHero from '../LexoraHero/LexoraHero';
-import  { setCsrfToken } from "../api/axios";
 
 const Login = () => {
 
@@ -49,13 +48,13 @@ async function Signin(values) {
     insertToken(data.access_token);
 
     // 2. جيب CSRF بعد الـ login ✅
-    const csrf = await api.get("/csrf-token");
-    setCsrfToken(csrf.data.csrfToken);
+    // const csrf = await api.get("/csrf-token");
+    // setCsrfToken(csrf.data.csrfToken);  
 
     toast.success(data.message);
     navigate("/");
   } catch (error) {
-    console.log("Message:", error.response?.data?.message);
+    console.log("Message:", error.response);
     toast.error(error.response?.data?.message);
   } finally {
     setisLoding(false);
