@@ -16,7 +16,7 @@ import Cookies from "js-cookie";
 import logo from "../../assets/images/LEX LOGO.png"
 import api from '../../api/axios';
 import LexoraHero from '../LexoraHero/LexoraHero';
-
+import api, { setCsrfToken } from "../api/axios";
 
 const Login = () => {
 
@@ -38,25 +38,29 @@ const Login = () => {
     resolver: zodResolver(schame)
 
   })
+async function Signin(values) {
+  setisLoding(true);
 
-  async function Signin(values) {
-    setisLoding(true);
+  try {
+    const { data } = await api.post("/auth/authSignin", values);
 
-    try {
-      const { data } = await api.post("/auth/authSignin", values);
+    // 1. حط الـ token الأول
+    Cookies.set("token", data.access_token, { expires: 1 });
+    insertToken(data.access_token);
 
-      toast.success(data.message);
-      insertToken(data.access_token);
-      Cookies.set("token", data.access_token, { expires: 1 });
+    // 2. جيب CSRF بعد الـ login ✅
+    const csrf = await api.get("/csrf-token");
+    setCsrfToken(csrf.data.csrfToken);
 
-      navigate("/");
-    } catch (error) {
-      console.log("Message:", error.response?.data?.message);
-      toast.error(error.response?.data?.message);
-    } finally {
-      setisLoding(false);
-    }
+    toast.success(data.message);
+    navigate("/");
+  } catch (error) {
+    console.log("Message:", error.response?.data?.message);
+    toast.error(error.response?.data?.message);
+  } finally {
+    setisLoding(false);
   }
+}
   return (
     <>
       <div className="bg1 min-h-screen flex items-stretch relative">

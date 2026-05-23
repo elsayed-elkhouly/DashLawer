@@ -44,18 +44,19 @@ const AuthContextProvider = ({ children }) => {
   //   queryFn: getAllBooks
   // });
 
- useEffect(() => {
+// ✅ بس لما يكون في token
+useEffect(() => {
+  if (!token) return;
+
   api
     .get("/csrf-token")
     .then((res) => {
-      // console.log("csrf response:", res.data);
       setCsrfToken(res.data.csrfToken);
-      console.log("CSRF initialized");
     })
     .catch((error) => {
-      console.log("CSRF init error:", error?.response?.data || error.message);
+      console.log("CSRF init error:", error.message);
     });
-}, []);
+}, [token]);
 
   useEffect(() => {
     if (token) {
