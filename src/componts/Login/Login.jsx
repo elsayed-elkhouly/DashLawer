@@ -16,7 +16,7 @@ import Cookies from "js-cookie";
 import logo from "../../assets/images/LEX LOGO.png"
 import api from '../../api/axios';
 import LexoraHero from '../LexoraHero/LexoraHero';
-import api, { setCsrfToken } from "../api/axios";
+import  { setCsrfToken } from "../api/axios";
 
 const Login = () => {
 
