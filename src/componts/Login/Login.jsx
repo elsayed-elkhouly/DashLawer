@@ -48,8 +48,8 @@ async function Signin(values) {
     insertToken(data.access_token);
 
     // 2. جيب CSRF بعد الـ login ✅
-    // const csrf = await api.get("/csrf-token");
-    // setCsrfToken(csrf.data.csrfToken);  
+    const csrf = await api.get("/csrf-token");
+    setCsrfToken(csrf.data.csrfToken);  
 
     toast.success(data.message);
     navigate("/");
