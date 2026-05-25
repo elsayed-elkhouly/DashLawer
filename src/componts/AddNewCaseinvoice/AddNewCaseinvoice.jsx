@@ -89,42 +89,56 @@ const AddNewCaseinvoice = () => {
   const remaining = total - paid;
 
   const onSubmit = async (data) => {
-    try {
-      const payload = {
-        clientId: data.clientId,
-        items: data.items.map((item) => ({
-          description: item.description,
-          amount: Number(item.amount),
-        })),
-        paidAmount: Number(data.paidAmount),
-        paymentMethod: data.paymentMethod,
-        discount: Number(data.discount),
-        tax: Number(data.tax),
-        isFromFees: data.isFromFees === "true",
-        notes: data.notes,
-        dueDate: data.dueDate,
-        caseNumber: data.caseNumber,
-      };
+    const payload = {
+      clientId: data.clientId,
+      items: data.items.map((item) => ({
+        description: item.description,
+        amount: Number(item.amount),
+      })),
+      paidAmount: Number(data.paidAmount),
+      paymentMethod: data.paymentMethod,
+      discount: Number(data.discount),
+      tax: Number(data.tax),
+      isFromFees: data.isFromFees === "true",
+      notes: data.notes,
+      dueDate: data.dueDate,
+      caseNumber: data.caseNumber,
+    };
 
-      const res = await api.post(
-        `/LegalCase/${id}/invoices`,
-        payload,
+    const MAX_RETRIES = 3;
+    let attempt = 0;
 
-      );
-      console.log(payload);
+    while (attempt < MAX_RETRIES) {
+      try {
+        const res = await api.post(`/LegalCase/${id}/invoices`, payload);    
+        toast.success("تم إنشاء الفاتورة بنجاح ✅");
+        reset();
+        setSearch("");
+        return;
 
-      console.log(res);
+      } catch (error) {
+        const serverMsg = error.response?.data?.message || "";
+        const isDuplicate = serverMsg.includes("E11000") || serverMsg.includes("duplicate key");
 
+        if (isDuplicate && attempt < MAX_RETRIES - 1) {
+          attempt++;
+          continue;
+        }
 
-      toast.success("تم إنشاء الفاتورة بنجاح");
-      reset();
-      setSearch("");
+        if (isDuplicate) {
+          toast.error("فشل إنشاء الفاتورة بعد عدة محاولات، تواصل مع الدعم الفني ❌");
+        } else if (error.response?.status === 403) {
+          toast.error("غير مصرح لك بإنشاء الفاتورة ⛔");
+        } else if (error.response?.status === 404) {
+          toast.error("القضية أو العميل غير موجود 🔍");
+        } else if (!error.response) {
+          toast.error("تعذر الاتصال بالسيرفر، تحقق من الإنترنت 🌐");
+        } else {
 
-    } catch (error) {
-      console.error(error.response?.data);
-
-      console.error("create invoice error:", error);
-      toast.error("حصل خطأ أثناء إنشاء الفاتورة");
+          toast.error(error.response?.data?.message || "حصل خطأ أثناء إنشاء الفاتورة ❌");
+        }
+        return;
+      }
     }
   };
 
@@ -175,91 +189,38 @@ const AddNewCaseinvoice = () => {
                     <HiOutlineBriefcase className="text-[#E7B53F]" size={20} />
                     <h2>تفاصيل العميل والقضية</h2>
                   </div>
-                  <div className="flex gap-5 py-3">
-                    <label>
+                  <div className="flex gap-3 py-3">
+
+                    <label className="cursor-pointer">
                       <input
                         type="radio"
                         value="true"
                         {...register("isFromFees")}
+                        className="hidden peer"
                       />
-                      خاص بالاتعاب
+                      <div className="px-5 py-2 rounded-lg border border-gray-600 text-white 
+                    peer-checked:bg-[#c59d4a] peer-checked:border-[#c59d4a] 
+                    peer-checked:font-bold transition-all duration-200">
+                        خاص بالاتعاب
+                      </div>
                     </label>
 
-                    <label>
+                    <label className="cursor-pointer">
                       <input
                         type="radio"
                         value="false"
                         {...register("isFromFees")}
+                        className="hidden peer"
                       />
-                      أخرى
+                      <div className="px-5 py-2 rounded-lg border border-gray-600 text-white 
+                    peer-checked:bg-[#183356] peer-checked:border-[#183356] 
+                    peer-checked:font-bold transition-all duration-200">
+                        أخرى
+                      </div>
                     </label>
+
                   </div>
                   <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                    {/* client search */}
-                    {/* <div className="md:col-span-2">
-                      <label className="mb-2 block text-sm text-[#D7E1EF]">
-                        العميل
-                      </label>
-
-                      <input
-                        type="hidden"
-                        {...register("clientId", {
-                          required: "العميل مطلوب",
-                        })}
-                      />
-
-                      <div className="relative">
-                        <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-[#6f86a6]">
-                          <HiOutlineMagnifyingGlass size={18} />
-                        </span>
-
-                        <input
-                          value={search}
-                          placeholder="ابحث باسم العميل"
-                          onChange={(e) => {
-                            setSearch(e.target.value);
-                            setShowClients(true);
-                          }}
-                          className="h-12 w-full rounded-2xl border border-white/10 bg-[#091D34] px-10 text-sm text-white outline-none focus:border-[#E7B53F]/40"
-                        />
-                      </div>
-
-                      {errors.clientId && (
-                        <p className="mt-1 text-xs text-red-400">
-                          {errors.clientId.message}
-                        </p>
-                      )}
-
-                      {isLoading && (
-                        <p className="mt-2 text-sm text-white">جاري البحث...</p>
-                      )}
-
-                      {showClients && clients?.clients?.length > 0 && (
-                        <div className="mt-2 overflow-hidden rounded-xl border border-white/10 bg-[#07162d]">
-                          {clients.clients.map((item) => (
-                            <div
-                              key={item.id}
-                              className="cursor-pointer border-b border-white/5 p-3 hover:bg-[#0b1d39]"
-                              onClick={() => {
-                                setValue("clientId", item.id);
-                                setSearch(item.fullName);
-                                setShowClients(false);
-                              }}
-                            >
-                              <p className="text-sm">{item.fullName}</p>
-                              <p className="text-xs text-[#7A90AF]">
-                                ID: {item.id}
-                              </p>
-                              <p className="text-xs text-[#7A90AF]">
-                                {item.phone}
-                              </p>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div> */}
-
-
                     {/* due date */}
                     <div>
                       <label className="mb-2 block text-sm text-[#D7E1EF]">

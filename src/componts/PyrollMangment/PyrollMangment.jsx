@@ -690,7 +690,7 @@ function PyrollMangment() {
                     <div className="space-y-6 text-sm">
                       <div className="flex items-center justify-between gap-3">
                         <div className="h-12 w-12 shrink-0 rounded-full border-2 border-amber-400 sm:h-14 sm:w-14" />
-
+ 
                         <div className="min-w-0 flex-1 text-right">
                           <h3 className="truncate text-base font-bold sm:text-lg">
                             {userpayroll?.payroll?.employee?.UserName ||

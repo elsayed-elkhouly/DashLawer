@@ -1,4 +1,3 @@
-import { PaginationButton } from 'flowbite-react';
 import React, { useState, useMemo } from 'react'
 import { BiCalendar, BiCalendarAlt, BiCalendarCheck, BiChevronDown, BiChevronLeftCircle, BiChevronRight, BiCloudDownload, BiDownload, BiPlus, BiSearch } from 'react-icons/bi'
 import { BsEye } from 'react-icons/bs';
@@ -84,7 +83,7 @@ const CaseMange = () => {
         }
       );
 
-      // console.log("Delete response:", res.data);
+    
       return res.data;
     } catch (error) {
       console.log("Delete error:", error);
@@ -102,26 +101,20 @@ const CaseMange = () => {
       queryClient.refetchQueries({ queryKey: ["Cases"], type: "active" });
     },
 
-    onError: (error) => {
-      // console.log("Delete mutation error:", error);
+    onError: (error) => {    
       toast.error("Something went wrong while deleting");
     },
   });
   const handleDelete = (id) => {
     deleteMutation.mutate(id);
   };
-  // console.log(Cases?.data?.cases);
   const cases = Cases?.data?.cases || [];
-  // console.log(cases);
-
   const filteredCases = useMemo(() => {
     let result = cases;
-
     // فلترة التاب
     if (activeTab !== "all") {
       result = result.filter((item) => item.tab === activeTab);
     }
-
     // فلترة السيرش
     if (searchTerm.trim() !== "") {
       const term = searchTerm.toLowerCase();
@@ -135,7 +128,6 @@ const CaseMange = () => {
         );
       });
     }
-
     return result;
   }, [cases, activeTab, searchTerm]);
   return (
@@ -185,10 +177,6 @@ const CaseMange = () => {
                 placeholder="البحث برقم القضية، اسم العميل، أو موضوع النزاع..."
               />
             </div>
-
-
-
-
           </div>
         </div>
       </div>
@@ -199,14 +187,12 @@ const CaseMange = () => {
             <div className="flex flex-wrap items-center gap-2">
               {tabs.map((tab) => {
                 const isActive = activeTab === tab.id;
-
                 return (
                   <button
                     key={tab.id}
                     type="button"
                     onClick={() => {
-                      setActiveTab(tab.id);
-                      // setCurrentPage(1);
+                      setActiveTab(tab.id);                    
                     }}
                     className={`relative rounded-md px-3 py-2 text-sm font-medium transition ${isActive
                       ? "text-[#d7b14a]"
@@ -221,10 +207,7 @@ const CaseMange = () => {
                 );
               })}
             </div>
-
-
           </div>
-
           <div className="overflow-hidden rounded-2xl border border-[#1a2d47] bg-[#09172b] shadow-[0_10px_30px_rgba(0,0,0,0.25)]">
             <div className="overflow-x-auto">
               <table className="min-w-full border-collapse">
@@ -239,7 +222,6 @@ const CaseMange = () => {
                     <th className="px-6 py-4 text-right font-medium">الإجراءات</th>
                   </tr>
                 </thead>
-
                 <tbody>
                   {isLoading ? (
                     <tr>
@@ -322,8 +304,6 @@ const CaseMange = () => {
                 </tbody>
               </table>
             </div>
-
-
           </div>
         </div>
       </div>

@@ -75,8 +75,8 @@ const Clients = () => {
         queryKey: ["Clients", currentPage, search],
         queryFn: () => getClients(currentPage, search),
         placeholderData: (previousData) => previousData,
-        staleTime: 0, // 5 دقايق
-        gcTime: 1000 * 60 * 10,   // يحتفظ بالكاش 10 دقايق بعد الخروج من الصفحة
+        staleTime: 0, 
+        gcTime: 1000 * 60 * 10,   
         refetchOnMount: false,
         refetchOnWindowFocus: false,
     });
@@ -156,8 +156,6 @@ const Clients = () => {
             queryClient.invalidateQueries({ queryKey: ["Stats"] });
             queryClient.invalidateQueries({ queryKey: ["Clients"] });
             queryClient.refetchQueries({ queryKey: ["Clients"], type: "active" });
-
-
             document.getElementById("my_modal_5")?.close();
             reset();
         },
@@ -509,8 +507,7 @@ const Clients = () => {
                 </div>
             </section>
             <section>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
                     {/* 4 */}
                     <div className="w-full h-52 p-5 bg-[#081226] border border-slate-800 rounded-3xl shadow-xl flex flex-col justify-between hover:border-emerald-400 duration-300">
 
@@ -586,7 +583,6 @@ const Clients = () => {
                             </div>
                         </div>
                     </div>
-
                     {/* 1 */}
                     <div className="w-full h-52 p-5 bg-[#081226] border border-[#EF444433] rounded-3xl shadow-xl flex flex-col justify-between hover:border-[#EF4444] duration-300">
 

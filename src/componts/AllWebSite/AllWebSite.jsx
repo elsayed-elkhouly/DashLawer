@@ -61,76 +61,105 @@ const AllWebSite = () => {
     const [country, setCountry] = useState("EG");
     return (
         <>
-            <header>
-                <div className=" p-8 dir-rtl flex  items-center justify-between" dir="rtl">
-                    <div className="mb-6">
-                        <h2 className="text-white text-2xl font-bold">مواقع تهمك</h2>
-                        <p className="text-gray-400 mt-1">روابط سريعة للمواقع الحكومية والخدمات القانونية</p>
+           <header>
+    <div className="p-4 sm:p-6 md:p-8 dir-rtl flex flex-col md:flex-row items-start md:items-center justify-between gap-4" dir="rtl">
+        
+        <div className="mb-2 md:mb-6">
+            <h2 className="text-white text-xl sm:text-2xl font-bold">مواقع تهمك</h2>
+            <p className="text-gray-400 mt-1 text-sm sm:text-base">
+                روابط سريعة للمواقع الحكومية والخدمات القانونية
+            </p>
+        </div>
+
+        <div className="inline-flex bg-[#1e293b] p-1 rounded-xl w-full md:w-auto">
+            <button className="bg-[#eab308] text-white w-full md:w-auto px-4 sm:px-6 py-2 rounded-lg font-bold transition-all">
+                المواقع الحكومية
+            </button>
+        </div>
+
+    </div>
+</header>
+
+<section>
+    <div className="p-4 sm:p-6 md:p-10">
+
+        {/* buttons */}
+       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 p-2 sm:p-4 mb-5">
+    
+    <button
+        onClick={() => setCountry("EG")}
+        className={`px-4 sm:px-6 py-2 rounded-lg transition-colors cursor-pointer duration-200 whitespace-nowrap ${
+            country === "EG"
+                ? "bg-[#c59d4a] text-white font-bold"
+                : " bg-[#183356] text-white"
+        }`}
+    >
+        EG مصر
+    </button>
+
+    <button
+        onClick={() => setCountry("SA")}
+        className={`px-4 sm:px-6 py-2 rounded-lg transition-colors cursor-pointer duration-200 whitespace-nowrap ${
+            country === "SA"
+                ? "bg-[#c59d4a] text-white font-bold"
+                : " bg-[#183356] text-white"
+        }`}
+    >
+        SA السعودية
+    </button>
+
+    <button
+        onClick={() => setCountry("AE")}
+        className={`px-4 sm:px-6 py-2 rounded-lg transition-colors cursor-pointer duration-200 whitespace-nowrap ${
+            country === "AE"
+                ? "bg-[#c59d4a] text-white font-bold"
+                : " bg-[#183356] text-white"
+        }`}
+    >
+        AE الإمارات
+    </button>
+
+    <button
+        onClick={() => setCountry("KW")}
+        className={`px-4 sm:px-6 py-2 rounded-lg transition-colors cursor-pointer duration-200 whitespace-nowrap ${
+            country === "KW"
+                ? "bg-[#c59d4a] text-white font-bold"
+                : " bg-[#183356] text-white"
+        }`}
+    >
+        KW الكويت
+    </button>
+
+</div>
+
+        {/* cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            {servicesByCountry[country]?.map((item, index) => (
+                <a
+                    key={index}
+                    href={item.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <div
+                        className="bg-[#081226] py-5 sm:py-6 px-4 rounded-xl border hover:scale-105 duration-300 border-stone-700 hover:border-[#c59d4a] transition-all cursor-pointer flex flex-col items-center text-white shadow-lg"
+                    >
+                        <div className="text-[#c59d4a] text-2xl sm:text-3xl mb-4">
+                            {item.icon}
+                        </div>
+                        <h3 className="text-lg sm:text-xl font-bold mb-1 text-center">
+                            {item.title}
+                        </h3>
+                        <p className="text-stone-400 text-xs sm:text-sm text-center">
+                            {item.subtitle}
+                        </p>
                     </div>
+                </a>
+            ))}
+        </div>
 
-                    <div className="inline-flex bg-[#1e293b] p-1 rounded-xl">
-                        <button className="bg-[#eab308] text-white px-6 py-2 rounded-lg font-bold transition-all">
-                            المواقع الحكومية
-                        </button>
-                  
-                    </div>
-                </div>
-            </header>
-            <section>
-
-                <div className=" p-10">
-                    <div className="flex  gap-3 p-4 mb-5 ">
-                        <button
-                            onClick={() => setCountry("EG")}
-                            className={`px-6 py-2 rounded-lg transition-colors cursor-pointer duration-200 ${country === "EG" ? "bg-[#c59d4a] text-white  font-bold" : " bg-[#183356] text-white"}`}
-                        >
-                            EG مصر
-                        </button>
-
-                        <button
-                            onClick={() => setCountry("SA")}
-                            className={`px-6 py-2 rounded-lg transition-colors cursor-pointer duration-200 ${country === "SA" ? "bg-[#c59d4a] text-white  font-bold" : " bg-[#183356] text-white"}`}
-                        >
-                            SA السعودية
-                        </button>
-
-                        <button
-                            onClick={() => setCountry("AE")}
-                            className={`px-6 py-2 rounded-lg transition-colors cursor-pointer duration-200 ${country === "AE" ? "bg-[#c59d4a] text-white  font-bold" : " bg-[#183356] text-white"}`}
-                        >
-                            AE الإمارات
-                        </button>
-                        <button
-                            onClick={() => setCountry("KW")}
-                            className={`px-6 py-2 rounded-lg transition-colors cursor-pointer duration-200 ${country === "KW" ? "bg-[#c59d4a] text-white  font-bold" : " bg-[#183356] text-white"}`}
-                        >
-                            KW الكويت
-                        </button>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {servicesByCountry[country]?.map((item, index) => (
-                            <a
-                                key={index}
-                                href={item.link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                <div
-                                    className="bg-[#081226]  py-6 px-4 rounded-xl border  hover:scale-105  duration-300 border-stone-700 hover:border-[#c59d4a] transition-all cursor-pointer flex flex-col items-center text-white shadow-lg"
-                                >
-                                    <div className="text-[#c59d4a] text-3xl mb-4">
-                                        {item.icon}
-                                    </div>
-                                    <h3 className="text-xl font-bold mb-1">{item.title}</h3>
-                                    <p className="text-stone-400 text-sm">{item.subtitle}</p>
-                                </div>
-                            </a>
-
-                        ))}
-                    </div>
-                </div>
-            </section>
+    </div>
+</section>
 
         </>)
 }

@@ -23,7 +23,7 @@ import { jwtDecode } from "jwt-decode";
 
 const getActivityText = (activity) => {
   const userName = activity.userId?.UserName || "مستخدم غير معروف";
-  switch(activity.action) {
+  switch (activity.action) {
     case 'created':
       return `قام ${userName} بإنشاء المهمة`;
     case 'updated':
@@ -59,7 +59,7 @@ const TaskDetails = () => {
   if (token) {
     try {
       userRole = jwtDecode(token).role;
-    } catch(e) {}
+    } catch (e) { }
   }
   const isAdmin = userRole === "ADMIN" || userRole === "SUPER_ADMIN";
 
@@ -172,7 +172,7 @@ const TaskDetails = () => {
       toast.success("تم إضافة الخطوة بنجاح ✅");
       setNewSubtaskTitle("");
       setShowAddSubtask(false);
-      
+
       const newSubtask = resData?.data || resData?.subtask || resData;
       setCurrentTask(prev => {
         const subtasks = prev.subtasks || [];
@@ -195,8 +195,8 @@ const TaskDetails = () => {
     },
     onSuccess: ({ subtaskId, isCompleted }) => {
       setCurrentTask(prev => {
-        const subtasks = (prev.subtasks || []).map(st => 
-           (st._id === subtaskId || st.id === subtaskId) ? { ...st, isCompleted } : st
+        const subtasks = (prev.subtasks || []).map(st =>
+          (st._id === subtaskId || st.id === subtaskId) ? { ...st, isCompleted } : st
         );
         return { ...prev, subtasks };
       });
@@ -379,7 +379,7 @@ const TaskDetails = () => {
                   إنجاز {completedStepsCount} من {steps.length}
                 </span>
                 {isAdmin && (
-                  <button 
+                  <button
                     onClick={() => setShowAddSubtask(!showAddSubtask)}
                     className="w-8 h-8 flex items-center justify-center rounded-lg bg-amber-400 text-[#0A1628] hover:bg-amber-500 transition"
                   >
@@ -400,15 +400,15 @@ const TaskDetails = () => {
             {/* Add Subtask Form */}
             {showAddSubtask && isAdmin && (
               <form onSubmit={handleAddSubtask} className="flex gap-2 mb-6">
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   value={newSubtaskTitle}
                   onChange={(e) => setNewSubtaskTitle(e.target.value)}
                   placeholder="عنوان الخطوة الجديدة..."
                   className="flex-1 bg-[#14233A] text-white px-4 py-2 rounded-xl outline-none focus:ring-1 focus:ring-amber-400 border border-transparent focus:border-amber-400 text-sm"
                 />
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   disabled={addSubtaskMutation.isPending || !newSubtaskTitle.trim()}
                   className="bg-amber-400 text-[#0A1628] px-4 py-2 rounded-xl font-bold text-sm hover:bg-amber-500 transition disabled:opacity-50"
                 >
@@ -467,7 +467,19 @@ const TaskDetails = () => {
                 <div key={mainComment._id || mainComment.id} className="flex flex-col gap-4">
                   {/* Main Comment */}
                   <div className="flex gap-4">
-                    <img src={mainComment.userId?.ProfilePhoto?.url || "https://i.pravatar.cc/150"} alt={mainComment.userId?.UserName} className="w-10 h-10 rounded-full object-cover" />
+                    {
+                      mainComment.userId?.ProfilePhoto?.url ? (
+                        <img
+                          src={mainComment.userId.ProfilePhoto.url}
+                          alt={mainComment.userId?.UserName}
+                          className="w-10 h-10 rounded-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-10 h-10 rounded-full  flex items-center justify-center text-white font-bold bg-[#c59d4a]">
+                          {mainComment.userId?.UserName?.charAt(0)?.toUpperCase() || "?"}
+                        </div>
+                      )
+                    }
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-2">
                         <span className="font-medium text-white">{mainComment.userId?.UserName || "مستخدم غير معروف"}</span>

@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
-import flowbiteReact from "flowbite-react/plugin/vite"; 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
@@ -9,9 +8,19 @@ export default defineConfig({
       babel: {
         plugins: [['babel-plugin-react-compiler']],
       },
-    }),tailwindcss(),
-    flowbiteReact()
+    }),tailwindcss()
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            return id.toString().split('node_modules/')[1].split('/')[0].toString();
+          }
+        }
+      }
+    }
+  },
   server: {
     port: 3000,
     strictPort: true, // لو 3000 مش متاح هيقف بدل ما يغيره

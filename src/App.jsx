@@ -1,47 +1,49 @@
+import { lazy, Suspense } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
 import Layout from "./componts/Layout/Layout";
-import Login from "./componts/Login/Login";
-import Dashbord from "./componts/Dashbrd/Dashbord";
-import CaseMange from "./componts/CaseMahgment/CaseMange";
-import Team from "./componts/TeamMember/Team";
-import Bills from "./componts/Bills/Bills";
-import Calendar from "./componts/Calendar/Calendar";
-import DigitalArchive from "./componts/Digital Archive/DigitalArchive";
-import Setting from "./componts/Setting/Setting";
 import { Toaster } from "react-hot-toast";
 import ProtectedRoute from "./componts/ProtectedRoute/ProtectedRoute";
-import AddMember from "./componts/AddMember/AddMember";
 import AuthContextProvider from "./Context/AuthContextProvider";
-import Clients from "./componts/Clients/Clients";
 import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import ClientProfile from "./componts/ClientProfile/ClientProfile";
-import AddNewCase from "./componts/AddCase/AddNewCase";
-import CaseDetails from "./componts/CaseDetails/CaseDetails";
-import Eror from "./componts/Eror/Eror";
-import AddNewFees from "./componts/AddNewFees/AddNewFees";
-import TaskMangment from "./componts/TaskMangment/TaskMangment";
-import TaskDetails from "./componts/TaskMangment/TaskDetails";
-import BookMangment from "./componts/BookMangment/BookMangment";
-import AddSession from "./componts/AddSession/AddSession";
-import TeamProfile from "./componts/TeamProfile/TeamProfile";
-import MyProfile from "./componts/MyProfile/MyProfile";
-import SessionDetails from "./componts/SessionDetails/SessionDetails";
-import PyrollMangment from "./componts/PyrollMangment/PyrollMangment";
-import BookOfLaw from "./componts/BookofLaw/BookOfLaw";
-import AllSesions from "./componts/AllSesions/AllSesions";
-import AddNewCaseinvoice from "./componts/AddNewCaseinvoice/AddNewCaseinvoice";
-import Dashbord2 from "./componts/Dashbord2/Dashbord2";
 import { jwtDecode } from "jwt-decode";
-import PackegesMangment from "./componts/PackegesMangment/PackegesMangment";
-import ClientMangment from "./componts/ClientMangment/ClientMangment";
-import Coupon from "./componts/Coupon/Coupon";
-import OfficeProfile from "./componts/OfficeProfile/OfficeProfile";
-import AddCopoun from "./componts/AddCopoun/AddCopoun";
-import AllWebSite from "./componts/AllWebSite/AllWebSite";
+
+const Login = lazy(() => import("./componts/Login/Login"));
+const Dashbord = lazy(() => import("./componts/Dashbrd/Dashbord"));
+const CaseMange = lazy(() => import("./componts/CaseMahgment/CaseMange"));
+const Team = lazy(() => import("./componts/TeamMember/Team"));
+const Bills = lazy(() => import("./componts/Bills/Bills"));
+const Calendar = lazy(() => import("./componts/Calendar/Calendar"));
+const DigitalArchive = lazy(() => import("./componts/Digital Archive/DigitalArchive"));
+const Setting = lazy(() => import("./componts/Setting/Setting"));
+const AddMember = lazy(() => import("./componts/AddMember/AddMember"));
+const Clients = lazy(() => import("./componts/Clients/Clients"));
+const ClientProfile = lazy(() => import("./componts/ClientProfile/ClientProfile"));
+const AddNewCase = lazy(() => import("./componts/AddCase/AddNewCase"));
+const CaseDetails = lazy(() => import("./componts/CaseDetails/CaseDetails"));
+const Eror = lazy(() => import("./componts/Eror/Eror"));
+const AddNewFees = lazy(() => import("./componts/AddNewFees/AddNewFees"));
+const TaskMangment = lazy(() => import("./componts/TaskMangment/TaskMangment"));
+const TaskDetails = lazy(() => import("./componts/TaskMangment/TaskDetails"));
+const BookMangment = lazy(() => import("./componts/BookMangment/BookMangment"));
+const AddSession = lazy(() => import("./componts/AddSession/AddSession"));
+const TeamProfile = lazy(() => import("./componts/TeamProfile/TeamProfile"));
+const MyProfile = lazy(() => import("./componts/MyProfile/MyProfile"));
+const SessionDetails = lazy(() => import("./componts/SessionDetails/SessionDetails"));
+const PyrollMangment = lazy(() => import("./componts/PyrollMangment/PyrollMangment"));
+const BookOfLaw = lazy(() => import("./componts/BookofLaw/BookOfLaw"));
+const AllSesions = lazy(() => import("./componts/AllSesions/AllSesions"));
+const AddNewCaseinvoice = lazy(() => import("./componts/AddNewCaseinvoice/AddNewCaseinvoice"));
+const Dashbord2 = lazy(() => import("./componts/Dashbord2/Dashbord2"));
+const PackegesMangment = lazy(() => import("./componts/PackegesMangment/PackegesMangment"));
+const ClientMangment = lazy(() => import("./componts/ClientMangment/ClientMangment"));
+const Coupon = lazy(() => import("./componts/Coupon/Coupon"));
+const OfficeProfile = lazy(() => import("./componts/OfficeProfile/OfficeProfile"));
+const AddCopoun = lazy(() => import("./componts/AddCopoun/AddCopoun"));
+const AllWebSite = lazy(() => import("./componts/AllWebSite/AllWebSite"));
 
 const client = new QueryClient();
 function getCookie(name) {
@@ -125,7 +127,13 @@ function App() {
           containerStyle={{ zIndex: 99999 }}
           toastOptions={{ style: { zIndex: 99999 } }}
         />
-        <RouterProvider router={router} />
+        <Suspense fallback={
+          <div className="flex h-screen items-center justify-center bg-[#061224] text-white">
+            <span className="loading loading-infinity loading-xl text-[#c59d4a]"></span>
+          </div>
+        }>
+          <RouterProvider router={router} />
+        </Suspense>
       </AuthContextProvider>
     </QueryClientProvider>
   );
