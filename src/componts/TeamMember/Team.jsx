@@ -50,14 +50,36 @@ const Team = () => {
         },
       }),
 
-    onSuccess: () => {
-      toast.success(" تم المسح")
-      queryClient.invalidateQueries(["Users"]);
+    onMutate: async (deletedUserId) => {
+      await queryClient.cancelQueries({ queryKey: ["Users"] });
+
+      const previousUsersData = queryClient.getQueryData(["Users"]);
+
+      queryClient.setQueryData(["Users"], (oldData) => {
+        if (!oldData) return oldData;
+        return {
+          ...oldData,
+          data: {
+            ...oldData.data,
+            users: oldData.data?.users?.filter((u) => u.id !== deletedUserId),
+          }
+        };
+      });
+
+      return { previousUsersData };
     },
 
-    onError: (error) => {
-      console.log(error.response?.data || error.message);
-      toast.error(error.response?.data?.message)
+    onError: (error, deletedUserId, context) => {
+      if (context?.previousUsersData) {
+        queryClient.setQueryData(["Users"], context.previousUsersData);
+      }
+
+      toast.error(error.response?.data?.message);
+    },
+
+    onSuccess: () => {
+      toast.success(" تم المسح");
+      queryClient.invalidateQueries({ queryKey: ["Users"] });
     },
   });
   const handleDelete = (id) => {

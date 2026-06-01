@@ -14,7 +14,7 @@ import { LuTicketPercent } from 'react-icons/lu'
 
 const Sections2 = ({ onItemClick }) => {
  const menuItems = [
-     { to: "/", icon: MdOutlineDashboard , label: "لوحة التحكم" },
+     { to: "/dashboard", icon: MdOutlineDashboard , label: "لوحة التحكم" },
      { to: "/PackegesMangment", icon: PiBag, label: "إدارة الباقات" },
      { to: "/ClientMangment", icon: AiOutlineTeam, label: "إدارة العملاء" },
      { to: "/coupon", icon: LuTicketPercent, label: "كوبون" },
@@ -30,7 +30,7 @@ const Sections2 = ({ onItemClick }) => {
            <NavLink
              key={item.to}
              to={item.to}
-             end={item.to === "/"}
+             end={item.to === "/dashboard"}
              onClick={onItemClick}
              className="block"
            >

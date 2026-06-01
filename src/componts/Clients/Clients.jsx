@@ -160,10 +160,6 @@ const Clients = () => {
             reset();
         },
         onError: (error) => {
-            console.log("Full error:", error);
-            console.log("Error response:", error.response);
-            console.log("Error data:", error.response?.data);
-            console.log("Error status:", error.response?.status);
             toast.error(error.response?.data?.message);
         },
     });
@@ -183,11 +179,8 @@ const Clients = () => {
                 }
             );
 
-            console.log("Delete response:", res.data);
             return res.data;
         } catch (error) {
-            console.log("Delete error:", error);
-            console.log("Delete error response:", error.response);
             throw error;
         }
     }
@@ -195,19 +188,39 @@ const Clients = () => {
     const deleteMutation = useMutation({
         mutationFn: deleteClient,
 
-        onSuccess: () => {
-            toast.success("Client deleted successfully");
+        onMutate: async (deletedClientId) => {
+            // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
+            await queryClient.cancelQueries({ queryKey: ["Clients", currentPage, search] });
 
-            queryClient.invalidateQueries({ queryKey: ["Stats"] });
-            queryClient.invalidateQueries({ queryKey: ["Clients"] });
+            // Snapshot the previous value
+            const previousClientsData = queryClient.getQueryData(["Clients", currentPage, search]);
 
-            queryClient.refetchQueries({ queryKey: ["Stats"], type: "active" });
-            queryClient.refetchQueries({ queryKey: ["Clients"], type: "active" });
+            // Optimistically update the list by removing the client
+            queryClient.setQueryData(["Clients", currentPage, search], (oldData) => {
+                if (!oldData) return oldData;
+                return {
+                    ...oldData,
+                    clients: oldData.clients.filter((c) => c.id !== deletedClientId),
+                    total: Math.max(0, (oldData.total || 1) - 1),
+                };
+            });
+
+            // Return a context object with the snapshotted value
+            return { previousClientsData };
         },
 
-        onError: (error) => {
-            console.log("Delete mutation error:", error);
-            toast.error("Something went wrong while deleting");
+        onError: (error, deletedClientId, context) => {
+            // If the mutation fails, roll back
+            if (context?.previousClientsData) {
+                queryClient.setQueryData(["Clients", currentPage, search], context.previousClientsData);
+            }
+            toast.error(error.response.data.message);
+        },
+
+        onSuccess: () => {
+            toast.success("Client deleted successfully");
+            queryClient.invalidateQueries({ queryKey: ["Stats"] });
+            queryClient.invalidateQueries({ queryKey: ["Clients"] });
         },
     });
 

@@ -45,16 +45,36 @@ const Coupon = () => {
   const deleteMutation = useMutation({
     mutationFn: deleteClient,
 
-    onSuccess: () => {
-      toast.success("Client deleted successfully");
+    onMutate: async (deletedCouponId) => {
+      await queryClient.cancelQueries({ queryKey: ["Copuns"] });
 
-      queryClient.invalidateQueries({ queryKey: ["Copuns"] });
-     
+      const previousCouponsData = queryClient.getQueryData(["Copuns"]);
+
+      queryClient.setQueryData(["Copuns"], (oldData) => {
+        if (!oldData) return oldData;
+        return {
+          ...oldData,
+          data: {
+            ...oldData.data,
+            coupons: oldData.data?.coupons?.filter((coupon) => coupon._id !== deletedCouponId),
+          }
+        };
+      });
+
+      return { previousCouponsData };
     },
 
-    onError: (error) => {
+    onError: (error, deletedCouponId, context) => {
+      if (context?.previousCouponsData) {
+        queryClient.setQueryData(["Copuns"], context.previousCouponsData);
+      }
       console.log("Delete mutation error:", error);
       toast.error("Something went wrong while deleting");
+    },
+
+    onSuccess: () => {
+      toast.success("Coupon deleted successfully");
+      queryClient.invalidateQueries({ queryKey: ["Copuns"] });
     },
   });
 

@@ -14,7 +14,7 @@ import { TfiWorld } from "react-icons/tfi";
 
 const Sections = ({ onItemClick }) => {
   const menuItems = [
-    { to: "/", icon: MdOutlineDashboard , label: "لوحة التحكم" },
+    { to: "/dashboard", icon: MdOutlineDashboard , label: "لوحة التحكم" },
     { to: "/CaseMangemnt", icon: PiBag, label: "إدارة القضايا" },
     { to: "/TeamMember", icon: AiOutlineTeam, label: "أعضاء الفريق" },
     { to: "/Bills", icon: TbFileInvoice, label: "الفواتير" },
@@ -38,7 +38,7 @@ const Sections = ({ onItemClick }) => {
           <NavLink
             key={item.to}
             to={item.to}
-            end={item.to === "/"}
+            end={item.to === "/dashboard"}
             onClick={onItemClick}
             className="block"
           >

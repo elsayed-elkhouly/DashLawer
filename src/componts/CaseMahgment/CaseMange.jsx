@@ -11,13 +11,14 @@ import {
   HiOutlineChevronRight,
 } from "react-icons/hi2";
 import axios from 'axios';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import toast from 'react-hot-toast';
 import api from '../../api/axios';
 
 const CaseMange = () => {
+  const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
@@ -95,14 +96,35 @@ const CaseMange = () => {
   const deleteMutation = useMutation({
     mutationFn: deleteCase,
 
+    onMutate: async (deletedCaseId) => {
+      await queryClient.cancelQueries({ queryKey: ["Cases"] });
+
+      const previousCasesData = queryClient.getQueryData(["Cases"]);
+
+      queryClient.setQueryData(["Cases"], (oldData) => {
+        if (!oldData) return oldData;
+        return {
+          ...oldData,
+          data: {
+            ...oldData.data,
+            cases: oldData.data?.cases?.filter((c) => c.id !== deletedCaseId && c._id !== deletedCaseId),
+          }
+        };
+      });
+
+      return { previousCasesData };
+    },
+
+    onError: (error, deletedCaseId, context) => {
+      if (context?.previousCasesData) {
+        queryClient.setQueryData(["Cases"], context.previousCasesData);
+      }
+      toast.error(error.response.data.message);
+    },
+
     onSuccess: () => {
       toast.success("Case deleted successfully");
       queryClient.invalidateQueries({ queryKey: ["Cases"] });
-      queryClient.refetchQueries({ queryKey: ["Cases"], type: "active" });
-    },
-
-    onError: (error) => {    
-      toast.error("Something went wrong while deleting");
     },
   });
   const handleDelete = (id) => {

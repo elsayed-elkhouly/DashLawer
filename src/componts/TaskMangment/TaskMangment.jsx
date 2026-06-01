@@ -221,13 +221,31 @@ const TaskMangment = () => {
   }
   const deleteTaskMutation = useMutation({
     mutationFn: deleteTask,
+    onMutate: async (deletedTaskId) => {
+      await queryClient.cancelQueries({ queryKey: ["Tasks", page] });
+
+      const previousTasksData = queryClient.getQueryData(["Tasks", page]);
+
+      queryClient.setQueryData(["Tasks", page], (oldData) => {
+        if (!oldData) return oldData;
+        return {
+          ...oldData,
+          tasks: oldData.tasks.filter((t) => t.id !== deletedTaskId && t._id !== deletedTaskId),
+          total: Math.max(0, (oldData.total || 1) - 1),
+        };
+      });
+
+      return { previousTasksData };
+    },
+    onError: (err, deletedTaskId, context) => {
+      if (context?.previousTasksData) {
+        queryClient.setQueryData(["Tasks", page], context.previousTasksData);
+      }
+      toast.error(err.response.data.message);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["Tasks"] });
       toast.success("تم حذف المهمة بنجاح 🗑️");
-    },
-    onError: (err) => {
-      toast.error("حصل خطأ أثناء الحذف ❌");
-      console.error(err);
     },
   });
   return (

@@ -18,7 +18,7 @@ import { Link } from 'react-router-dom';
 const ClientMangment = () => {
 
   function getAllOffice() {
-    return api.get("/super-admin/getAllOffices")
+    return api.get("super-admin/getAllOffices")
   }
 
   const { data } = useQuery({
@@ -229,7 +229,8 @@ const ClientMangment = () => {
               </div>
 
               <div>
-                {data?.data?.offices?.map((client) => (
+                {data?.data?.offices?.map((client,index) => (
+                  
                   <div
                     key={client.id}
                     className="grid grid-cols-7 items-center border-b border-white/5 px-5 py-4 transition hover:bg-white/2 md:px-6"
@@ -281,12 +282,7 @@ const ClientMangment = () => {
                         <FiEye size={14} />
                       </button>
                      </Link>
-                      {/* <button className="transition hover:text-white cursor-pointer">
-                        <FiEdit2 size={13} />
-                      </button> */}
-                      {/* <button className="transition hover:text-[#ff7b7b] cursor-pointer">
-                        <FiTrash2 size={13} />
-                      </button> */}
+                   
                     </div>
                   </div>
                 ))}

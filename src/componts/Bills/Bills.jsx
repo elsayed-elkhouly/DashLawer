@@ -141,12 +141,34 @@ const Bills = () => {
         }
       );
     },
-    onSuccess: (res) => {
-      toast.success(res?.data?.message);
-      queryClient.invalidateQueries({ queryKey: ["Bills"] });
+    onMutate: async (deletedInvoiceId) => {
+      await queryClient.cancelQueries({ queryKey: ["Bills", currentPage] });
+
+      const previousBillsData = queryClient.getQueryData(["Bills", currentPage]);
+
+      queryClient.setQueryData(["Bills", currentPage], (oldData) => {
+        if (!oldData) return oldData;
+        return {
+          ...oldData,
+          data: {
+            ...oldData.data,
+            invoices: oldData.data?.invoices?.filter((invoice) => invoice._id !== deletedInvoiceId),
+            total: Math.max(0, (oldData.data?.total || 1) - 1),
+          }
+        };
+      });
+
+      return { previousBillsData };
     },
-    onError: (error) => {
-      console.log(error);
+    onError: (error, deletedInvoiceId, context) => {
+      if (context?.previousBillsData) {
+        queryClient.setQueryData(["Bills", currentPage], context.previousBillsData);
+      }
+      toast.error(error.response?.data?.message);
+    },
+    onSuccess: (res) => {
+      toast.success(res?.data?.message || "تم حذف الفاتورة بنجاح");
+      queryClient.invalidateQueries({ queryKey: ["Bills"] });
     },
   });
 

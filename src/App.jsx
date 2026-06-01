@@ -5,11 +5,14 @@ import Layout from "./componts/Layout/Layout";
 import { Toaster } from "react-hot-toast";
 import ProtectedRoute from "./componts/ProtectedRoute/ProtectedRoute";
 import AuthContextProvider from "./Context/AuthContextProvider";
-import {
-  QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/react-query";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
+import OnlineStatusIndicator from "./componts/OnlineStatusIndicator/OnlineStatusIndicator";
 import { jwtDecode } from "jwt-decode";
+import Home from "./componts/Home/Home";
+import Service from "./componts/Service/Service";
+import BookDate from "./componts/BookDate/BookDate";
 
 const Login = lazy(() => import("./componts/Login/Login"));
 const Dashbord = lazy(() => import("./componts/Dashbrd/Dashbord"));
@@ -44,8 +47,25 @@ const Coupon = lazy(() => import("./componts/Coupon/Coupon"));
 const OfficeProfile = lazy(() => import("./componts/OfficeProfile/OfficeProfile"));
 const AddCopoun = lazy(() => import("./componts/AddCopoun/AddCopoun"));
 const AllWebSite = lazy(() => import("./componts/AllWebSite/AllWebSite"));
+const PortalLayout = lazy(() => import("./componts/PortalLayout/PortalLayout"));
+const PortalHome = lazy(() => import("./componts/PortalHome/PortalHome"));
 
-const client = new QueryClient();
+const client = new QueryClient({
+  defaultOptions: {
+    queries: {
+      gcTime: 1000 * 60 * 60 * 24, // 24 hours
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      networkMode: "offlineFirst",
+    },
+    mutations: {
+      networkMode: "offlineFirst",
+    },
+  },
+});
+
+const persister = createSyncStoragePersister({
+  storage: window.localStorage,
+});
 function getCookie(name) {
   const cookie = document.cookie
     .split("; ")
@@ -71,12 +91,25 @@ try {
   console.error("Token decode error:", error);
 }
 const router = createBrowserRouter([
+  // Portal Layout at root "/"
   {
     path: "/",
+    element: <PortalLayout />,
+    children: [
+      { index: true, element: <PortalHome /> },
+      { path: "/service", element: <Service /> },
+      { path: "/BookingDate", element: <BookDate /> },
+
+
+    ]
+  },
+
+  // Dashboard Layout (using pathless layout route)
+  {
     element: <Layout />,
     children: [
       {
-        index: true,
+        path: "/dashboard",
         element: (
           <ProtectedRoute>
             {role === "SUPER_ADMIN" ? <Dashbord2 /> : <Dashbord />}
@@ -114,13 +147,15 @@ const router = createBrowserRouter([
       { path: "/Clients/ClientProfile/:id", element: <ProtectedRoute><ClientProfile /></ProtectedRoute> },
     ],
   },
+
   { path: "/Login", element: <Login /> },
   { path: "*", element: <Eror /> },
 ]);
 
 function App() {
   return (
-    <QueryClientProvider client={client}>
+    <PersistQueryClientProvider client={client} persistOptions={{ persister }}>
+      <OnlineStatusIndicator />
       <AuthContextProvider>
         <Toaster
           position="top-center"
@@ -135,7 +170,7 @@ function App() {
           <RouterProvider router={router} />
         </Suspense>
       </AuthContextProvider>
-    </QueryClientProvider>
+    </PersistQueryClientProvider>
   );
 }
 

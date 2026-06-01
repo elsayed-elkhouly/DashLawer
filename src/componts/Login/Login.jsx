@@ -52,9 +52,9 @@ async function Signin(values) {
     setCsrfToken(csrf.data.csrfToken);  
 
     toast.success(data.message);
-    navigate("/");
+    // navigate("/");
+    window.location.href = "/dashboard";
   } catch (error) {
-    console.log("Message:", error.response);
     toast.error(error.response?.data?.message);
   } finally {
     setisLoding(false);
