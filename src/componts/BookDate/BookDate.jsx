@@ -84,7 +84,7 @@ const BookDate = () => {
             const res = await api.get(
                 "/SettingsService/"
             );
-            console.log("API:", res.data.Settings);
+            // console.log("API:", res.data.Settings);
             setSettings(res?.data?.Settings)
         } catch (error) {
             console.log(error);
@@ -191,8 +191,8 @@ const BookDate = () => {
                                                     <option value="" disabled>
                                                         اختر نوع الاستشارة
                                                     </option>
-                                                    {casee.filter(cas => cas.isActive).map((cas, index) => (
-                                                        <option key={index} value={cas._id}>{cas.name}</option>
+                                                    {casee?.filter(cas => cas.isActive).map((cas, index) => (
+                                                        <option key={index} value={cas?._id}>{cas?.name}</option>
                                                     ))}
                                                 </select>
                                                 <SlCalender className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5" />
@@ -215,9 +215,9 @@ const BookDate = () => {
                                                     <option value="" disabled>
                                                         اختر الوقت
                                                     </option>
-                                                    {slots.map((slot, index) => {
-                                                        const startDate = new Date(slot.startAt);
-                                                        const endAtDate = new Date(slot.endAt);
+                                                    {slots?.map((slot, index) => {
+                                                        const startDate = new Date(slot?.startAt);
+                                                        const endAtDate = new Date(slot?.endAt);
                                                         const formattedStart = startDate.toLocaleString("ar-EG", {
                                                             day: "2-digit",
                                                             month: "long",
@@ -232,7 +232,7 @@ const BookDate = () => {
                                                             hour12: true,
                                                         });
                                                         return (
-                                                            <option key={index} value={slot.id}>
+                                                            <option key={index} value={slot?._id}>
                                                                 {formattedStart} / {formattedEnd}
                                                             </option>
                                                         );
@@ -278,14 +278,14 @@ const BookDate = () => {
                                         <h2 className="text-white text-xl font-bold">لماذا تختارنا؟</h2>
                                     </div>
                                     <div className="space-y-8">
-                                        {features.map((item, index) => (
+                                        {features?.map((item, index) => (
                                             <div key={index} className="flex gap-4 group">
                                                 <div className="bg-gray-800/40 p-2 rounded-lg group-hover:bg-[#c9a152]/10 transition-colors flex justify-center items-center">
                                                     <BiCheckCircle className="text-[#c9a152] w-5 h-5" />
-                                                </div>
+                                                </div>  
                                                 <div>
-                                                    <h3 className="text-white font-bold text-sm mb-1">{item.title}</h3>
-                                                    <p className="text-gray-400 text-xs">{item.desc}</p>
+                                                    <h3 className="text-white font-bold text-sm mb-1">{item?.title}</h3>
+                                                    <p className="text-gray-400 text-xs">{item?.desc}</p>
                                                 </div>
                                             </div>
                                         ))}
@@ -328,7 +328,9 @@ const BookDate = () => {
                                     src={settings?.mapEmbedUrl}
                                     className="w-full h-full"
                                     loading="lazy"
-                                ></iframe>
+                                >
+
+a                                </iframe>
 
 
                             </section>
