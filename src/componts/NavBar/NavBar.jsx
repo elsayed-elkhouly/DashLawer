@@ -18,10 +18,10 @@ const NavBar = () => {
             const res = await api.get(
                 "/SettingsService/"
             );
-            console.log("API:", res.data.Settings);
+            // console.log("API:", res.data.Settings);
             setSettings(res?.data?.Settings)
         } catch (error) {
-            console.log(error);
+            // console.log(error);
         }
     }
 
@@ -57,7 +57,7 @@ const NavBar = () => {
                         </button>
 
                         <Link to="/Login">
-                            <button className="flex items-center gap-2 bg-[#c59d4a] hover:bg-[#af893d] text-[#050b14] px-5 py-2.5 rounded-xl font-bold text-sm transition-all duration-300 shadow-lg shadow-[#c59d4a]/10 hover:shadow-[#c59d4a]/20">
+                            <button className="flex items-center cursor-pointer gap-2 bg-[#c59d4a] hover:bg-[#af893d] text-[#050b14] px-5 py-2.5 rounded-xl font-bold text-sm transition-all duration-300 shadow-lg shadow-[#c59d4a]/10 hover:shadow-[#c59d4a]/20">
                                 <LogIn size={16} />
                                 <span>بوابة النظام</span>
                             </button>

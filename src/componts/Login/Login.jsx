@@ -60,7 +60,12 @@ async function Signin(values) {
   }
 }
   return (
-    <>
+    <> 
+    <div className='fixed top-4 left-4 z-50'>
+      <button onClick={() => navigate("/")} className='text-white cursor-pointer bg-[#C9A14A] px-4 py-2 rounded-lg shadow-lg hover:bg-[#C9A14A]/90 transition-all duration-200 '>
+        Back to Home
+      </button>
+    </div>
       <div className="bg1 min-h-screen flex items-stretch relative">
 
         {/* الجزء الأيمن - فورم تسجيل الدخول */}

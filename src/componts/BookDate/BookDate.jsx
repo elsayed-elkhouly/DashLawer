@@ -12,9 +12,13 @@ import { MdOutlineChat } from 'react-icons/md'
 import { RiMicAiLine } from 'react-icons/ri'
 import { SlCalender } from 'react-icons/sl'
 import api from '../../api/axios'
+import { ARAB_COUNTRY_CODES } from '../../utils/constants'
 
 const BookDate = () => {
     const [slots, setSlots] = useState([])
+    const [countryCode, setCountryCode] = useState("+20");
+    const [loading, setLoading] = useState(false);
+
     const [casee, setCase] = useState([])
     const [isloding, setisLoding] = useState(false)
     const [settings, setSettings] = useState(null);
@@ -41,9 +45,13 @@ const BookDate = () => {
     async function Booked(values) {
         setisLoding(true);
         try {
+            const payload = {
+                ...values,
+                phone: `${countryCode}${values.phone.replace(/^0+/, "")}`,
+            };
             const res = await api.post(
                 "/appointment/BOOKED",
-                values
+                payload
             );
 
             reset({
@@ -77,22 +85,20 @@ const BookDate = () => {
     async function GetActiveCase() {
         const data = await api.get("/CaseType/")
         setCase(data.data.caseTypes);
-        console.log(data);
     }
     async function getData() {
         try {
             const res = await api.get(
                 "/SettingsService/"
             );
-            // console.log("API:", res.data.Settings);
+            console.log("API:", res.data.Settings);
             setSettings(res?.data?.Settings)
         } catch (error) {
             console.log(error);
         }
     }
 
-    useEffect(() => {
-    }, [])
+
 
     useEffect(() => {
         getData()
@@ -156,9 +162,17 @@ const BookDate = () => {
                                                     />
                                                     <BiPhoneCall className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5" />
                                                 </div>
-                                                <div className="bg-[#111927] border border-gray-700/50 border-r-0 rounded-l-xl px-4 flex items-center text-gray-300 text-sm">
-                                                    20+
-                                                </div>
+                                                <select
+                                                    value={countryCode}
+                                                    onChange={(e) => setCountryCode(e.target.value)}
+                                                    disabled={loading}
+                                                    className="bg-[#111927] text-white px-3 py-3 outline-none rounded-l-xl  border-gray-700 cursor-pointer text-sm font-medium"
+                                                    dir="ltr"
+                                                >
+                                                    {ARAB_COUNTRY_CODES.map(c => (
+                                                        <option key={c.code} value={c.code} title={c.name}>{c.code}</option>
+                                                    ))}
+                                                </select>
                                             </div>
                                             {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>}
                                         </div>
@@ -282,7 +296,7 @@ const BookDate = () => {
                                             <div key={index} className="flex gap-4 group">
                                                 <div className="bg-gray-800/40 p-2 rounded-lg group-hover:bg-[#c9a152]/10 transition-colors flex justify-center items-center">
                                                     <BiCheckCircle className="text-[#c9a152] w-5 h-5" />
-                                                </div>  
+                                                </div>
                                                 <div>
                                                     <h3 className="text-white font-bold text-sm mb-1">{item?.title}</h3>
                                                     <p className="text-gray-400 text-xs">{item?.desc}</p>
@@ -330,7 +344,7 @@ const BookDate = () => {
                                     loading="lazy"
                                 >
 
-a                                </iframe>
+                                    a                                </iframe>
 
 
                             </section>
