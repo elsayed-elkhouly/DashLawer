@@ -56,9 +56,9 @@ const PortalHome = () => {
             whileInView="visible"
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="w-90 lg:w-1/2 mx-auto lg:ms-8"
+            className="w-90 lg:w-[40%] mx-auto lg:ms-0 -pt-5"
           >
-            <img src={data?.data?.Settings?.logo} className="w-full lg:w-153.25" alt="" />
+            <img src={data?.data?.Settings?.logo} className="w-full lg:w-full" alt="" />
           </motion.div>
 
           {/* Text */}
@@ -67,7 +67,7 @@ const PortalHome = () => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="mt-8 flex flex-col text-right lg:me-35 lg:w-223.75 leading-tight lg:mb-50 pe-5 lg:pe-0"
+            className=" flex flex-col text-right  lg:w-[60%] leading-tight lg:mb-50 me-5 lg:me-25 mt-10 "
           >
             <motion.h3 variants={fadeRight} transition={{ duration: 0.6 }}
               className="text-[32px] lg:text-[85.82px] font-bold text-white">

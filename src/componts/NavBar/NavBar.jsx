@@ -35,7 +35,7 @@ const NavBar = () => {
         <>
             <section className="relative">
                 <div className="navbar bg-[#14243a] shadow-sm flex items-center justify-around lg:gap-52 fixed z-50 w-full">
-                    <div className="flex gap-2 items-center">
+                    <div className="flex flex-col lg:flex-row gap-2 lg:gap-2 items-center ">
                         {/* زر الهامبرجر */}
                         <button
                             className="btn btn-ghost bg-[#C9A24D] lg:hidden"
@@ -58,7 +58,7 @@ const NavBar = () => {
                         </button>
 
                         <Link to="/Login">
-                            <button className="flex items-center cursor-pointer gap-2 bg-[#c59d4a] hover:bg-[#af893d] text-[#050b14] px-5 py-2.5 rounded-xl font-bold text-sm transition-all duration-300 shadow-lg shadow-[#c59d4a]/10 hover:shadow-[#c59d4a]/20">
+                            <button className="flex items-center cursor-pointer gap-2 bg-[#c59d4a] hover:bg-[#af893d] text-[#050b14] px-2.5 py-1.5 lg:px-5 lg:py-2.5 rounded-xl font-bold text-sm transition-all duration-300 shadow-lg shadow-[#c59d4a]/10 hover:shadow-[#c59d4a]/20">
                                 <LogIn size={16} />
                                 <span>بوابة النظام</span>
                             </button>
@@ -84,7 +84,7 @@ const NavBar = () => {
                             <h6 className="text-[18.3px] font-bold text-white"> {settings?.officeName} </h6>
                             <h6 className="text-[10px] text-[#A0A0A0] font-normal ms-8">   {settings?.officeName}  للخدمات القانونيه   </h6>
                         </div>
-                        {/* <FaBalanceScale className="text-3xl text-[#C9A24D]" /> */} 
+                  
 
                         <img src={settings?.logo} alt="" className='w-[100px] h-[100px]' />
                     </div>
