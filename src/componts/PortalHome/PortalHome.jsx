@@ -7,28 +7,19 @@ import { Link } from 'react-router-dom'
 import { motion } from "framer-motion";
 import { LiaMedalSolid } from 'react-icons/lia'
 import ReviewsSection from '../ReviewsSection/ReviewsSection';
+import api from '../../api/axios';
+import { useQuery } from '@tanstack/react-query';
 const PortalHome = () => {
 
-  const reviews = [
-    {
-      name: "احمد مصطفي",
-      text: "وجدت لديهم الأمان والاحترافية والسرية التامة.",
-      stars: 5,
-      featured: false
-    },
-    {
-      name: "مصطفي شريف",
-      text: "الدقة والعمق القانوني هو ما يميز إيليت بحق.",
-      stars: 5,
-      featured: true
-    },
-    {
-      name: "محمد عماد",
-      text: "أداء يفوق التوقعات في قضية تجارية معقدة.",
-      stars: 5,
-      featured: false
-    }
-  ];
+  function getData() {
+    return  api.get("/SettingsService/");
+  }
+  const {data} = useQuery({
+    queryKey : ["services"],
+    queryFn : getData
+  })
+    
+   
   const fadeLeft = {
     hidden: { opacity: 0, x: -80 },
     visible: { opacity: 1, x: 0 }
@@ -52,10 +43,10 @@ const PortalHome = () => {
       }
     }
   };
-  return (
+  return (  
     <>
       {/* ================= ABOUT SECTION ================= */}
-      <section className="bg-[#071a33] pt-20">
+      <section className="bg-[#071a33] pt-30">
         <div className="lg:flex lg:items-center lg:justify-around">
 
           {/* Image */}
@@ -67,7 +58,7 @@ const PortalHome = () => {
             transition={{ duration: 0.8 }}
             className="w-90 lg:w-1/2 mx-auto lg:ms-8"
           >
-            <img src={photo1} className="w-full lg:w-153.25" alt="" />
+            <img src={data?.data?.Settings?.logo} className="w-full lg:w-153.25" alt="" />
           </motion.div>
 
           {/* Text */}

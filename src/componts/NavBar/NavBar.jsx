@@ -13,15 +13,16 @@ const NavBar = () => {
     const closeMenu = () => setMenuOpen(false);
 
     const [settings, setSettings] = useState(null);
+    
     async function getData() {
         try {
             const res = await api.get(
                 "/SettingsService/"
             );
-            // console.log("API:", res.data.Settings);
+
             setSettings(res?.data?.Settings)
         } catch (error) {
-            // console.log(error);
+
         }
     }
 
@@ -83,7 +84,9 @@ const NavBar = () => {
                             <h6 className="text-[18.3px] font-bold text-white"> {settings?.officeName} </h6>
                             <h6 className="text-[10px] text-[#A0A0A0] font-normal ms-8">   {settings?.officeName}  للخدمات القانونيه   </h6>
                         </div>
-                        <FaBalanceScale className="text-3xl text-[#C9A24D]" />
+                        {/* <FaBalanceScale className="text-3xl text-[#C9A24D]" /> */} 
+
+                        <img src={settings?.logo} alt="" className='w-[100px] h-[100px]' />
                     </div>
                 </div>
 

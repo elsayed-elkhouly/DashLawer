@@ -48,11 +48,7 @@ const CaseDetails = () => {
         }
     }
     function getCaseDetails() {
-        return api.get(`/LegalCase/${id}`, {
-            headers: {
-                authorization: `Bearer ${Cookies.get("token")}`,
-            }
-        })
+        return api.get(`/LegalCase/${id}`)
     }
     const { data, error } = useQuery({
         queryKey: ["CaseDetails", id],

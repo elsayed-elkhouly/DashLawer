@@ -327,7 +327,7 @@ const Setting = () => {
       queryClient.invalidateQueries({ queryKey: ["setting"] });
     },
     onError: (error) => {
-      console.log(error.response?.data || error.message);
+      console.log(error);
       toast.error(" حجم الصوره كبير / فشل تحديث اللوجو");
     },
   });

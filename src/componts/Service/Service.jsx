@@ -46,38 +46,7 @@ const Service = () => {
       icon: <BiHome size={32} />
     }
   ];
-  const services2 = [
-    {
-      id: 1,
-      title: "قضايا الأحوال الشخصية",
-      desc: "في أصعب مراحل الحياة، العميل يحتاج هدوء واتزان. وجود مكتب يدير الملف بخصوصية تامة وبحزم قانوني يعني حماية الحقوق بأقل قدر ممكن من الاستنزاف النفسي. الهدف هنا مش كسب قضية بس، بل الحفاظ على الاستقرار وحقوق الأطفال والأسرة."
-    },
-    {
-      id: 2,
-      title: "القانون الجنائي",
-      desc: "العميل هنا قلق وخائف. أكبر قيمة تقدمها له هي سرعة التحرك، وبناء دفاع قوي من أول لحظة. كل إجراء يتم بدقة قد يغيّر مصير كامل. الشعور إن في حد فاهم الإجراءات وبيتحرك بسرعة واحترافية يساوي راحة وأمان في أصعب الظروف."
-    },
-    {
-      id: 3,
-      title: "القانون العقاري",
-      desc: "العقار غالبًا استثمار عمر. دور المكتب هو منع الوقوع في فخ عقار عليه نزاع أو مشكلة ملكية. العميل يخرج من الصفقة وهو مطمئن إن كل ورقة سليمة، وكل بند يحمي فلوسه واستثماره على المدى الطويل."
-    },
-    {
-      id: 4,
-      title: "القانون المدني",
-      desc: "حماية المصالح الشخصية والمالية. المكتب هنا يضمن إن العقود واضحة ومحصّنة، وإن أي ضرر تتعرض له يمكن المطالبة به قانونيًا بشكل صحيح. الهدف هو تقليل المخاطر قبل حدوثها، وليس مجرد التعامل معها بعد وقوعها."
-    },
-    {
-      id: 5,
-      title: "القضايا العمالية",
-      desc: "سواء كنت صاحب عمل أو موظف، أنت محتاج توازن. المكتب يساعدك تحافظ على حقوقك بدون تصعيد غير ضروري، ويضمن إن أي نزاع يتم التعامل معه وفق القانون، بما يحفظ سمعتك ويقلل الخسائر."
-    },
-    {
-      id: 6,
-      title: "الشركات والشركاء",
-      desc: "ابدأ مشروعك على أرض قانونية صلبة من أول يوم، تجنّب مفاجآت الشركاء والمشاكل الضريبية والثغرات اللي ممكن تضيّع مجهود سنين. وجود صياغة احترافية للعقود يحميك من الخلافات قبل ما تبدأ، وبيوفّر عليك وقت وقضايا وخسائر مستقبلية."
-    }
-  ];
+
   const steps = [
     { title: "استشارة", desc: "فهم أولي لتفاصيل القضية وتحديد المتطلبات الأساسية.", icon: <MdOutlineChat /> },
     { title: "دراسة الحالة", desc: "تحليل معمق للمستندات والبحث في السوابق القانونية.", icon: <HiOutlineChartBarSquare /> },
@@ -87,16 +56,6 @@ const Service = () => {
   const fadeUp = {
     hidden: { opacity: 0, y: 60 },
     visible: { opacity: 1, y: 0 }
-  };
-
-  const fadeRight = {
-    hidden: { opacity: 0, x: 80 },
-    visible: { opacity: 1, x: 0 }
-  };
-
-  const fadeLeft = {
-    hidden: { opacity: 0, x: -80 },
-    visible: { opacity: 1, x: 0 }
   };
 
   const stagger = {
@@ -111,104 +70,104 @@ const Service = () => {
     <>
 
       {/* ================= Services ================= */}
-      <section className="bg-[#071a33] py-20 px-6 text-right" dir="rtl">
-  <div className="w-full px-4 sm:px-6 md:max-w-6xl md:mx-auto">
+      <section className="bg-[#071a33] py-40 px-6 text-right" dir="rtl">
+        <div className="w-full px-4 sm:px-6 md:max-w-6xl md:mx-auto">
 
-    <motion.div
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true }}
-      variants={fadeUp}
-      transition={{ duration: 0.7 }}
-      className="mb-12"
-    >
-      <h2 className="text-white text-4xl font-bold mb-4">
-        خدماتنا القانونية
-      </h2>
-      <p className="text-gray-400">
-        اختر التخصص المناسب وسنقوم بمساعدتك فورًا
-      </p>
-    </motion.div>
-
-    <motion.div
-      variants={stagger}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true }}
-      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-    >
-      {services.map((item, index) => (
-        <motion.div
-          key={index}
-          variants={fadeUp}
-          whileHover={{ scale: 1.05 }}
-          transition={{ duration: 0.5 }}
-          className="group bg-[#061328] border border-gray-800 p-8 rounded-sm hover:border-[#c5a059]"
-        >
-          <div className="bg-[#1a2436] w-16 h-16 rounded-full flex items-center justify-center text-[#c5a059] mb-6 group-hover:bg-[#c5a059] group-hover:text-[#0a1120] transition-colors">
-            {item.icon}
-          </div>
-
-          <h3 className="text-white text-2xl font-bold mb-4">
-            {item.title}
-          </h3>
-
-          <p className="text-gray-400 text-sm leading-relaxed mb-8">
-            {item.desc}
-          </p>
-
-          <motion.button
-           whileHover={{ x: -5 }}
-            className="flex items-center gap-2 text-[#c5a059] font-semibold text-sm hover:underline cursor-pointer"
-            onClick={() => setSelectedService(item)}
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeUp}
+            transition={{ duration: 0.7 }}
+            className="mb-12"
           >
-            عرض التفاصيل
-          </motion.button>
-        </motion.div>
-      ))}
-    </motion.div>
-  </div>
+            <h2 className="text-white text-4xl font-bold mb-4">
+              خدماتنا القانونية
+            </h2>
+            <p className="text-gray-400">
+              اختر التخصص المناسب وسنقوم بمساعدتك فورًا
+            </p>
+          </motion.div>
 
-  {/* ===== Modal (واحد بس برا الـ map) ===== */}
-  {selectedService && (
-  <div
-    className="fixed inset-0 z-50 flex items-center justify-center bg-black/60"
-    onClick={() => setSelectedService(null)}   // 👈 يقفل لو ضغطت برا
-  >
-    <div
-      className="bg-[#0d1626] p-8 rounded-lg w-[90%] md:w-125 relative border border-gray-800 shadow-2xl sm:rounded-[2.5rem]"
-      onClick={(e) => e.stopPropagation()}     // 👈 يمنع القفل لو ضغطت جوه
-    >
-            
-                 {/* Header */}
-                     <div className="mb-6 sm:mb-8 mt-2 sm:mt-4">
-                      <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-2">
-                        قانون الشركات والعقود
-                      </h2>
-                      <div className="h-1 w-16 sm:w-20 bg-[#c5a059] rounded-full"></div>
-                    </div> 
+          <motion.div
+            variants={stagger}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
+            {services.map((item, index) => (
+              <motion.div
+                key={index}
+                variants={fadeUp}
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.5 }}
+                className="group bg-[#061328] border border-gray-800 p-8 rounded-sm hover:border-[#c5a059]"
+              >
+                <div className="bg-[#1a2436] w-16 h-16 rounded-full flex items-center justify-center text-[#c5a059] mb-6 group-hover:bg-[#c5a059] group-hover:text-[#0a1120] transition-colors">
+                  {item.icon}
+                </div>
 
-                    {/* Description */}
-                    <p className="text-gray-300 leading-relaxed mb-8 sm:mb-10 text-sm sm:text-base">
-                      نقدم خدمات شاملة في صياغة ومراجعة العقود التجارية،
-                      وتأسيس الشركات بكافة أنواعها،
-                      مع ضمان الامتثال الكامل للقوانين واللوائح
-                      المحلية والدولية لحماية مصالح أعمالكم.
-                    </p> 
+                <h3 className="text-white text-2xl font-bold mb-4">
+                  {item.title}
+                </h3>
 
-                    {/* CTA Button */}
-                    <NavLink to="/BookingDate">
-                      <button className="w-full py-3 sm:py-4 bg-[#c5a059] hover:bg-[#b38f4d] text-[#111827] font-bold rounded-xl sm:rounded-2xl transition-all transform active:scale-95 shadow-lg shadow-[#c5a059]/20">
-                        احجز استشارة لهذه الخدمة
-                      </button>
-                    </NavLink> 
+                <p className="text-gray-400 text-sm leading-relaxed mb-8">
+                  {item.desc}
+                </p>
 
-                 
-      
-    </div>
-  </div>
-)}
-</section>
+                <motion.button
+                  whileHover={{ x: -5 }}
+                  className="flex items-center gap-2 text-[#c5a059] font-semibold text-sm hover:underline cursor-pointer"
+                  onClick={() => setSelectedService(item)}
+                >
+                  عرض التفاصيل
+                </motion.button>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+
+        {/* ===== Modal (واحد بس برا الـ map) ===== */}
+        {selectedService && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60"
+            onClick={() => setSelectedService(null)}   // 👈 يقفل لو ضغطت برا
+          >
+            <div
+              className="bg-[#0d1626] p-8 rounded-lg w-[90%] md:w-125 relative border border-gray-800 shadow-2xl sm:rounded-[2.5rem]"
+              onClick={(e) => e.stopPropagation()}     // 👈 يمنع القفل لو ضغطت جوه
+            >
+
+              {/* Header */}
+              <div className="mb-6 sm:mb-8 mt-2 sm:mt-4">
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-2">
+                  قانون الشركات والعقود
+                </h2>
+                <div className="h-1 w-16 sm:w-20 bg-[#c5a059] rounded-full"></div>
+              </div>
+
+              {/* Description */}
+              <p className="text-gray-300 leading-relaxed mb-8 sm:mb-10 text-sm sm:text-base">
+                نقدم خدمات شاملة في صياغة ومراجعة العقود التجارية،
+                وتأسيس الشركات بكافة أنواعها،
+                مع ضمان الامتثال الكامل للقوانين واللوائح
+                المحلية والدولية لحماية مصالح أعمالكم.
+              </p>
+
+              {/* CTA Button */}
+              <NavLink to="/BookingDate">
+                <button className="w-full py-3 sm:py-4 bg-[#c5a059] hover:bg-[#b38f4d] text-[#111827] font-bold rounded-xl sm:rounded-2xl transition-all transform active:scale-95 shadow-lg shadow-[#c5a059]/20">
+                  احجز استشارة لهذه الخدمة
+                </button>
+              </NavLink>
+
+
+
+            </div>
+          </div>
+        )}
+      </section>
 
       {/* ================= Corporate Law ================= */}
       <section className="bg-[#071a33]   py-20 px-6 overflow-x-hidden" dir="rtl">

@@ -11,10 +11,8 @@ const Footer = () => {
       const res = await api.get(
         "/SettingsService/"
       );
-      console.log("API:", res.data.Settings);
       setSettings(res?.data?.Settings)
     } catch (error) {
-      console.log(error);
     }
   }
 

@@ -91,10 +91,9 @@ const BookDate = () => {
             const res = await api.get(
                 "/SettingsService/"
             );
-            console.log("API:", res.data.Settings);
+            
             setSettings(res?.data?.Settings)
         } catch (error) {
-            console.log(error);
         }
     }
 
@@ -151,7 +150,6 @@ const BookDate = () => {
                                                         type="tel"
                                                         placeholder="0123456789"
                                                         className="w-full bg-[#111927] border border-gray-700/50 rounded-r-xl py-4 px-12 text-white focus:border-yellow-600 outline-none transition-all placeholder:text-gray-600"
-                                                        maxLength={11}
                                                         {...register("phone", {
                                                             required: "رقم الهاتف مطلوب",
                                                             pattern: {
