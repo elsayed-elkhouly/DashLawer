@@ -86,16 +86,14 @@ const BookMangment = () => {
     }, [search, selectedFilter]);
 
     function getAppoint() {
-        return api.get("/appointment/?page=1&limit=1", {
-            headers: {
-                authorization: `Bearer ${Cookies.get("token")}`,
-            },
-        });
+        return api.get("/appointment/?page=1&limit=1");
     }
     const { data } = useQuery({
         queryKey: ["Slots"],
         queryFn: getAppoint,
     });
+    console.log(data);
+    
     const stats = [
         {
             id: 1,
@@ -147,7 +145,7 @@ const BookMangment = () => {
             });
 
             setAppointDetails(res?.data?.appointment);
-            console.log(res?.data?.appointment);
+            
 
         } catch (error) {
             console.log(error);
@@ -155,6 +153,8 @@ const BookMangment = () => {
             setLoading(false);
         }
     }
+ 
+    
 
     // console.log(data?.data?.appointments);
     function formatDateTimeLocal12(isoString) {
@@ -170,14 +170,9 @@ const BookMangment = () => {
         });
     }
     async function CancelBook(id) {
-        const res = await api.patch(`/appointment/${id}/cancel`, null,
-            {
-                headers: {
-                    authorization: `Bearer ${Cookies.get("token")}`,
-                },
-            }
+        const res = await api.patch(`/appointment/${id}/cancel`, null
         )
-        console.log(res);
+        
 
     }
     return (
@@ -247,8 +242,8 @@ const BookMangment = () => {
                             <div className="grid grid-cols-12 bg-white/3 px-5 py-4 text-xs text-[#8EA3BF]">
                                 <div className="col-span-2">الاسم الكامل</div>
                                 <div className="col-span-2">رقم الهاتف</div>
-                                <div className="col-span-2">البريد الإلكتروني</div>
-                                <div className="col-span-2">نوع الخدمة</div>
+                                <div className="col-span-3">البريد الإلكتروني</div>
+                                <div className="col-span-1">نوع الخدمة</div>
                                 <div className="col-span-2">التاريخ والوقت</div>
                                 <div className="col-span-1">الحالة</div>
                                 <div className="col-span-1">الإجراءات</div>
@@ -261,8 +256,8 @@ const BookMangment = () => {
                                 >
                                     <div className="col-span-2 font-medium text-white">{item.fullName}</div>
                                     <div className="col-span-2 text-[#9BB0C9]">{item.phone}</div>
-                                    <div className="col-span-2 text-[#9BB0C9]">{item.email}</div>
-                                    <div className="col-span-2 text-[#D6DFEC]">{item.caseType.name}</div>
+                                    <div className="col-span-3 text-[#9BB0C9]">{item.email}</div>
+                                    <div className="col-span-1 text-[#D6DFEC]">{item.caseType.name}</div>
 
                                     <div className="col-span-2">
                                         <p className="text-white">{formatDateTimeLocal12(item.slot.startAt)}</p>

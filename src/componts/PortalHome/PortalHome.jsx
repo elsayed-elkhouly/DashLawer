@@ -14,6 +14,7 @@ const PortalHome = () => {
   function getData() {
     return  api.get("/SettingsService/");
   }
+  
   const {data} = useQuery({
     queryKey : ["services"],
     queryFn : getData

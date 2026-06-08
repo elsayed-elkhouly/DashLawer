@@ -28,8 +28,6 @@ const NavBar = () => {
 
     useEffect(() => {
         getData()
-
-
     }, [])
     return (
         <>
